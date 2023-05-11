@@ -35,5 +35,4 @@ public :
 	UPROPERTY()
 	TMap<uint8, FString> ActivationString;
 	
-
 };

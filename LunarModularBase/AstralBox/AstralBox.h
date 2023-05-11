@@ -4,11 +4,11 @@
 
 #include "EngineMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Interface/InteractObjInterface.h"
+#include "Interface/AstroMissionClearInterface.h"
 #include "AstralBox.generated.h"
 
 UCLASS()
-class LUNARMODULARBASE_API AAstralBox : public AActor, public IInteractObjInterface
+class LUNARMODULARBASE_API AAstralBox : public AActor
 {
 	GENERATED_BODY()
 	
@@ -22,20 +22,15 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-	//Collision Detected
-	//UFUNCTION(Client, Reliable)
-	virtual void SetObjActiveComplete() override;
+	void SetObjActiveComplete();
 
-	virtual void OnActivating() override;
+	void OnActivating();
 
-	virtual void StopActivating() override;
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	void StopActivating();
 
 	void VisibleSetting(bool InBoolean);
 
 	void ActivationSetting(float Percentage);
-
 public:	
 	UPROPERTY(VisibleAnywhere, Category = Box)
 	TObjectPtr<UStaticMeshComponent> Box;
@@ -51,11 +46,6 @@ public:
 
 	//On Player Collision
 public :
-	UPROPERTY(VisibleAnywhere, Category = CollisionPlayer)
-	TObjectPtr<class AActor> Player;
-
-	UPROPERTY(EditAnywhere)
-	bool bIsComplete;
 	FTimerHandle ActivationTimer;
 
 	UPROPERTY(EditAnywhere)
@@ -71,6 +61,10 @@ protected :
 
 	//Item Section
 protected :
+	FOnActivatedComplete OnActiveCompleted;
+
+	FOnTakeItemDelegate OnItemIsGiven;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (PrivateAccess = "true"), Category = ItemData)
 	TObjectPtr<class UAstroItemData> ObjectItemData;
 

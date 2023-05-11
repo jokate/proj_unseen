@@ -6,15 +6,12 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/GameStateBase.h"
 #include "UI/AstroInteractionObj/AstralBoxWidget.h"
-#include "Mission/AstroMissionSingleton.h"
+
 //Interface Header
-#include "Interface/AstroMissionManager.h"
 #include "Interface/AstroCharacterInterface.h"
-#include "Interface/AstroMissionClearInterface.h"
 
 //Data Asset
 #include "InteractionObjDataAsset.h"
-#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AAstralBox::AAstralBox()
@@ -66,15 +63,10 @@ void AAstralBox::PostInitializeComponents()
 	Trigger->OnComponentEndOverlap.AddDynamic(this, &AAstralBox::OnCharacterOverlapOut);
 }
 
-
 void AAstralBox::SetObjActiveComplete()
 {
-	auto CastedPlayer = Cast<IAstroMissionClearInterface>(Player);
-	if (CastedPlayer != nullptr) {
-		if(this->ObjectItemData)
-			CastedPlayer->TakeItem(this->ObjectItemData);
-		CastedPlayer->Req_MissionClear(ObjectID);
-	}
+	OnItemIsGiven.ExecuteIfBound(ObjectItemData);
+	OnActiveCompleted.ExecuteIfBound(ObjectID);
 	SetActorEnableCollision(false);
 }
 
@@ -82,7 +74,6 @@ void AAstralBox::OnActivating()
 {
 	GetWorld()->GetTimerManager().SetTimer(ActivationTimer, [&]() {
 		if (BoxStat->Percentage < 1.0f) {
-			UE_LOG(LogTemp, Log, TEXT("%s : 작동 중.."), *GetActorNameOrLabel());
 			ActivationSetting(0.05f);
 		}
 		else {
@@ -95,23 +86,26 @@ void AAstralBox::OnActivating()
 
 void AAstralBox::StopActivating()
 {
-	UE_LOG(LogTemp, Log, TEXT("%s : 작동 중지"), *GetActorNameOrLabel());
 	GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
 	ActivationSetting(0.0f);
-}
-
-void AAstralBox::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
 void AAstralBox::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Log, TEXT("충둘하였음"));
-	Player = OtherActor;
-	auto Character = CastChecked<IAstroCharacterInterface>(OtherActor);
-	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && Character) {
-		Character->SearchObjectHit(this, true);
+	auto MissionClearInterface = CastChecked<IAstroMissionClearInterface>(OtherActor);
+
+	if(OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && MissionClearInterface)
+	{
+		MissionClearInterface->OnObjectCollided(OnActiveCompleted, OnItemIsGiven);
+	}
+
+	auto CharacterInterface = CastChecked<IAstroCharacterInterface>(OtherActor);
+	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy) {
+
+		CharacterInterface->ReturnActivateObjectDelegate().BindUObject(this, &AAstralBox::OnActivating);
+		CharacterInterface->ReturnDeactivateObjectDelegate().BindUObject(this, &AAstralBox::StopActivating);
+
 		BoxStat->SetActable(true);
 		VisibleSetting(true);
 	}
@@ -119,11 +113,25 @@ void AAstralBox::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 
 void AAstralBox::OnCharacterOverlapOut(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Log, TEXT("충둘에서 나왔다"));
-	Player = nullptr;
-	auto Character = Cast<IAstroCharacterInterface>(OtherActor);
-	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && Character) {
-		Character->SearchObjectHit(this, false);
+	if(OtherActor == this) 
+	{
+		return;
+	}
+
+	auto MissionClearInterface = CastChecked<IAstroMissionClearInterface>(OtherActor);
+	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy)
+	{
+		OnItemIsGiven.Unbind();
+		OnActiveCompleted.Unbind();
+	}
+
+	auto CharacterInterface = Cast<IAstroCharacterInterface>(OtherActor);
+
+	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && CharacterInterface) {
+
+		CharacterInterface->ReturnActivateObjectDelegate().Unbind();
+		CharacterInterface->ReturnDeactivateObjectDelegate().Unbind();
+
 		VisibleSetting(false);
 		ActivationSetting(0.0f);
 	}
@@ -134,7 +142,8 @@ void AAstralBox::VisibleSetting(bool InBoolean)
 {
 	IWidgetInterface* WidgetVisibleAction = CastChecked<IWidgetInterface>(ActivationWidget->GetUserWidgetObject());
 	OnVisible Visible;
-	Visible.BindLambda([&]() {
+	Visible.BindLambda([&]() 
+	{
 		return BoxStat->SetActable(InBoolean);
 	});
 
@@ -145,9 +154,10 @@ void AAstralBox::ActivationSetting(float Percentage)
 {
 	IInteractionWidgetInterface* WidgetVisibleAction = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetUserWidgetObject());
 	OnActivate Activate;
-	Activate.BindLambda([&]() {
+	Activate.BindLambda([&]() 
+	{
 		return BoxStat->SettingPercent(Percentage);
-		});
+	});
 
 	WidgetVisibleAction->PercentSet(Activate);
 }

@@ -95,13 +95,23 @@ void AAstroHUD::AddItem(UObject* InItemData)
 
 void AAstroHUD::ActiveItemWidget()
 {
-	if (InventoryWidget->GetVisibility() == ESlateVisibility::Visible)
+	if (InventoryWidget->GetVisibility() == ESlateVisibility::Visible) {
 		InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
-	else
+		GetOwningPlayerController()->bShowMouseCursor = false;
+	}
+	else 
+	{
 		InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+		GetOwningPlayerController()->bShowMouseCursor = true;
+	}
 }
 
-void AAstroHUD::ItemUpdateWhenHovered(class UAstroItemData* InItemData)
+void AAstroHUD::TextUpdateWhenHovered(class UAstroItemData* InItemData)
 {
 	InventoryWidget->SetTextData(InItemData);
+}
+
+void AAstroHUD::TextUpdateWhenUnHovered()
+{
+	InventoryWidget->SetTextDefault();
 }

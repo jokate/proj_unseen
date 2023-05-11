@@ -51,4 +51,7 @@ protected :
 
 	UFUNCTION()
 	void OnHoveredItemButton();
+
+	UFUNCTION()
+	void UnHoveredItemButton();
 };

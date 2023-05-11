@@ -39,8 +39,9 @@ public :
 
 	virtual void ActiveItemWidget() override;
 
-	virtual void ItemUpdateWhenHovered(class UAstroItemData* InItemData) override;
+	virtual void TextUpdateWhenHovered(class UAstroItemData* InItemData) override;
 
+	virtual void TextUpdateWhenUnHovered() override;
 
 public :
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")

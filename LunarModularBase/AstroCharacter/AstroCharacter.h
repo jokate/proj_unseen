@@ -32,9 +32,18 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
-	virtual void SearchObjectHit(AActor* Obj, bool bInAndOut) override;
-
 	void ExploreWidgetVisibleSet(bool OnVisible);
+
+	//On Collision To Object
+public :
+	FOnCharacterActivateObject OnActivateEvent;
+	FOnCharacterStopActivateObject OnDeActivateEvent;
+
+	virtual FOnCharacterActivateObject& ReturnActivateObjectDelegate() override;
+	virtual FOnCharacterStopActivateObject& ReturnDeactivateObjectDelegate() override;
+
+	virtual void OnObjectCollided(FOnActivatedComplete& InActivaedDelegate, FOnTakeItemDelegate& InTakeItemDelegate) override;
+public :
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	TObjectPtr<USpringArmComponent> SpringArm;
@@ -44,9 +53,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = Status)
 	TObjectPtr<class UAstroCharacterStatusComponent> CharacterStat;
-	
-	UPROPERTY(VisibleAnywhere, Category = ContactedBox)
-	TArray<AActor*> HitObj;
 
 	UPROPERTY(VisibleAnywhere, Category = HUD)
 	TObjectPtr<class AHUD> AstroHUD;
@@ -82,8 +88,6 @@ public:
 	void Search(const FInputActionValue& Value);
 	void UnSearch(const FInputActionValue& Value);
 	void ExploreCheck(float DeltaTime);
-
-	UObject* GetNearestObject();
 
 protected:
 	void SetControlMode();

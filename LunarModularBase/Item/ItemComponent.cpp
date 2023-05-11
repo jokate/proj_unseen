@@ -23,8 +23,6 @@ UItemComponent::UItemComponent()
 void UItemComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 }
 
 void UItemComponent::ItemWidgetActive()
@@ -37,6 +35,7 @@ void UItemComponent::ItemWidgetActive()
 
 void UItemComponent::InitItem(UAstroItemData* ItemData)
 {	
+	ItemContainer.Add(ItemData);
 	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
 	if (PlayerHUD != nullptr && GetOwnerRole() == ENetRole::ROLE_AutonomousProxy) {
 		PlayerHUD->AddItem(ItemData);
@@ -45,16 +44,12 @@ void UItemComponent::InitItem(UAstroItemData* ItemData)
 
 void UItemComponent::ItemUse(UAstroItemData* InItemData)
 {
-	if (InItemData->Type == EItemType::Active)
+	auto ItemData = CastChecked<UAstroActiveItemData>(InItemData);
+	if (auto ItemUseEvent = ItemUseEvents.Find((uint8)ItemData->ActivationType))
 	{
-		auto ItemData = CastChecked<UAstroActiveItemData>(InItemData);
-		if (auto ItemUseEvent = ItemUseEvents.Find((uint8)ItemData->ActivationType))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("ItemActivated"));
-			ItemUseEvent->ItemDeleagate.ExecuteIfBound(InItemData);
-		}
+		UE_LOG(LogTemp, Warning, TEXT("ItemActivated"));
+		ItemUseEvent->ItemDeleagate.ExecuteIfBound(InItemData);
 	}
-
 }
 
 void UItemComponent::InstallItem(UAstroItemData* InItemData)

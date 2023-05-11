@@ -6,7 +6,8 @@
 #include "UObject/Interface.h"
 #include "AstroCharacterInterface.generated.h"
 
-
+DECLARE_DELEGATE(FOnCharacterActivateObject);
+DECLARE_DELEGATE(FOnCharacterStopActivateObject);
 
 struct FInputActionValue;
 // This class does not need to be modified.
@@ -15,8 +16,6 @@ class UAstroCharacterInterface : public UInterface
 {
 	GENERATED_BODY()
 };
-
-
 
 /**
  * 
@@ -35,5 +34,6 @@ public:
 	virtual void StopSwift(const FInputActionValue& Value) = 0;
 	virtual void Exploring(const FInputActionValue& Value) = 0;
 	virtual void UnExploring(const FInputActionValue& Value) = 0;
-	virtual void SearchObjectHit(AActor* Obj, bool bInAndOut) = 0;
+	virtual FOnCharacterActivateObject& ReturnActivateObjectDelegate() = 0;
+	virtual FOnCharacterStopActivateObject& ReturnDeactivateObjectDelegate() = 0;
 };

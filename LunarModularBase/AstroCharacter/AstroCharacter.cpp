@@ -26,9 +26,6 @@
 #include "InputMappingContext.h"
 #include "Game/AstroPlayerState.h"
 
-//Interface
-#include "Interface/InteractObjInterface.h"
-
 //UserData Assets
 #include "UserDataAsset.h"
 #include "Net/UnrealNetwork.h"
@@ -199,21 +196,14 @@ void AAstroCharacter::StopSwift(const FInputActionValue& Value)
 }
 
 
-void AAstroCharacter::Search(const FInputActionValue& Value) {
-	auto NearInteract = Cast<IInteractObjInterface>(GetNearestObject());
-	if (nullptr != NearInteract) {
-		NearInteract->OnActivating();
-		CharacterStat->bSearch = true;
-	}
+void AAstroCharacter::Search(const FInputActionValue& Value) 
+{
+	OnActivateEvent.ExecuteIfBound();
 }
 
 void AAstroCharacter::UnSearch(const FInputActionValue& Value)
 {
-	auto NearInteract = Cast<IInteractObjInterface>(GetNearestObject());
-	if (nullptr != NearInteract) {
-		NearInteract->StopActivating();
-	}
-	CharacterStat->bSearch = false;
+	OnDeActivateEvent.ExecuteIfBound();
 }
 
 void AAstroCharacter::Exploring(const FInputActionValue& Value)
@@ -241,18 +231,6 @@ void AAstroCharacter::Jumping(const FInputActionValue& Value)
 
 #pragma region Mission
 
-//void AAstroCharacter::Req_MissionClear_Implementation(FName ObjectName)
-//{
-//	auto GameState = CastChecked<IAstroMissionManager>(GetWorld()->GetGameState());
-//	if (GameState == nullptr)
-//	{
-//		UE_LOG(LogTemp, Log, TEXT("NULL GAMEMODE"));
-//		return;
-//	}
-//
-//	GameState->Resp_MissionClear(PlayerType, ObjectName);
-//}
-
 void AAstroCharacter::Req_MissionClear(FName ObjectName)
 {
 	MissionComponent->ClearCheck(ObjectName);
@@ -275,6 +253,7 @@ void AAstroCharacter::HUDUpdate(FName InMissionID)
 
 
 #pragma endregion
+
 void AAstroCharacter::ExploreCheck(float DeltaTime)
 {
 
@@ -288,20 +267,6 @@ void AAstroCharacter::ExploreCheck(float DeltaTime)
 	}
 }
 
-UObject* AAstroCharacter::GetNearestObject()
-{
-	double MinDist = INT32_MAX;
-	UObject* RetObj = nullptr;
-	for (auto Hit : HitObj) {
-		if (nullptr != Hit) {
-			if (MinDist > FVector::Distance(GetActorLocation(), Hit->GetActorLocation())) {
-				RetObj = Hit;
-			}
-		}
-	}
-	return RetObj;
-
-}
 
 void AAstroCharacter::SetControlMode() {
 	SpringArm->TargetArmLength = DefaultDistance;
@@ -349,18 +314,6 @@ void AAstroCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 }
 
 
-void AAstroCharacter::SearchObjectHit(AActor* Obj, bool bInAndOut)
-{
-	if (bInAndOut) {
-		HitObj.Emplace(Obj);
-	}
-	else {
-		if (HitObj.Contains(Obj)) {
-			HitObj.Remove(Obj);
-		}
-	}
-}
-
 void AAstroCharacter::ExploreWidgetVisibleSet(bool InVisible) 
 {
 	UFunction* Function = AstroHUD->GetClass()->FindFunctionByName("SetVisibleUserStatus");
@@ -369,6 +322,23 @@ void AAstroCharacter::ExploreWidgetVisibleSet(bool InVisible)
 		CharacterStat->SetExploring(InVisible);
 		AstroHUD->ProcessEvent(Function, &CharacterStat->GetExplore());
 	}
+}
+
+FOnCharacterActivateObject& AAstroCharacter::ReturnActivateObjectDelegate()
+{
+	// TODO: insert return statement here
+	return OnActivateEvent;
+}
+
+FOnCharacterStopActivateObject& AAstroCharacter::ReturnDeactivateObjectDelegate()
+{
+	// TODO: insert return statement here
+	return OnDeActivateEvent;
+}
+
+void AAstroCharacter::OnObjectCollided(FOnActivatedComplete& InActivatedDelegate, FOnTakeItemDelegate& InTakeItemDelegate)
+{
+
 }
 
 void AAstroCharacter::ActiveItemWidget()

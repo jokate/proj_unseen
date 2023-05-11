@@ -45,7 +45,9 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
+	
+	UPROPERTY(VisibleAnywhere, Meta = (PrivateAccess = "true"))
+	TArray<class UAstroItemData*> ItemContainer;
 public:	
 	void ItemWidgetActive();
 protected :

@@ -35,4 +35,6 @@ public :
 	void AddItemData(UObject* ItemData);
 
 	void SetTextData(UAstroItemData* InItemData);
+
+	void SetTextDefault();
 };

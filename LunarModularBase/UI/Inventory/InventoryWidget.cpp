@@ -25,3 +25,9 @@ void UInventoryWidget::SetTextData(UAstroItemData* InItemData)
 	ItemNameText->SetText(FText::FromString(InItemData->ItemName));
 	ItemDescriptionText->SetText(FText::FromString(InItemData->ItemDescription));
 }
+
+void UInventoryWidget::SetTextDefault()
+{
+	ItemNameText->SetText(FText::FromString(TEXT("")));
+	ItemDescriptionText->SetText(FText::FromString(TEXT("")));
+}

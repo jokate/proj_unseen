@@ -29,4 +29,6 @@ public :
 	FORCEINLINE virtual EPlayerType ReturnTag() override { return EPlayerType::PLAYER_FRONT; }
 
 	virtual void TakeItem(UAstroItemData* InItemData) override;
+
+	virtual void OnObjectCollided(FOnActivatedComplete& InActivaedDelegate, FOnTakeItemDelegate& InTakeItemDelegate) override;
 };

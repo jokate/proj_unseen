@@ -16,23 +16,27 @@ void UInventorySlotWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	ItemButton->OnClicked.AddDynamic(this, &UInventorySlotWidget::OnPressedItemButton);
-	ItemActivationWidget->ItemActionButton->OnClicked.AddDynamic(this, &UInventorySlotWidget::OnActivationItemButton);
 	ItemButton->OnHovered.AddDynamic(this, &UInventorySlotWidget::OnHoveredItemButton);
+	ItemButton->OnUnhovered.AddDynamic(this, &UInventorySlotWidget::UnHoveredItemButton);
 	
 }
 
 void UInventorySlotWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
-	IUserObjectListEntry::NativeOnListItemObjectSet(ListItemObject);
 
 	ItemData = Cast<UAstroItemData>(ListItemObject);
 
 	check(ItemData);
 	ItemImage->SetBrushFromTexture(ItemData->ItemImage);
 	if (ItemData->Type == EItemType::Active)
+	{
 		ItemActivationWidget->ButtonSet(true);
+		ItemActivationWidget->ItemActionButton->OnClicked.AddDynamic(this, &UInventorySlotWidget::OnActivationItemButton);
+	}
 	else
+	{
 		ItemActivationWidget->ButtonSet(false);
+	}
 }
 
 void UInventorySlotWidget::OnPressedItemButton()
@@ -52,5 +56,12 @@ void UInventorySlotWidget::OnHoveredItemButton()
 {
 	UE_LOG(LogTemp, Log, TEXT("Hovered"));
 	IAstroHUDInterface* HUD =  CastChecked<IAstroHUDInterface>(GetOwningPlayer()->GetHUD());
-	HUD->ItemUpdateWhenHovered(ItemData);
+	HUD->TextUpdateWhenHovered(ItemData);
+}
+
+void UInventorySlotWidget::UnHoveredItemButton()
+{
+	IAstroHUDInterface* HUD = CastChecked<IAstroHUDInterface>(GetOwningPlayer()->GetHUD());
+	HUD->TextUpdateWhenUnHovered();
+	ItemActivationWidget->ItemActionButton->SetVisibility(ESlateVisibility::Hidden);
 }

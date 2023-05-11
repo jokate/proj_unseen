@@ -37,5 +37,7 @@ public:
 
 	virtual void ActiveItemWidget() = 0;
 
-	virtual void ItemUpdateWhenHovered(class UAstroItemData* InItemData) = 0;
+	virtual void TextUpdateWhenHovered(class UAstroItemData* InItemData) = 0;
+
+	virtual void TextUpdateWhenUnHovered() = 0;
 };

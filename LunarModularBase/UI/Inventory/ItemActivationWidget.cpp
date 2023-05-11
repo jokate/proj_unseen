@@ -10,7 +10,6 @@ void UItemActivationWidget::NativeConstruct()
 { 
 	Super::NativeConstruct();
 	ItemActionButton->SetVisibility(ESlateVisibility::Hidden);
-	
 }
 
 void UItemActivationWidget::SetItemActivateWidgetActive()
@@ -23,7 +22,6 @@ void UItemActivationWidget::SetItemActivateWidgetActive()
 
 void UItemActivationWidget::ButtonSet(bool bIsItemActive)
 {
-	ItemActionButton->SetIsEnabled(bIsItemActive);
 	if (!bIsItemActive)
 		ItemActionText->SetText(FText::FromString(TEXT("작동 불가")));
 }
