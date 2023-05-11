@@ -32,4 +32,10 @@ public:
 
 	UFUNCTION()
 	virtual void SetPlayerHPText(uint32& InHp) = 0;
+
+	virtual void AddItem(UObject* InItemData) = 0;
+
+	virtual void ActiveItemWidget() = 0;
+
+	virtual void ItemUpdateWhenHovered(class UAstroItemData* InItemData) = 0;
 };

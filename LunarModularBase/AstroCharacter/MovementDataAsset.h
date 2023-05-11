@@ -39,6 +39,9 @@ public :
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputTurn;
+		
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UInputAction* ItemUse;
 
 	
 };

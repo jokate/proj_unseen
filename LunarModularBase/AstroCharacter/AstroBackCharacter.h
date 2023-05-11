@@ -20,5 +20,6 @@ public :
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	FORCEINLINE virtual EPlayerType ReturnTag() override { return EPlayerType::PLAYER_BACK; }
-
+	virtual void Req_MissionClear(FName ObjectName) override;
+	virtual void TakeItem(UAstroItemData* InItemData) override;
 };

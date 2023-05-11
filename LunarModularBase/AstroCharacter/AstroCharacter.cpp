@@ -13,6 +13,9 @@
 //Mission
 #include "Mission/MissionComponent.h"
 
+//Item Component
+#include "Item/ItemComponent.h"
+
 //For Movement 
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -58,6 +61,7 @@ AAstroCharacter::AAstroCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	CharacterStat = CreateDefaultSubobject<UAstroCharacterStatusComponent>(TEXT("ASTROSTATUS"));
 	MissionComponent = CreateDefaultSubobject<UMissionComponent>(TEXT("MISSION"));
+	ItemComponent = CreateDefaultSubobject<UItemComponent>(TEXT("ITEM"));
 
 	SpringArm->SetupAttachment(GetCapsuleComponent());
 	Camera->SetupAttachment(SpringArm);
@@ -131,7 +135,7 @@ void AAstroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PEI->BindAction(InputActions->InputLeftRight, ETriggerEvent::Triggered, this, &AAstroCharacter::LeftRight);
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Triggered, this, &AAstroCharacter::Search);
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Completed, this, &AAstroCharacter::UnSearch);
-
+	PEI->BindAction(InputActions->ItemUse, ETriggerEvent::Triggered, this, &AAstroCharacter::ActiveItemWidget);
 }
 
 
@@ -321,6 +325,7 @@ void AAstroCharacter::On_RepMovementSpeedUpdate()
 }
 
 
+
 void AAstroCharacter::OnMovementSpeedUpdate()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Speed : %f"), MovementSpeed);
@@ -366,3 +371,18 @@ void AAstroCharacter::ExploreWidgetVisibleSet(bool InVisible)
 	}
 }
 
+void AAstroCharacter::ActiveItemWidget()
+{
+	ItemComponent->ItemWidgetActive();
+}
+
+void AAstroCharacter::TakeItem(UAstroItemData* InItemData)
+{
+	ItemComponent->InitItem(InItemData);
+}
+
+void AAstroCharacter::UseItem(UAstroItemData* InItemData)
+{
+	UE_LOG(LogTemp, Log, TEXT("Item Use"));
+	ItemComponent->ItemUse(InItemData);
+}

@@ -6,11 +6,12 @@
 #include "GameFramework/Character.h"
 #include "Interface/AstroCharacterInterface.h"
 #include "Interface/AstroMissionClearInterface.h"
+#include "Interface/AstroItemInterface.h"
 #include "AstroCharacter.generated.h"
 
 
 UCLASS()
-class LUNARMODULARBASE_API AAstroCharacter : public ACharacter, public IAstroCharacterInterface, public IAstroMissionClearInterface
+class LUNARMODULARBASE_API AAstroCharacter : public ACharacter, public IAstroCharacterInterface, public IAstroMissionClearInterface, public IAstroItemInterface
 {
 	GENERATED_BODY()
 
@@ -117,5 +118,16 @@ protected :
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
 	class UMovementDataAsset* InputActions;
+	
+	//Item Section
+protected :
+	UPROPERTY(VisibleAnywhere, Category = "Item Component", Meta = (PrivateAccess = "true"))
+	TObjectPtr<class UItemComponent> ItemComponent;
+
+	void ActiveItemWidget();
+
+	virtual void TakeItem(class UAstroItemData* InItemData) override;
+
+	virtual void UseItem(class UAstroItemData* InItemData) override;
 
 };

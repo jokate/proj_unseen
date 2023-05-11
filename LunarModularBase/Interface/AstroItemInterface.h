@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "MissionGameModeInterface.generated.h"
+#include "AstroItemInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UMissionGameModeInterface : public UInterface
+class UAstroItemInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,10 +16,12 @@ class UMissionGameModeInterface : public UInterface
 /**
  * 
  */
-class LUNARMODULARBASE_API IMissionGameModeInterface
+class LUNARMODULARBASE_API IAstroItemInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	virtual void UseItem(class UAstroItemData* InItemData) = 0;
+
 };

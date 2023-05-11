@@ -3,6 +3,8 @@
 
 #include "AstroCharacter/AstroFrontCharacter.h"
 #include "Mission/AstroMissionSingleton.h"
+#include "Mission/MissionComponent.h"
+#include "Item/AstroItemData.h"
 
 AAstroFrontCharacter::AAstroFrontCharacter()
 {
@@ -29,6 +31,23 @@ void AAstroFrontCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+
+void AAstroFrontCharacter::Req_MissionClear(FName ObjectName)
+{
+	FString RequestID = ObjectName.ToString();
+	if (!RequestID.Contains(ASTRO_COOP_ID))
+		RequestID = ASTRO_FRONT_ID + RequestID;
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *RequestID);
+	MissionComponent->ClearCheck(FName(*RequestID));
+}
+
+void AAstroFrontCharacter::TakeItem(UAstroItemData* InItemData)
+{
+	Super::TakeItem(InItemData);
+	Req_MissionClear(InItemData->ItemID);
+}
+
 
 
 

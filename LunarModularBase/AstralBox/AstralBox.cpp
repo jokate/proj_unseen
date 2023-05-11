@@ -71,6 +71,8 @@ void AAstralBox::SetObjActiveComplete()
 {
 	auto CastedPlayer = Cast<IAstroMissionClearInterface>(Player);
 	if (CastedPlayer != nullptr) {
+		if(this->ObjectItemData)
+			CastedPlayer->TakeItem(this->ObjectItemData);
 		CastedPlayer->Req_MissionClear(ObjectID);
 	}
 	SetActorEnableCollision(false);

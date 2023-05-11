@@ -5,7 +5,7 @@
 #include "Mission/AstroMissionSingleton.h"
 #include "Mission/Mission.h"
 
-#include "GameFramework/GameStateBase.h"
+#include "GameFramework/GameModeBase.h"
 #include "GameFramework/HUD.h"
 #include "GameFramework/PlayerController.h"
 

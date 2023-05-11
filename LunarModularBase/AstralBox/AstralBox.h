@@ -62,11 +62,16 @@ public :
 	FName ObjectID = "";
 	
 
-private :
+protected :
 	UFUNCTION()
 	void OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
 	void OnCharacterOverlapOut(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	//Item Section
+protected :
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (PrivateAccess = "true"), Category = ItemData)
+	TObjectPtr<class UAstroItemData> ObjectItemData;
 
 };

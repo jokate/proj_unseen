@@ -30,4 +30,6 @@ public:
 	virtual EPlayerType ReturnTag() = 0;
 
 	virtual void PlayerTypeSetting(EPlayerType InPlayerType) = 0;
+
+	virtual void TakeItem(class UAstroItemData* InItemData) = 0;
 };

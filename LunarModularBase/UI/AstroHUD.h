@@ -12,6 +12,7 @@
  */
 class UMissionWidget;
 class UAstroCharacterWidget;
+class UInventoryWidget;
 
 UCLASS()
 class LUNARMODULARBASE_API AAstroHUD : public AHUD, public IAstroHUDInterface
@@ -22,25 +23,34 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void DrawHUD() override;
-	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
+	//HUD Setting Function
+public :
 	virtual void UpdateMissionText(FString& MissionText) override;
 
-	UFUNCTION()
 	virtual void UpdateMissionScriptText(FString& MissionScript) override;
 
 	UFUNCTION()
 	virtual void SetVisibleUserStatus(bool& InVisible) override;
-
 	UFUNCTION()
 	virtual	void SetPlayerHPText(uint32& InHp) override;
 
+	virtual void AddItem(UObject* InItemData) override;
+
+	virtual void ActiveItemWidget() override;
+
+	virtual void ItemUpdateWhenHovered(class UAstroItemData* InItemData) override;
+
+
+public :
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
 	TSubclassOf<UMissionWidget> MissionWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "User Status Widget")
 	TSubclassOf<UAstroCharacterWidget> UserStatusClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory Widget")
+	TSubclassOf<UInventoryWidget> InventoryClass;
 
 
 private:
@@ -50,5 +60,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "User Status Widget")
 	TObjectPtr<UAstroCharacterWidget> UserStatusWidget;
 
-
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory Widget")
+	TObjectPtr<UInventoryWidget> InventoryWidget;
 };
