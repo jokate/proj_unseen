@@ -15,56 +15,58 @@ UAstralBoxWidget::UAstralBoxWidget(const FObjectInitializer& ObjectInitializer) 
 	if (UIDATA_ASSET.Succeeded()) 
 	{
 		BoxUIDataAsset = UIDATA_ASSET.Object;
-	}
-	
+	}	
 }
 
 void UAstralBoxWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	DynamicUIMaterialInstance = UMaterialInstanceDynamic::Create(BoxUIDataAsset->PercentInstance, DynamicUIMaterialInstance);
+	DynamicUIMaterialInstance->SetScalarParameterValue("Percent", 0.0f);
 	CanvasPanel = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("LoadPanel")));
 	PercentTargetImage = Cast<UImage>(GetWidgetFromName(TEXT("Percentage")));
 	PercentTargetImage->SetBrushFromMaterial(DynamicUIMaterialInstance);
+	OnPlayerTriggered(false);
+}
+
+void UAstralBoxWidget::OnActivateButtonPressed()
+{
+	GetWorld()->GetTimerManager().SetTimer(ActivationTimer, [&]() {
+		SetPercentage(CurrentPercentage + ActivateIncreasePercentage);
+	}, ActivateIncreasePercentage, true);
+}
+
+FOnActivated& UAstralBoxWidget::ActivatedEventBind()
+{
+	// TODO: insert return statement here
+	return OnActivated;
+}
+
+void UAstralBoxWidget::OnActivateButtonReleased()
+{
 	SetPercentage(0.0f);
-	UpdateVisible(false);
+	GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
 }
 
-void UAstralBoxWidget::VisibilitySet(OnVisible& VisibleFunc)
+void UAstralBoxWidget::SetPercentage(float InPercentage)
 {
-	if (VisibleFunc.IsBound()) {
-		UpdateVisible(VisibleFunc.Execute());
-	}
-
-}
-
-void UAstralBoxWidget::PercentSet(OnActivate& Activated) 
-{
-	if (Activated.IsBound()) {
-		SetPercentage(Activated.Execute());
+	CurrentPercentage = InPercentage;
+	DynamicUIMaterialInstance->SetScalarParameterValue("Percent", InPercentage);
+	if(CurrentPercentage > CompletePercentage)
+	{
+		OnActivated.ExecuteIfBound();
+		OnActivated.Unbind();
+		GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
 	}
 }
 
-void UAstralBoxWidget::SetPercentage(float Percentage)
+void UAstralBoxWidget::OnPlayerTriggered(bool bIsTriggered)
 {
-	if (nullptr != DynamicUIMaterialInstance)
-		DynamicUIMaterialInstance->SetScalarParameterValue("Percent", Percentage);
-	if (Percentage > 1.0f) {
-		CanvasPanel->SetVisibility(ESlateVisibility::Hidden);
+	if (bIsTriggered) {
+		CanvasPanel->SetVisibility(ESlateVisibility::Visible);
 		return;
 	}
-}
-
-void UAstralBoxWidget::UpdateVisible(bool InBoolean)
-{
-	if (CanvasPanel != nullptr) {
-		if (InBoolean) {
-			CanvasPanel->SetVisibility(ESlateVisibility::Visible);
-		}
-		else {
-			CanvasPanel->SetVisibility(ESlateVisibility::Hidden);
-		}
-	}
+	CanvasPanel->SetVisibility(ESlateVisibility::Hidden);
 }
 
 

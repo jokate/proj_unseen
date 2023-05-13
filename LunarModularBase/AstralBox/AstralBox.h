@@ -28,18 +28,15 @@ protected:
 
 	void StopActivating();
 
-	void VisibleSetting(bool InBoolean);
-
-	void ActivationSetting(float Percentage);
 public:	
 	UPROPERTY(VisibleAnywhere, Category = Box)
 	TObjectPtr<UStaticMeshComponent> Box;
 
-	UPROPERTY(VisibleAnywhere, Category = Stat)
-	TObjectPtr<class UAstralBoxComponent> BoxStat;
-
 	UPROPERTY(VisibleAnywhere, Category = UI)
 	TObjectPtr<class UWidgetComponent> ActivationWidget;
+
+	UPROPERTY(VisibleAnywhere, Category = AccessChecker)
+	TObjectPtr<class UAccessControlComponent> AccessChecker;
 
 	UPROPERTY(VisibleAnywhere, Category = Box)
 	TObjectPtr<class USphereComponent> Trigger;
@@ -58,7 +55,6 @@ protected :
 
 	UFUNCTION()
 	void OnCharacterOverlapOut(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
 	//Item Section
 protected :
 	FOnActivatedComplete OnActiveCompleted;

@@ -183,18 +183,11 @@ void AAstroCharacter::Turn(const FInputActionValue& Value)
 void AAstroCharacter::Swift(const FInputActionValue& Value)
 {
 	Server_Swift(SwiftSpeed);
-	if (!HasAuthority()) {
-		UE_LOG(LogTemp, Log, TEXT("Speed : %f"), MovementSpeed);
-	}
 }
 void AAstroCharacter::StopSwift(const FInputActionValue& Value)
 {
 	Server_Swift(DefaultSpeed);
-	if (!HasAuthority()) {
-		UE_LOG(LogTemp, Log, TEXT("Speed : %f"), MovementSpeed);
-	}
 }
-
 
 void AAstroCharacter::Search(const FInputActionValue& Value) 
 {
@@ -225,7 +218,6 @@ void AAstroCharacter::Jumping(const FInputActionValue& Value)
 	Super::Jump();
 	ExploreWidgetVisibleSet(false);
 }
-
 
 #pragma endregion
 
@@ -355,4 +347,9 @@ void AAstroCharacter::UseItem(UAstroItemData* InItemData)
 {
 	UE_LOG(LogTemp, Log, TEXT("Item Use"));
 	ItemComponent->ItemUse(InItemData);
+}
+
+bool AAstroCharacter::ContainsItem(FName ItemData)
+{
+	return ItemComponent->ItemContainCheck(ItemData);
 }

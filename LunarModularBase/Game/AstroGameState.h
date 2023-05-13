@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
-#include "AstroDefinition.h"
-#include "Interface/AstroMissionManager.h"
+#include "Interface/AstroGameStateInterface.h"
 #include "AstroGameState.generated.h"
 
 
 
 UCLASS()
-class LUNARMODULARBASE_API AAstroGameState : public AGameStateBase {
+class LUNARMODULARBASE_API AAstroGameState : public AGameStateBase , public IAstroGameStateInterface
+{
 	GENERATED_BODY()
 	
 public :
@@ -27,7 +27,6 @@ protected :
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-
 	//Mission Update Event
 protected :
 	UFUNCTION()
@@ -36,11 +35,20 @@ protected :
 	UFUNCTION()
 	void BackMissionIDUpdated();
 
+	// Mission Container Function
+protected:
+	void AddClearedMissionToList(FName InMissionName);
+
+	virtual bool IsContainMissionID(FName InMissionID) override;
+
 private:
 	UPROPERTY(ReplicatedUsing = FrontMissionIDUpdated, VisibleAnywhere, Meta = (PrivateAccess = "true"))
 	FName CurrentFrontMissionID;
 
 	UPROPERTY(ReplicatedUsing = BackMissionIDUpdated, VisibleAnywhere, Meta = (PrivateAccess = "true"))
 	FName CurrentBackMissionID;
+
+	UPROPERTY(Replicated, VisibleAnywhere, Meta = (PrivateAccess = "true"))
+	TArray<FName> ClearedMissionList;
 };
 

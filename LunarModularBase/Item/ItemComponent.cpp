@@ -35,6 +35,7 @@ void UItemComponent::ItemWidgetActive()
 
 void UItemComponent::InitItem(UAstroItemData* ItemData)
 {	
+	ItemContainStatus.Add(ItemData->ItemID);
 	ItemContainer.Add(ItemData);
 	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
 	if (PlayerHUD != nullptr && GetOwnerRole() == ENetRole::ROLE_AutonomousProxy) {
@@ -62,6 +63,11 @@ void UItemComponent::OperateItem(UAstroItemData* InItemData)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Item Operated"));
 	RequestMissionClearCheck(InItemData);
+}
+
+bool UItemComponent::ItemContainCheck(FName InItemID)
+{
+	return ItemContainStatus.Contains(InItemID);
 }
 
 void UItemComponent::RequestMissionClearCheck_Implementation(UAstroItemData* InItemData)

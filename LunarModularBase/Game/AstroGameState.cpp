@@ -17,11 +17,13 @@ AAstroGameState::AAstroGameState()
 
 void AAstroGameState::SetFrontMissionID(FName InMissionID)
 {
+	AddClearedMissionToList(CurrentFrontMissionID);
 	CurrentFrontMissionID = InMissionID;
 }
 
 void AAstroGameState::SetBackMissionID(FName InMissionID)
 {
+	AddClearedMissionToList(CurrentBackMissionID);
 	CurrentBackMissionID = InMissionID;
 }
 
@@ -37,6 +39,7 @@ void AAstroGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 	DOREPLIFETIME(AAstroGameState, CurrentFrontMissionID);
 	DOREPLIFETIME(AAstroGameState, CurrentBackMissionID);
+	DOREPLIFETIME(AAstroGameState, ClearedMissionList);
 }
 
 void AAstroGameState::FrontMissionIDUpdated()
@@ -55,4 +58,15 @@ void AAstroGameState::BackMissionIDUpdated()
 		UE_LOG(LogTemp, Log, TEXT("BACKMISSIONUPDATED"));
 		Pawn->HUDUpdate(CurrentBackMissionID);
 	}
+}
+
+void AAstroGameState::AddClearedMissionToList(FName InMissionName)
+{
+	if(!ClearedMissionList.Contains(InMissionName) || !InMissionName.IsEqual("None"))
+		ClearedMissionList.Add(InMissionName);
+}
+
+bool AAstroGameState::IsContainMissionID(FName InMissionID)
+{
+	return ClearedMissionList.Contains(InMissionID);
 }

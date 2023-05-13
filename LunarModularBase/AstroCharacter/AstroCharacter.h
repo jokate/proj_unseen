@@ -134,4 +134,5 @@ protected :
 
 	virtual void UseItem(class UAstroItemData* InItemData) override;
 
+	virtual bool ContainsItem(FName ItemData) override;
 };

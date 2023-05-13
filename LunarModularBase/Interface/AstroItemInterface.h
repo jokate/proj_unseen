@@ -24,4 +24,5 @@ class LUNARMODULARBASE_API IAstroItemInterface
 public:
 	virtual void UseItem(class UAstroItemData* InItemData) = 0;
 
+	virtual bool ContainsItem(FName ItemData) = 0;
 };

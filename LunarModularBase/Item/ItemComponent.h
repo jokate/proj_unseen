@@ -45,7 +45,10 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	
+
+	UPROPERTY(VisibleAnywhere, Meta = (PrivateAccess = "true"))
+	TArray<FName> ItemContainStatus;
+
 	UPROPERTY(VisibleAnywhere, Meta = (PrivateAccess = "true"))
 	TArray<class UAstroItemData*> ItemContainer;
 public:	
@@ -56,6 +59,9 @@ protected :
 public :
 	void InitItem(UAstroItemData* ItemData);
 
+	UPROPERTY()
+	TArray<FName> IDContainer;
+
 	//Item Use Events
 public : 
 	UPROPERTY()
@@ -63,6 +69,7 @@ public :
 
 	void ItemUse(UAstroItemData* InItemData);
 
+	bool ItemContainCheck(FName InItemID);
 protected:
 
 	void InstallItem(UAstroItemData* InItemData);

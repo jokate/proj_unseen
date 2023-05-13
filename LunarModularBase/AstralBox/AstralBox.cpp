@@ -1,15 +1,14 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AstralBox.h"
-#include "AstralBoxComponent.h"
+#include "AstralBox/AstralBox.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/GameStateBase.h"
-#include "UI/AstroInteractionObj/AstralBoxWidget.h"
 
+#include "AccessControl/AccessControlComponent.h"
 //Interface Header
 #include "Interface/AstroCharacterInterface.h"
-
+#include "Interface/InteractionWidgetInterface.h"
 //Data Asset
 #include "InteractionObjDataAsset.h"
 
@@ -24,11 +23,11 @@ AAstralBox::AAstralBox()
 	}
 
 	check(DataAsset != nullptr);
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+
 	PrimaryActorTick.bCanEverTick = false;
 	Box = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BOX"));
-	BoxStat = CreateDefaultSubobject<UAstralBoxComponent>(TEXT("BOXSTATUS"));	
 	ActivationWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("ACTIVATION"));
+	AccessChecker = CreateDefaultSubobject<UAccessControlComponent>(TEXT("ACCESSCHECKER"));
 	Trigger = CreateDefaultSubobject<USphereComponent>(TEXT("TRIGGER"));
 
 	RootComponent = Box;
@@ -54,6 +53,8 @@ void AAstralBox::BeginPlay()
 {
 	Super::BeginPlay();
 
+	IInteractionWidgetInterface* ActivationWidgetObject = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetUserWidgetObject());
+	ActivationWidgetObject->ActivatedEventBind().BindUObject(this, &AAstralBox::SetObjActiveComplete);
 }
 
 void AAstralBox::PostInitializeComponents()
@@ -72,51 +73,42 @@ void AAstralBox::SetObjActiveComplete()
 
 void AAstralBox::OnActivating()
 {
-	GetWorld()->GetTimerManager().SetTimer(ActivationTimer, [&]() {
-		if (BoxStat->Percentage < 1.0f) {
-			ActivationSetting(0.05f);
-		}
-		else {
-			SetObjActiveComplete();
-			GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
-			
-		}
-	}, 0.05f, true);
+	IInteractionWidgetInterface* ActivationWidgetObject = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetUserWidgetObject());
+	ActivationWidgetObject->OnActivateButtonPressed();
 }
 
 void AAstralBox::StopActivating()
 {
-	GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
-	ActivationSetting(0.0f);
+	IInteractionWidgetInterface* ActivationWidgetObject = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetUserWidgetObject());
+	ActivationWidgetObject->OnActivateButtonReleased();
 }
 
 void AAstralBox::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("충둘하였음"));
+	if (!AccessChecker->CanBeActivated(OtherActor))
+		return;
+
 	auto MissionClearInterface = CastChecked<IAstroMissionClearInterface>(OtherActor);
 
-	if(OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && MissionClearInterface)
+	if(OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy)
 	{
 		MissionClearInterface->OnObjectCollided(OnActiveCompleted, OnItemIsGiven);
 	}
 
 	auto CharacterInterface = CastChecked<IAstroCharacterInterface>(OtherActor);
 	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy) {
-
 		CharacterInterface->ReturnActivateObjectDelegate().BindUObject(this, &AAstralBox::OnActivating);
 		CharacterInterface->ReturnDeactivateObjectDelegate().BindUObject(this, &AAstralBox::StopActivating);
 
-		BoxStat->SetActable(true);
-		VisibleSetting(true);
+		IInteractionWidgetInterface* ActivationWidgetObject = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetUserWidgetObject());
+		ActivationWidgetObject->OnPlayerTriggered(true);
 	}
 }
 
 void AAstralBox::OnCharacterOverlapOut(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if(OtherActor == this) 
-	{
+	if (OtherActor == this || !AccessChecker->CanBeActivated(OtherActor))
 		return;
-	}
 
 	auto MissionClearInterface = CastChecked<IAstroMissionClearInterface>(OtherActor);
 	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy)
@@ -132,32 +124,8 @@ void AAstralBox::OnCharacterOverlapOut(UPrimitiveComponent* OverlappedComp, AAct
 		CharacterInterface->ReturnActivateObjectDelegate().Unbind();
 		CharacterInterface->ReturnDeactivateObjectDelegate().Unbind();
 
-		VisibleSetting(false);
-		ActivationSetting(0.0f);
+		IInteractionWidgetInterface* ActivationWidgetObject = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetUserWidgetObject());
+		ActivationWidgetObject->OnPlayerTriggered(false);
 	}
-}
 
-void AAstralBox::VisibleSetting(bool InBoolean)
-
-{
-	IWidgetInterface* WidgetVisibleAction = CastChecked<IWidgetInterface>(ActivationWidget->GetUserWidgetObject());
-	OnVisible Visible;
-	Visible.BindLambda([&]() 
-	{
-		return BoxStat->SetActable(InBoolean);
-	});
-
-	WidgetVisibleAction->VisibilitySet(Visible);
-}
-
-void AAstralBox::ActivationSetting(float Percentage)
-{
-	IInteractionWidgetInterface* WidgetVisibleAction = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetUserWidgetObject());
-	OnActivate Activate;
-	Activate.BindLambda([&]() 
-	{
-		return BoxStat->SettingPercent(Percentage);
-	});
-
-	WidgetVisibleAction->PercentSet(Activate);
 }
