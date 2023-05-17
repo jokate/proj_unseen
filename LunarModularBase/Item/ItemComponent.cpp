@@ -35,6 +35,8 @@ void UItemComponent::ItemWidgetActive()
 
 void UItemComponent::InitItem(UAstroItemData* ItemData)
 {	
+	if (!ItemData)
+		return;
 	ItemContainStatus.Add(ItemData->ItemID);
 	ItemContainer.Add(ItemData);
 	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));

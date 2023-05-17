@@ -18,14 +18,19 @@ enum class EMissionType : uint8 {
 	MISSION_SHARED
 };
 
+UENUM(BlueprintType)
+enum class EInteractiveType : uint8 
+{
+	NORMAL,
+	TIMELIMIT
+};
+
 USTRUCT(BlueprintType)
 struct FMissionData : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FName MissionID = "";
+public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	EMissionType MissionType = EMissionType::MISSION_INTERACTION;
@@ -37,26 +42,40 @@ struct FMissionData : public FTableRowBase
 	FName NextMissionID = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FName MissionItemID = "";
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	FString MissionScript = "";
 
+};
+
+USTRUCT(BlueprintType)
+struct FInteractiveMissionData : public FTableRowBase 
+{
+	GENERATED_BODY()
+	
+public :
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FName NeedToClear = "";
+	EInteractiveType InteractionType = EInteractiveType::NORMAL;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	FName MissionItemID = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int32 ActCount = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	uint8 bIsSharedGoal = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FName AfterSharedFront = "";
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FName AfterSharedBack = "";
+	float Time = 0;
 };
+
+
+USTRUCT(BlueprintType)
+struct FWaitMissionData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	FName NeedToClear = "";
+};
+
 
 UENUM(BlueprintType)
 enum class EPlayerType : uint8 {

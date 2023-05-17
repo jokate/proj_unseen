@@ -11,44 +11,60 @@
 /**
  * 
  */
-DECLARE_DELEGATE_RetVal_OneParam(class UMission*, FOnCollabMissionChange, FString);
+DECLARE_DELEGATE_RetVal_OneParam(class UAstroMissionBase*, FOnMissionChanged, FName);
 
 USTRUCT(BlueprintType)
-struct	FCollabMissionDistributor {
+struct	FMissionGenerator {
 	GENERATED_BODY()
 
-	FCollabMissionDistributor() {}
-	FCollabMissionDistributor(const FOnCollabMissionChange& InCollabMission) : CollabMissionDistributor(InCollabMission) {}
+	FMissionGenerator() {}
+	FMissionGenerator(const FOnMissionChanged& InMissionChangeEvent) : MissionChange(InMissionChangeEvent) {}
 
-	FOnCollabMissionChange CollabMissionDistributor;
+	FOnMissionChanged MissionChange;
 };
 class UMission;
+class UAstroMissionBase;
 
 UCLASS()
 class LUNARMODULARBASE_API UAstroMissionSingleton : public UObject
 {
 	GENERATED_BODY()
 	
+	//DataTables
 protected :
+
 	UPROPERTY()
 	TObjectPtr<class UDataTable> MissionTable;
 
-	UPROPERTY(VisibleAnywhere)
-	TMap<FString, FMissionData> Missions;
+	UPROPERTY()
+	TObjectPtr<class UDataTable> InteractiveMissionDatabase;
 
 	UPROPERTY()
-	TMap<EPlayerType, FCollabMissionDistributor> CollabMissionDistributors;
+	TObjectPtr<class UDataTable> WaitMissionDatabase;
+
+	UPROPERTY(VisibleAnywhere)
+	TMap<FName, FMissionData> Missions;
+
+	UPROPERTY(VisibleAnywhere)
+	TMap<FName, FInteractiveMissionData> InteractiveMissionData;
+
+	UPROPERTY(VisibleAnywhere)
+	TMap<FName, FWaitMissionData> WaitMissionData;
+
+public :
+	TMap<EMissionType, FMissionGenerator> MissionGenerator;
+
+	UAstroMissionBase* InteractiveMissionReturn(FName InMissionID);
+
+	UAstroMissionBase* WaitMissionReturn(FName InMissionID);
+
 public :
 
 	UAstroMissionSingleton();
 	
 	static UAstroMissionSingleton& Get();
 
-	UMission* GetMission(uint8 IsCurrentCollab, EPlayerType PlayerType, FString MissionID);
-
-	UMission* AfterClearCollabFront(FString InMissionID);
-
-	UMission* AfterClearCollabBack(FString InMissionID);
+	UAstroMissionBase* GetMission(FName MissionID);
 
 	FString ReturnMissionScript(FName InMissionID);
 

@@ -31,7 +31,8 @@ bool UAccessControlComponent::GameStateChecker()
 
 bool UAccessControlComponent::PlayerItemChecker(AActor* InCharacterActor)
 {
-	IAstroItemInterface* ItemChecker = CastChecked<IAstroItemInterface>(InCharacterActor);
-
-	return ItemChecker->ContainsItem(NeedItemID);
+	IAstroItemInterface* ItemChecker = Cast<IAstroItemInterface>(InCharacterActor);
+	if(ItemChecker)
+		return ItemChecker->ContainsItem(NeedItemID);
+	return false;
 }

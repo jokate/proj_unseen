@@ -39,6 +39,7 @@ protected :
 protected:
 	void AddClearedMissionToList(FName InMissionName);
 
+public :
 	virtual bool IsContainMissionID(FName InMissionID) override;
 
 private:
@@ -47,6 +48,8 @@ private:
 
 	UPROPERTY(ReplicatedUsing = BackMissionIDUpdated, VisibleAnywhere, Meta = (PrivateAccess = "true"))
 	FName CurrentBackMissionID;
+
+
 
 	UPROPERTY(Replicated, VisibleAnywhere, Meta = (PrivateAccess = "true"))
 	TArray<FName> ClearedMissionList;

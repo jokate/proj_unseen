@@ -38,6 +38,8 @@ void AAstroBackCharacter::Req_MissionClear(FName ObjectName)
 
 void AAstroBackCharacter::TakeItem(UAstroItemData* InItemData)
 {
+	if (!InItemData)
+		return;
 	Super::TakeItem(InItemData);
 	Req_MissionClear(InItemData->ItemID);
 }

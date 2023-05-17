@@ -44,6 +44,8 @@ void AAstroFrontCharacter::Req_MissionClear(FName ObjectName)
 
 void AAstroFrontCharacter::TakeItem(UAstroItemData* InItemData)
 {
+	if (!InItemData)
+		return;
 	Super::TakeItem(InItemData);
 	Req_MissionClear(InItemData->ItemID);
 }

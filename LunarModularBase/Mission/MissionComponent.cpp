@@ -3,7 +3,6 @@
 
 #include "Mission/MissionComponent.h"
 #include "Mission/AstroMissionSingleton.h"
-#include "Mission/Mission.h"
 
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/HUD.h"

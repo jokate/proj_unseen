@@ -22,11 +22,11 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-	void SetObjActiveComplete();
+	virtual void SetObjActiveComplete();
 
-	void OnActivating();
+	virtual void OnActivating();
 
-	void StopActivating();
+	virtual void StopActivating();
 
 public:	
 	UPROPERTY(VisibleAnywhere, Category = Box)

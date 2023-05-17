@@ -55,7 +55,6 @@ void UAstralBoxWidget::SetPercentage(float InPercentage)
 	if(CurrentPercentage > CompletePercentage)
 	{
 		OnActivated.ExecuteIfBound();
-		OnActivated.Unbind();
 		GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
 	}
 }

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out our copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -8,14 +8,38 @@
 #include "Engine/StreamableManager.h"
 #include "AstroGameMode.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FMissionClearCheckerDelegate, FName);
+DECLARE_DELEGATE_RetVal_TwoParams(bool, FOnInteractiveMissionClear, class UAstroInteractiveMission*, FName);
+DECLARE_DELEGATE_RetVal_TwoParams(bool, FOnMissionClearCheck, class UAstroMissionBase*, FName);
+
+
+USTRUCT(BlueprintType)
+struct FMissionChecker {
+
+	GENERATED_BODY()
+
+	FMissionChecker() {}
+
+	FMissionChecker(const FOnMissionClearCheck& InMissionClearChecker) : MissionClearCheck(InMissionClearChecker) {}
+
+	FOnMissionClearCheck MissionClearCheck;
+
+};
+
+USTRUCT(BlueprintType)
+struct FInteractiveMissionChecker
+{
+	GENERATED_BODY()
+
+	FInteractiveMissionChecker() {}
+	FInteractiveMissionChecker(const FOnInteractiveMissionClear& InMissionClear) : MissionClear(InMissionClear) {}
+
+	FOnInteractiveMissionClear MissionClear;
+};
 
 /**
  *
  */
-
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FMissionClearCheckerDelegate, FName)
-DECLARE_MULTICAST_DELEGATE(FOnMissionUpdateEventDelegate)
 
 UCLASS()
 class LUNARMODULARBASE_API AAstroGameMode : public AGameModeBase, public IAstroMissionManager
@@ -39,43 +63,62 @@ private :
 	UPROPERTY()
 	TObjectPtr<class UAstroClassDataSet> ClassDataAsset;
 
-	//Current Missions
-private :
+	//Mission Clear Check Functions
+protected:
+
+	UPROPERTY(VisibleAnywhere, Category = MissioManager, Meta = (PrivateAccess = "true"))
+	TObjectPtr<class UMissionManager> MissionManager;
+	
+	virtual void InMissionIDEventOccured(FName InID) override;
+
+private:
 
 	UPROPERTY()
-	TObjectPtr<class UMission> FrontwardMission;
+	TObjectPtr<class UAstroMissionBase> FrontwardMission;
 
 	UPROPERTY()
-	TObjectPtr<class UMission> BackwardMission;
+	TObjectPtr<class UAstroMissionBase> BackwardMission;
 
 	UPROPERTY()
-	TArray<FName> ClearedMissionList;
-
+	TArray<FName> MissionClearedList;
 
 	//Mission Clear Check Functions
+
 protected:
 	//BroadCast Delegate
 	FMissionClearCheckerDelegate MissionClearChecker;
-
-	virtual void InMissionIDEventOccured(FName InID) override;
 
 	void FrontwardMissionClearChecker(FName InID);
 
 	void FrontwardMissionSetter();
 
+	void FrontwardGameStateSetter();
+
 	void BackwardMissionClearChecker(FName InID);
 
 	void BackwardMissionSetter();
-	
+
+	void BackwardGameStateSetter();
+
 	//When Mission is cleared this function will called.
 	void MissionClearedEvent(FName InID);
 
-	//On Update
-protected :
-	//If Mission is updated, Check whether the Waiting Mission is Completed.
-	FOnMissionUpdateEventDelegate MissionUpdateEvent;
+	FTimer TimerHandle;
 
-	void IsFrontWaitMissionCleared();
+	//Mission Clear Delegate
+protected:
+	UPROPERTY()
+	TMap<EMissionType, FMissionChecker> MissionClearCheckEvent;
 
-	void IsBackWaitMissionCleared();
+	UPROPERTY()
+	TMap<EInteractiveType, FInteractiveMissionChecker> ClearChecker;
+
+	bool InteractiveMissionClearCheck(UAstroMissionBase* MissionBase, FName InObjID);
+
+	bool InteractiveMissionClearInTime(UAstroInteractiveMission* MissionBase, FName InObjID);
+
+	bool InteractiveMissionClearNormal(UAstroInteractiveMission* MissionBase, FName InObjID);
+
+	bool WaitMissionClearCheck(UAstroMissionBase* MissionBase, FName InObjID);
+
 };

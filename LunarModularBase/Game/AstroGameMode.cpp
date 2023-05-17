@@ -9,10 +9,10 @@
 #include "GameFramework/HUD.h"
 #include "GameFramework/GameStateBase.h"
 #include "Engine/AssetManager.h"
-#include "Interface/AstroCharacterInterface.h"
 
-#include "Mission/Mission.h"
+#include "Mission/Missions.h"
 #include "Mission/AstroMissionSingleton.h"
+
 
 AAstroGameMode::AAstroGameMode()
 {
@@ -44,10 +44,15 @@ AAstroGameMode::AAstroGameMode()
 	if (GAME_STATE_CLASS.Class) {
 		GameStateClass = GAME_STATE_CLASS.Class;
 	}
+
 	MissionClearChecker.AddUObject(this, &AAstroGameMode::FrontwardMissionClearChecker);
 	MissionClearChecker.AddUObject(this, &AAstroGameMode::BackwardMissionClearChecker);
-	MissionUpdateEvent.AddUObject(this, &AAstroGameMode::IsFrontWaitMissionCleared);
-	MissionUpdateEvent.AddUObject(this, &AAstroGameMode::IsBackWaitMissionCleared);
+
+	MissionClearCheckEvent.Add(EMissionType::MISSION_INTERACTION, FMissionChecker(FOnMissionClearCheck::CreateUObject(this, &AAstroGameMode::InteractiveMissionClearCheck)));
+	MissionClearCheckEvent.Add(EMissionType::MISSION_WAIT, FMissionChecker(FOnMissionClearCheck::CreateUObject(this, &AAstroGameMode::WaitMissionClearCheck)));
+
+	ClearChecker.Add(EInteractiveType::NORMAL, FInteractiveMissionChecker(FOnInteractiveMissionClear::CreateUObject(this, &AAstroGameMode::InteractiveMissionClearNormal)));
+	ClearChecker.Add(EInteractiveType::TIMELIMIT, FInteractiveMissionChecker(FOnInteractiveMissionClear::CreateUObject(this, &AAstroGameMode::InteractiveMissionClearInTime)));
 }
 
 void AAstroGameMode::PostInitializeComponents()
@@ -61,8 +66,8 @@ void AAstroGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	//For Test
-	BackwardMission = UAstroMissionSingleton::Get().GetMission(1, EPlayerType::PLAYER_BACK, "I_00");
-	FrontwardMission = UAstroMissionSingleton::Get().GetMission(1, EPlayerType::PLAYER_FRONT, "I_00");
+	BackwardMission = UAstroMissionSingleton::Get().GetMission("B_01");
+	FrontwardMission = UAstroMissionSingleton::Get().GetMission("F_01");
 	AAstroGameState* AstroGameState = CastChecked<AAstroGameState>(GetWorld()->GetGameState());
 	if (AstroGameState)
 	{
@@ -97,10 +102,14 @@ void AAstroGameMode::InMissionIDEventOccured(FName InID)
 	MissionClearChecker.Broadcast(InID);
 }
 
+
+#pragma endregion
+
 void AAstroGameMode::FrontwardMissionClearChecker(FName InID)
 {
 	check(FrontwardMission)
-	if (FrontwardMission->ClearCheck(FrontwardMission->MissionType, InID))
+	UE_LOG(LogTemp, Warning, TEXT("ObjectID Init : %s"), *InID.ToString());
+	if (MissionClearCheckEvent[FrontwardMission->MissionType].MissionClearCheck.Execute(FrontwardMission, InID))
 	{
 		FName PrevMissionID = FrontwardMission->MissionID;
 		FrontwardMissionSetter();
@@ -108,10 +117,26 @@ void AAstroGameMode::FrontwardMissionClearChecker(FName InID)
 	}
 }
 
+void AAstroGameMode::FrontwardMissionSetter()
+{
+	FrontwardMission = UAstroMissionSingleton::Get().GetMission(FrontwardMission->NextMissionID);
+	FrontwardGameStateSetter();
+}
+
+void AAstroGameMode::FrontwardGameStateSetter()
+{
+	AAstroGameState* AstroGameState = CastChecked<AAstroGameState>(GetWorld()->GetGameState());
+	if (AstroGameState)
+	{
+		AstroGameState->SetFrontMissionID(FrontwardMission->MissionID);
+	}
+}
+
 void AAstroGameMode::BackwardMissionClearChecker(FName InID)
 {
 	check(BackwardMission)
-	if (BackwardMission->ClearCheck(BackwardMission->MissionType, InID))
+		UE_LOG(LogTemp, Warning, TEXT("ObjectID Init : %s"), *InID.ToString());
+	if (MissionClearCheckEvent[BackwardMission->MissionType].MissionClearCheck.Execute(BackwardMission, InID))
 	{
 		FName PrevMissionID = BackwardMission->MissionID;
 		BackwardMissionSetter();
@@ -119,19 +144,14 @@ void AAstroGameMode::BackwardMissionClearChecker(FName InID)
 	}
 }
 
-void AAstroGameMode::FrontwardMissionSetter()
-{
-	FrontwardMission = UAstroMissionSingleton::Get().GetMission(FrontwardMission->bIsShared, EPlayerType::PLAYER_FRONT, FrontwardMission->MissionID.ToString());
-	AAstroGameState* AstroGameState = CastChecked<AAstroGameState>(GetWorld()->GetGameState());
-	if(AstroGameState) 
-	{
-		AstroGameState->SetFrontMissionID(FrontwardMission->MissionID);
-	}
-}
-
 void AAstroGameMode::BackwardMissionSetter()
 {
-	BackwardMission = UAstroMissionSingleton::Get().GetMission(BackwardMission->bIsShared, EPlayerType::PLAYER_BACK, BackwardMission->MissionID.ToString());
+	BackwardMission = UAstroMissionSingleton::Get().GetMission(BackwardMission->NextMissionID);
+	BackwardGameStateSetter();
+}
+
+void AAstroGameMode::BackwardGameStateSetter()
+{
 	AAstroGameState* AstroGameState = CastChecked<AAstroGameState>(GetWorld()->GetGameState());
 	if (AstroGameState)
 	{
@@ -141,27 +161,48 @@ void AAstroGameMode::BackwardMissionSetter()
 
 void AAstroGameMode::MissionClearedEvent(FName InID)
 {
-	if (!ClearedMissionList.Contains(InID)) {
-		ClearedMissionList.Add(InID);
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *InID.ToString());
-		MissionUpdateEvent.Broadcast();
+	if (!MissionClearedList.Contains(InID)) {
+		MissionClearedList.Emplace(InID);
+		InMissionIDEventOccured(InID);
 	}
 }
 
-void AAstroGameMode::IsFrontWaitMissionCleared()
+bool AAstroGameMode::InteractiveMissionClearCheck(UAstroMissionBase* MissionBase, FName InObjID)
 {
-	if (FrontwardMission->NeedToClear.IsValid() && ClearedMissionList.Contains(FrontwardMission->NeedToClear)) 
+	UAstroInteractiveMission* InteractiveMission = CastChecked<UAstroInteractiveMission>(MissionBase);
+	if (ClearChecker.Find(InteractiveMission->InteractionType)) 
 	{
-		InMissionIDEventOccured(FrontwardMission->NeedToClear);
+		return ClearChecker[InteractiveMission->InteractionType].MissionClear.Execute(InteractiveMission, InObjID);
 	}
+	return false;
 }
 
-void AAstroGameMode::IsBackWaitMissionCleared()
+bool AAstroGameMode::InteractiveMissionClearInTime(UAstroInteractiveMission* MissionBase, FName InObjID)
 {
-	if (BackwardMission->NeedToClear.IsValid() && ClearedMissionList.Contains(BackwardMission->NeedToClear))
-	{
-		InMissionIDEventOccured(BackwardMission->NeedToClear);
+	if (!MissionBase->MissionItemID.IsEqual(InObjID))
+		return false;
+
+	if (!MissionBase->ClearCheck(InObjID)) {
+
+		GetWorld()->GetTimerManager().SetTimer(MissionBase->ActivationTimer, MissionBase, &UAstroInteractiveMission::OnTimerUnCleared, MissionBase->ActiveTime, false);
+		return false;
+	}
+	else {
+		MissionBase->ActivationTimer.Invalidate();
+		return true;
 	}
 }
 
-#pragma endregion
+bool AAstroGameMode::InteractiveMissionClearNormal(UAstroInteractiveMission* MissionBase, FName InObjID)
+{
+	return MissionBase->ClearCheck(InObjID);
+}
+
+bool AAstroGameMode::WaitMissionClearCheck(UAstroMissionBase* MissionBase, FName InObjID)
+{
+	UAstroWaitMission* WaitMission = Cast<UAstroWaitMission>(MissionBase);
+	if (WaitMission) {
+		return MissionClearedList.Contains(WaitMission->NeedToClear);
+	}
+	return false;
+}
