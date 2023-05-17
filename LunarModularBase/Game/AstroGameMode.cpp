@@ -51,8 +51,7 @@ AAstroGameMode::AAstroGameMode()
 	MissionClearCheckEvent.Add(EMissionType::MISSION_INTERACTION, FMissionChecker(FOnMissionClearCheck::CreateUObject(this, &AAstroGameMode::InteractiveMissionClearCheck)));
 	MissionClearCheckEvent.Add(EMissionType::MISSION_WAIT, FMissionChecker(FOnMissionClearCheck::CreateUObject(this, &AAstroGameMode::WaitMissionClearCheck)));
 
-	ClearChecker.Add(EInteractiveType::NORMAL, FInteractiveMissionChecker(FOnInteractiveMissionClear::CreateUObject(this, &AAstroGameMode::InteractiveMissionClearNormal)));
-	ClearChecker.Add(EInteractiveType::TIMELIMIT, FInteractiveMissionChecker(FOnInteractiveMissionClear::CreateUObject(this, &AAstroGameMode::InteractiveMissionClearInTime)));
+
 }
 
 void AAstroGameMode::PostInitializeComponents()
@@ -67,7 +66,9 @@ void AAstroGameMode::BeginPlay()
 
 	//For Test
 	BackwardMission = UAstroMissionSingleton::Get().GetMission("B_01");
+	BackwardMission->SetOwningActor(this);
 	FrontwardMission = UAstroMissionSingleton::Get().GetMission("F_01");
+	FrontwardMission->SetOwningActor(this);
 	AAstroGameState* AstroGameState = CastChecked<AAstroGameState>(GetWorld()->GetGameState());
 	if (AstroGameState)
 	{
@@ -108,7 +109,6 @@ void AAstroGameMode::InMissionIDEventOccured(FName InID)
 void AAstroGameMode::FrontwardMissionClearChecker(FName InID)
 {
 	check(FrontwardMission)
-	UE_LOG(LogTemp, Warning, TEXT("ObjectID Init : %s"), *InID.ToString());
 	if (MissionClearCheckEvent[FrontwardMission->MissionType].MissionClearCheck.Execute(FrontwardMission, InID))
 	{
 		FName PrevMissionID = FrontwardMission->MissionID;
@@ -119,7 +119,9 @@ void AAstroGameMode::FrontwardMissionClearChecker(FName InID)
 
 void AAstroGameMode::FrontwardMissionSetter()
 {
-	FrontwardMission = UAstroMissionSingleton::Get().GetMission(FrontwardMission->NextMissionID);
+	UAstroMissionBase* Mission = UAstroMissionSingleton::Get().GetMission(FrontwardMission->NextMissionID);
+	Mission->SetOwningActor(this);
+	FrontwardMission = Mission;
 	FrontwardGameStateSetter();
 }
 
@@ -135,7 +137,6 @@ void AAstroGameMode::FrontwardGameStateSetter()
 void AAstroGameMode::BackwardMissionClearChecker(FName InID)
 {
 	check(BackwardMission)
-		UE_LOG(LogTemp, Warning, TEXT("ObjectID Init : %s"), *InID.ToString());
 	if (MissionClearCheckEvent[BackwardMission->MissionType].MissionClearCheck.Execute(BackwardMission, InID))
 	{
 		FName PrevMissionID = BackwardMission->MissionID;
@@ -146,7 +147,10 @@ void AAstroGameMode::BackwardMissionClearChecker(FName InID)
 
 void AAstroGameMode::BackwardMissionSetter()
 {
-	BackwardMission = UAstroMissionSingleton::Get().GetMission(BackwardMission->NextMissionID);
+	UAstroMissionBase* Mission = UAstroMissionSingleton::Get().GetMission(BackwardMission->NextMissionID);
+	Mission->SetOwningActor(this);
+	BackwardMission = Mission;
+
 	BackwardGameStateSetter();
 }
 
@@ -170,39 +174,18 @@ void AAstroGameMode::MissionClearedEvent(FName InID)
 bool AAstroGameMode::InteractiveMissionClearCheck(UAstroMissionBase* MissionBase, FName InObjID)
 {
 	UAstroInteractiveMission* InteractiveMission = CastChecked<UAstroInteractiveMission>(MissionBase);
-	if (ClearChecker.Find(InteractiveMission->InteractionType)) 
-	{
-		return ClearChecker[InteractiveMission->InteractionType].MissionClear.Execute(InteractiveMission, InObjID);
+	if (InteractiveMission) {
+		return InteractiveMission->ClearCheck(InObjID);
 	}
 	return false;
 }
 
-bool AAstroGameMode::InteractiveMissionClearInTime(UAstroInteractiveMission* MissionBase, FName InObjID)
-{
-	if (!MissionBase->MissionItemID.IsEqual(InObjID))
-		return false;
-
-	if (!MissionBase->ClearCheck(InObjID)) {
-
-		GetWorld()->GetTimerManager().SetTimer(MissionBase->ActivationTimer, MissionBase, &UAstroInteractiveMission::OnTimerUnCleared, MissionBase->ActiveTime, false);
-		return false;
-	}
-	else {
-		MissionBase->ActivationTimer.Invalidate();
-		return true;
-	}
-}
-
-bool AAstroGameMode::InteractiveMissionClearNormal(UAstroInteractiveMission* MissionBase, FName InObjID)
-{
-	return MissionBase->ClearCheck(InObjID);
-}
 
 bool AAstroGameMode::WaitMissionClearCheck(UAstroMissionBase* MissionBase, FName InObjID)
 {
 	UAstroWaitMission* WaitMission = Cast<UAstroWaitMission>(MissionBase);
 	if (WaitMission) {
-		return MissionClearedList.Contains(WaitMission->NeedToClear);
+		return WaitMission->ClearCheck(InObjID);
 	}
 	return false;
 }

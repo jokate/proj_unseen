@@ -2,6 +2,8 @@
 
 
 #include "AstralBox/AstralTimerBox.h"
+#include "Interface/InteractionWidgetInterface.h"
+#include "Components/WidgetComponent.h"
 
 void AAstralTimerBox::SetObjActiveComplete() {
 	Super::SetObjActiveComplete();
@@ -10,4 +12,7 @@ void AAstralTimerBox::SetObjActiveComplete() {
 	GetWorld()->GetTimerManager().SetTimer(ReActivateHandler, [&]() {
 		SetActorEnableCollision(true);
 	}, ReactivateTime, false);
+
+	IInteractionWidgetInterface* ActivationWidgetObject = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetUserWidgetObject());
+	ActivationWidgetObject->OnActivateButtonReleased();
 }

@@ -28,4 +28,11 @@ public :
 	virtual bool ClearCheck(FName ObjID);
 
 	virtual void Initialize(FName InMissionID, const struct FMissionData MissionData);
+
+
+public :
+	virtual void SetOwningActor(AActor* Actor);
+
+	UPROPERTY()
+	TObjectPtr<AActor> OwningActor;
 };

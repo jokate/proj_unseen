@@ -2,6 +2,7 @@
 
 
 #include "Mission/AstroWaitMission.h"
+#include "Interface/AstroGameStateInterface.h"
 
 UAstroWaitMission::UAstroWaitMission()
 {
@@ -10,10 +11,9 @@ UAstroWaitMission::UAstroWaitMission()
 
 bool UAstroWaitMission::ClearCheck(FName ObjID)
 {
-	if (NeedToClear == ObjID)
-		return true;
-	else
-		return false;
+
+	IAstroGameStateInterface* AstroGameState = CastChecked<IAstroGameStateInterface>(OwningActor->GetWorld()->GetGameState());
+	return AstroGameState->IsContainMissionID(NeedToClear);
 }
 
 void UAstroWaitMission::Initialize(FName InMissionID, const FMissionData MissionData, const FWaitMissionData WaitMissionData)

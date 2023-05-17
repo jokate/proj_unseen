@@ -9,6 +9,19 @@
 /**
  * 
  */
+DECLARE_DELEGATE_RetVal_OneParam(bool, FOnInteractiveMissionClear, FName);
+
+USTRUCT(BlueprintType)
+struct FInteractiveMissionChecker
+{
+	GENERATED_BODY()
+
+	FInteractiveMissionChecker() {}
+	FInteractiveMissionChecker(const FOnInteractiveMissionClear& InMissionClear) : MissionClear(InMissionClear) {}
+
+	FOnInteractiveMissionClear MissionClear;
+};
+
 
 UCLASS()
 class LUNARMODULARBASE_API UAstroInteractiveMission : public UAstroMissionBase
@@ -44,6 +57,14 @@ public :
 	void OnTimerUnCleared();
 
 	//Initializer
+public :
+	UPROPERTY()
+	TMap<EInteractiveType, FInteractiveMissionChecker> ClearChecker;
+
+	bool InteractiveMissionClearInTime(FName InObjID);
+
+	bool InteractiveMissionClearNormal(FName InObjID);
+
 public :
 
 	void Initialize(FName InMissionID, const struct FMissionData MissionData, const struct FInteractiveMissionData InteractiveMissionData);

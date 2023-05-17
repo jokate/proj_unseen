@@ -9,7 +9,6 @@
 #include "AstroGameMode.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMissionClearCheckerDelegate, FName);
-DECLARE_DELEGATE_RetVal_TwoParams(bool, FOnInteractiveMissionClear, class UAstroInteractiveMission*, FName);
 DECLARE_DELEGATE_RetVal_TwoParams(bool, FOnMissionClearCheck, class UAstroMissionBase*, FName);
 
 
@@ -24,17 +23,6 @@ struct FMissionChecker {
 
 	FOnMissionClearCheck MissionClearCheck;
 
-};
-
-USTRUCT(BlueprintType)
-struct FInteractiveMissionChecker
-{
-	GENERATED_BODY()
-
-	FInteractiveMissionChecker() {}
-	FInteractiveMissionChecker(const FOnInteractiveMissionClear& InMissionClear) : MissionClear(InMissionClear) {}
-
-	FOnInteractiveMissionClear MissionClear;
 };
 
 /**
@@ -65,10 +53,6 @@ private :
 
 	//Mission Clear Check Functions
 protected:
-
-	UPROPERTY(VisibleAnywhere, Category = MissioManager, Meta = (PrivateAccess = "true"))
-	TObjectPtr<class UMissionManager> MissionManager;
-	
 	virtual void InMissionIDEventOccured(FName InID) override;
 
 private:
@@ -110,14 +94,7 @@ protected:
 	UPROPERTY()
 	TMap<EMissionType, FMissionChecker> MissionClearCheckEvent;
 
-	UPROPERTY()
-	TMap<EInteractiveType, FInteractiveMissionChecker> ClearChecker;
-
 	bool InteractiveMissionClearCheck(UAstroMissionBase* MissionBase, FName InObjID);
-
-	bool InteractiveMissionClearInTime(UAstroInteractiveMission* MissionBase, FName InObjID);
-
-	bool InteractiveMissionClearNormal(UAstroInteractiveMission* MissionBase, FName InObjID);
 
 	bool WaitMissionClearCheck(UAstroMissionBase* MissionBase, FName InObjID);
 

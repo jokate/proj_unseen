@@ -13,3 +13,8 @@ void UAstroMissionBase::Initialize(FName InMissionID, const FMissionData Mission
 	MissionID = InMissionID;
 	NextMissionID = MissionData.NextMissionID;
 }
+
+void UAstroMissionBase::SetOwningActor(AActor* Actor)
+{
+	OwningActor = Actor;
+}
