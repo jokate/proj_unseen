@@ -36,7 +36,6 @@ public:
 	TObjectPtr<class USphereComponent> ObjectTrigger;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 	//Object Activation
 protected :
 

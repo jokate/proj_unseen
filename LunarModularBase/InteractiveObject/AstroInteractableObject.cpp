@@ -40,7 +40,6 @@ AAstroInteractableObject::AAstroInteractableObject()
 	Mesh->SetStaticMesh(DataAsset->MeshData);
 	Mesh->SetRelativeLocation(FVector(0.0f, -3.5f, 0.0f));
 	bReplicates = true;
-	
 }
 
 
@@ -51,7 +50,6 @@ void AAstroInteractableObject::BeginPlay()
 
 	
 }
-
 void AAstroInteractableObject::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
