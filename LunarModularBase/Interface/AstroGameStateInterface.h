@@ -23,4 +23,8 @@ class LUNARMODULARBASE_API IAstroGameStateInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual bool IsContainMissionID(FName InMissionID) = 0;
+
+	virtual void SetFrontMissionID(FName InMissionID) = 0;
+
+	virtual void SetBackMissionID(FName InMissionID) = 0;
 };

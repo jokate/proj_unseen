@@ -17,6 +17,7 @@
 UMissionComponent::UMissionComponent()
 {
 	PlayerType = EPlayerType::PLAYER_NONE;
+
 }
 
 void UMissionComponent::ClearCheck_Implementation(FName ObjectName)
