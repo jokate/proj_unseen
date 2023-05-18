@@ -8,7 +8,6 @@
 #include "AstroMissionClearInterface.generated.h"
 
 DECLARE_DELEGATE_OneParam(FOnActivatedComplete, FName);
-DECLARE_DELEGATE_OneParam(FOnTakeItemDelegate, class UAstroItemData*);
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -36,5 +35,5 @@ public:
 
 	virtual void TakeItem(class UAstroItemData* InItemData) = 0;
 
-	virtual void OnObjectCollided(FOnActivatedComplete& InActivaedDelegate, FOnTakeItemDelegate& InTakeItemDelegate) = 0;
+	virtual void OnMissionObjectCollided(FOnActivatedComplete& InActivaedDelegate) = 0;
 };

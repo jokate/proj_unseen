@@ -14,7 +14,7 @@
 class UBoxUIDataAsset;
 
 UCLASS()
-class LUNARMODULARBASE_API UAstralBoxWidget : public UUserWidget, public IInteractionWidgetInterface
+class LUNARMODULARBASE_API UAstralBoxWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
@@ -38,22 +38,11 @@ private :
 
 	//User Activate Widget
 protected :
-	const float ActivateIncreasePercentage = 0.05f;
-	const float CompletePercentage = 1.0f;
-	float CurrentPercentage = 0.0f;
 
-	FOnActivated OnActivated;
-
-	FTimerHandle ActivationTimer;
-
-	virtual void OnActivateButtonPressed() override;
-
-	virtual FOnActivated& ActivatedEventBind() override;
-
-	virtual void OnActivateButtonReleased() override;
-
+	UFUNCTION(BlueprintCallable, Category = UISet)
 	void SetPercentage(float InPercentage);
 
 protected :
-	virtual void OnPlayerTriggered(bool bIsTriggered) override;
+	UFUNCTION(BlueprintCallable, Category = UISet)
+	void OnPlayerTriggered(bool bIsTriggered);
 };

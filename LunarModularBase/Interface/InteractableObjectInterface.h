@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "AstroItemInterface.generated.h"
+#include "InteractableObjectInterface.generated.h"
 
 // This class does not need to be modified.
-DECLARE_DELEGATE_OneParam(FOnTakeItemDelegate, class UAstroItemData*);
 UINTERFACE(MinimalAPI)
-class UAstroItemInterface : public UInterface
+class UInteractableObjectInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,15 +16,13 @@ class UAstroItemInterface : public UInterface
 /**
  * 
  */
-class LUNARMODULARBASE_API IAstroItemInterface
+class LUNARMODULARBASE_API IInteractableObjectInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void UseItem(class UAstroItemData* InItemData) = 0;
+	virtual void OnActivating() = 0;
 
-	virtual bool ContainsItem(FName ItemData) = 0;
-
-	virtual void OnItemObjectCollided(FOnTakeItemDelegate& ItemDelegate) = 0;
+	virtual void StopActivating() = 0;
 };

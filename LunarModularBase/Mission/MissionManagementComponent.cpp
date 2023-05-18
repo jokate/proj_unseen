@@ -40,6 +40,7 @@ void UMissionManagementComponent::InitializeComponent()
 
 void UMissionManagementComponent::InMissionIDEventOccured(FName InID)
 {
+	UE_LOG(LogTemp, Warning, TEXT("In ID : %s"), *InID.ToString())
 	MissionClearChecker.Broadcast(InID);
 }
 
@@ -49,12 +50,12 @@ void UMissionManagementComponent::InMissionIDEventOccured(FName InID)
 void UMissionManagementComponent::FrontwardMissionClearChecker(FName InID)
 {
 	check(FrontwardMission)
-		if (MissionClearCheckEvent[FrontwardMission->MissionType].MissionClearCheck.Execute(FrontwardMission, InID))
-		{
-			FName PrevMissionID = FrontwardMission->MissionID;
-			FrontwardMissionSetter();
-			MissionClearedEvent(PrevMissionID);
-		}
+	if (MissionClearCheckEvent[FrontwardMission->MissionType].MissionClearCheck.Execute(FrontwardMission, InID))
+	{
+		FName PrevMissionID = FrontwardMission->MissionID;
+		FrontwardMissionSetter();
+		MissionClearedEvent(PrevMissionID);
+	}
 }
 
 void UMissionManagementComponent::FrontwardMissionSetter()

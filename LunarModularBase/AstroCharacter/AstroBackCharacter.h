@@ -23,5 +23,6 @@ public :
 	virtual void Req_MissionClear(FName ObjectName) override;
 	virtual void TakeItem(UAstroItemData* InItemData) override;
 
-	virtual void OnObjectCollided(FOnActivatedComplete& InActivaedDelegate, FOnTakeItemDelegate& InTakeItemDelegate) override;
+	virtual void OnMissionObjectCollided(FOnActivatedComplete& InActivatedDelegate) override;
+	virtual void OnItemObjectCollided(FOnTakeItemDelegate& InTakeItemDelegate) override;
 };

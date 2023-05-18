@@ -50,11 +50,16 @@ void AAstroFrontCharacter::TakeItem(UAstroItemData* InItemData)
 	Req_MissionClear(InItemData->ItemID);
 }
 
-void AAstroFrontCharacter::OnObjectCollided(FOnActivatedComplete& InActivatedDelegate, FOnTakeItemDelegate& InTakeItemDelegate)
+void AAstroFrontCharacter::OnMissionObjectCollided(FOnActivatedComplete& InActivatedDelegate)
 {
 	InActivatedDelegate.BindUObject(this, &AAstroFrontCharacter::Req_MissionClear);
+}
+
+void AAstroFrontCharacter::OnItemObjectCollided(FOnTakeItemDelegate& InTakeItemDelegate)
+{
 	InTakeItemDelegate.BindUObject(this, &AAstroFrontCharacter::TakeItem);
 }
+
 
 
 

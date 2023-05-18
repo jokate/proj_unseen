@@ -8,7 +8,9 @@
 
 //For Widget
 #include "AstroCharacterStatusComponent.h"
+#include "Interface/InteractableObjectInterface.h"
 #include "Components/WidgetComponent.h"
+#include "Components/SphereComponent.h"
 
 //Mission
 #include "Mission/MissionComponent.h"
@@ -199,6 +201,7 @@ void AAstroCharacter::UnSearch(const FInputActionValue& Value)
 	OnDeActivateEvent.ExecuteIfBound();
 }
 
+
 void AAstroCharacter::Exploring(const FInputActionValue& Value)
 {
 	if (GetCharacterMovement()->Velocity.Z != 0.0f) return;
@@ -316,21 +319,26 @@ void AAstroCharacter::ExploreWidgetVisibleSet(bool InVisible)
 	}
 }
 
+
 FOnCharacterActivateObject& AAstroCharacter::ReturnActivateObjectDelegate()
 {
-	// TODO: insert return statement here
 	return OnActivateEvent;
+	// TODO: insert return statement here
 }
 
 FOnCharacterStopActivateObject& AAstroCharacter::ReturnDeactivateObjectDelegate()
 {
-	// TODO: insert return statement here
 	return OnDeActivateEvent;
+	// TODO: insert return statement here
 }
 
-void AAstroCharacter::OnObjectCollided(FOnActivatedComplete& InActivatedDelegate, FOnTakeItemDelegate& InTakeItemDelegate)
+void AAstroCharacter::OnMissionObjectCollided(FOnActivatedComplete& InActivatedDelegate)
 {
 
+}
+
+void AAstroCharacter::OnItemObjectCollided(FOnTakeItemDelegate& ItemDelegate)
+{
 }
 
 void AAstroCharacter::ActiveItemWidget()

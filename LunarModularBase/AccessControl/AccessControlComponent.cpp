@@ -21,6 +21,8 @@ bool UAccessControlComponent::CanBeActivated(AActor* InCharacterActor)
 
 bool UAccessControlComponent::GameStateChecker()
 {
+	if (NeedMissionIDs.IsEmpty())
+		return true;
 	for (auto NeedMissionID : NeedMissionIDs) {
 		IAstroGameStateInterface* AstroInterface = CastChecked<IAstroGameStateInterface>(GetWorld()->GetGameState());
 		if (AstroInterface->IsContainMissionID(NeedMissionID))
@@ -31,6 +33,8 @@ bool UAccessControlComponent::GameStateChecker()
 
 bool UAccessControlComponent::PlayerItemChecker(AActor* InCharacterActor)
 {
+	if (NeedItemID.IsNone())
+		return true;
 	IAstroItemInterface* ItemChecker = Cast<IAstroItemInterface>(InCharacterActor);
 	if(ItemChecker)
 		return ItemChecker->ContainsItem(NeedItemID);

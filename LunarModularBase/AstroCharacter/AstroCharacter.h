@@ -41,8 +41,9 @@ public :
 
 	virtual FOnCharacterActivateObject& ReturnActivateObjectDelegate() override;
 	virtual FOnCharacterStopActivateObject& ReturnDeactivateObjectDelegate() override;
+	virtual void OnMissionObjectCollided(FOnActivatedComplete& InActivaedDelegate) override;
 
-	virtual void OnObjectCollided(FOnActivatedComplete& InActivaedDelegate, FOnTakeItemDelegate& InTakeItemDelegate) override;
+	virtual void OnItemObjectCollided(FOnTakeItemDelegate& ItemDelegate) override;
 public :
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
@@ -85,8 +86,11 @@ protected :
 public:
 	//Jump / Search / MissionClear Check Function
 	void Jumping(const FInputActionValue& Value);
+
 	void Search(const FInputActionValue& Value);
+
 	void UnSearch(const FInputActionValue& Value);
+
 	void ExploreCheck(float DeltaTime);
 
 protected:
@@ -135,4 +139,6 @@ protected :
 	virtual void UseItem(class UAstroItemData* InItemData) override;
 
 	virtual bool ContainsItem(FName ItemData) override;
+
+protected :
 };
