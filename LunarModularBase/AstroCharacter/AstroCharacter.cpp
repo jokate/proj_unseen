@@ -201,6 +201,20 @@ void AAstroCharacter::UnSearch(const FInputActionValue& Value)
 	OnDeActivateEvent.ExecuteIfBound();
 }
 
+void AAstroCharacter::ActivationComplete_Implementation(AActor* InActor)
+{
+	ActivationComplete_Server(InActor);
+}
+
+void AAstroCharacter::ActivationComplete_Server_Implementation(AActor* InActor)
+{
+	IInteractableObjectInterface* InteractableObject = Cast <IInteractableObjectInterface>(InActor);
+	if(InteractableObject) 
+	{
+		InteractableObject->SetObjActiveComplete();
+	}
+}
+
 
 void AAstroCharacter::Exploring(const FInputActionValue& Value)
 {

@@ -47,7 +47,7 @@ AAstroInteractableObject::AAstroInteractableObject()
 void AAstroInteractableObject::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	
 }
 void AAstroInteractableObject::PostInitializeComponents()
@@ -65,7 +65,8 @@ void AAstroInteractableObject::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 void AAstroInteractableObject::SetObjActiveComplete()
 {
 	K2_OnObjectActive();
-	SetActorEnableCollision(false);
+	ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetPercentage(0.0f);
 }
 
 void AAstroInteractableObject::OnActivating()
@@ -113,10 +114,14 @@ void AAstroInteractableObject::OnCharacterOverlapOut(UPrimitiveComponent* Overla
 		return;
 
 	auto CharacterInterface = Cast<IAstroCharacterInterface>(OtherActor);
-	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy &&  CharacterInterface) 
+	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy &&  CharacterInterface)
 	{
 		CharacterInterface->ReturnActivateObjectDelegate().Unbind();
 		CharacterInterface->ReturnDeactivateObjectDelegate().Unbind();
+		if (ActivationPercent > ActivationFullPercent) 
+		{
+			CharacterInterface->ActivationComplete(this);
+		}
 		K2_OnCharacterOverlapOut();
 	}
 }

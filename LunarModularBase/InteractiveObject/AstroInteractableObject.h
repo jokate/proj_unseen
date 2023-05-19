@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interface/InteractableObjectInterface.h"
 #include "AstroInteractableObject.generated.h"
 
 UCLASS()
-class LUNARMODULARBASE_API AAstroInteractableObject : public AActor
+class LUNARMODULARBASE_API AAstroInteractableObject : public AActor, public IInteractableObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -39,10 +40,7 @@ public:
 	//Object Activation
 protected :
 
-	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnObjectActiveCPP"))
-	void K2_OnObjectActive();
-
-	virtual void SetObjActiveComplete();
+	virtual void SetObjActiveComplete() override;
 
 	virtual void OnActivating();
 
@@ -50,7 +48,6 @@ protected :
 	
 	//Activation Setter
 protected :
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float ActivationPercent = 0.0f;
 
@@ -60,19 +57,25 @@ protected :
 
 	FTimerHandle ActivationTimer;
 
+	UFUNCTION(BlueprintCallable)
 	void SetPercentage(float Infloat);
+
+	//For BlueprintEventFunction
+protected:
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnCharacterOverlapCPP"))
+	void K2_OnCharacterOverlapOut();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnCharacterOverlapOutCPP"))
+	void K2_OnCharacterOverlapped();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = PercentSet, Meta = (DisplayName = "OnSetPercentageCPP"))
 	void K2_OnActivateFunctionCall(float Infloat);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnObjectActiveCPP"))
+	void K2_OnObjectActive();
+
 	//Overlap Function
-protected:
-	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnCharacterOverlapCPP"))
-	void K2_OnCharacterOverlapOut();
-	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnCharacterOverlapOutCPP"))
-	void K2_OnCharacterOverlapped();
-
-
+protected :
 	UFUNCTION()
 	virtual void OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 

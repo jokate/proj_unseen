@@ -22,7 +22,5 @@ class LUNARMODULARBASE_API IInteractableObjectInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void OnActivating() = 0;
-
-	virtual void StopActivating() = 0;
+	virtual void SetObjActiveComplete() = 0; 
 };

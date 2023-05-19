@@ -31,7 +31,8 @@ void UAstralBoxWidget::NativeConstruct()
 
 void UAstralBoxWidget::SetPercentage(float InPercentage)
 {
-	DynamicUIMaterialInstance->SetScalarParameterValue("Percent", InPercentage);
+	if(DynamicUIMaterialInstance)
+		DynamicUIMaterialInstance->SetScalarParameterValue("Percent", InPercentage);
 }
 
 void UAstralBoxWidget::OnPlayerTriggered(bool bIsTriggered)

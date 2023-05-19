@@ -91,6 +91,12 @@ public:
 
 	void UnSearch(const FInputActionValue& Value);
 
+	UFUNCTION(Server, Reliable)
+	virtual void ActivationComplete(AActor* InActor) override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ActivationComplete_Server(AActor* InActor);
+
 	void ExploreCheck(float DeltaTime);
 
 protected:

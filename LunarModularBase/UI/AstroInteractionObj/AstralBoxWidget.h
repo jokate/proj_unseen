@@ -26,6 +26,8 @@ public:
 
 	virtual void NativeConstruct() override;
 
+	
+
 private :
 	UPROPERTY()
 	TObjectPtr<UBoxUIDataAsset> BoxUIDataAsset;
