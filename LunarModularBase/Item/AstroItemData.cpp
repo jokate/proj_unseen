@@ -3,3 +3,8 @@
 
 #include "Item/AstroItemData.h"
 
+void UAstroItemData::BeginDestroy()
+{
+	Super::BeginDestroy();
+	ItemCount = 1;
+}

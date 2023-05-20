@@ -43,11 +43,7 @@ public :
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
-	void ItemCountUp();
-
-	void ItemCountDown();
-
-	int32 ItemCount = 0;
+	void ItemCountChanged(UAstroItemData* ItemData);
 
 protected :
 	UFUNCTION()

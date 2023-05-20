@@ -20,6 +20,10 @@ class LUNARMODULARBASE_API UAstroItemData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 	
+	
+	
+	virtual void BeginDestroy() override;
+	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Type)
 	EItemType Type;
@@ -35,4 +39,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ItemDescription)
 	FString ItemDescription;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ItemCount)
+	int32 ItemCount = 1;
 };

@@ -43,4 +43,6 @@ public:
 
 	virtual void TextUpdateWhenUnHovered() = 0;
 
+	virtual bool ItemContainCheck(UObject* InItemData) = 0;
+
 };

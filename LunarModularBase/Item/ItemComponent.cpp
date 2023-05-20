@@ -37,8 +37,6 @@ void UItemComponent::InitItem(UAstroItemData* ItemData)
 {	
 	if (!ItemData)
 		return;
-	ItemContainStatus.Add(ItemData->ItemID);
-	ItemContainer.Add(ItemData);
 	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
 	if (PlayerHUD != nullptr && GetOwnerRole() == ENetRole::ROLE_AutonomousProxy) {
 		PlayerHUD->AddItem(ItemData);
@@ -67,9 +65,13 @@ void UItemComponent::OperateItem(UAstroItemData* InItemData)
 	RequestMissionClearCheck(InItemData);
 }
 
-bool UItemComponent::ItemContainCheck(FName InItemID)
+bool UItemComponent::ItemContainCheck(UObject* InItemData)
 {
-	return ItemContainStatus.Contains(InItemID);
+	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
+	if (PlayerHUD != nullptr && GetOwnerRole() == ENetRole::ROLE_AutonomousProxy) {
+		PlayerHUD->ItemContainCheck(InItemData);
+	}
+	return false;
 }
 
 void UItemComponent::RequestMissionClearCheck_Implementation(UAstroItemData* InItemData)

@@ -19,13 +19,14 @@ void UInventorySlotWidget::NativeConstruct()
 	ItemButton->OnClicked.AddDynamic(this, &UInventorySlotWidget::OnPressedItemButton);
 	ItemButton->OnHovered.AddDynamic(this, &UInventorySlotWidget::OnHoveredItemButton);
 	ItemButton->OnUnhovered.AddDynamic(this, &UInventorySlotWidget::UnHoveredItemButton);
-	
+	this->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UInventorySlotWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
-
+	UE_LOG(LogTemp, Log, TEXT("Visible Set"));
 	ItemData = Cast<UAstroItemData>(ListItemObject);
+	this->SetVisibility(ESlateVisibility::Visible);
 
 	check(ItemData);
 	ItemImage->SetBrushFromTexture(ItemData->ItemImage);
@@ -33,12 +34,18 @@ void UInventorySlotWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 	{
 		ItemActivationWidget->ButtonSet(true);
 		ItemActivationWidget->ItemActionButton->OnClicked.AddDynamic(this, &UInventorySlotWidget::OnActivationItemButton);
-		ItemCountUp();
+		ItemCountText->SetText(FText::FromString(FString::Printf(TEXT("%d"), ItemData->ItemCount)));
 	}
 	else
 	{
 		ItemActivationWidget->ButtonSet(false);
 	}
+}
+
+void UInventorySlotWidget::ItemCountChanged(UAstroItemData* InItemData)
+{
+	ItemData = InItemData;
+	ItemCountText->SetText(FText::FromString(FString::Printf(TEXT("%d"), ItemData->ItemCount)));
 }
 
 void UInventorySlotWidget::OnPressedItemButton()
@@ -53,7 +60,8 @@ void UInventorySlotWidget::OnActivationItemButton()
 
 	ItemUseComponent->UseItem(ItemData);
 	ItemActivationWidget->SetItemActivateWidgetActive();
-	ItemCountDown();
+	ItemData->ItemCount--;
+	ItemCountChanged(this->ItemData);
 }
 
 void UInventorySlotWidget::OnHoveredItemButton()
@@ -70,22 +78,5 @@ void UInventorySlotWidget::UnHoveredItemButton()
 	ItemActivationWidget->ItemActionButton->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UInventorySlotWidget::ItemCountUp()
-{
-	ItemCount += 1;
-	ItemCountText->SetText(FText::FromString(FString::Printf(TEXT("%d"), ItemCount)));
-}
-
-void UInventorySlotWidget::ItemCountDown()
-{
-	ItemCount -= 1;
-	ItemCountText->SetText(FText::FromString(FString::Printf(TEXT("%d"), ItemCount)));
-	if(ItemCount <= 0) 
-	{
-		IAstroHUDInterface* HUD = CastChecked<IAstroHUDInterface>(GetOwningPlayer()->GetHUD());
-		HUD->RemoveItem(ItemData);
-	}
-	
-}
 
 

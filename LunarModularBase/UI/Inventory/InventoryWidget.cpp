@@ -14,10 +14,9 @@ void UInventoryWidget::NativeConstruct()
 	this->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UInventoryWidget::NativeDestruct()
+bool UInventoryWidget::IsItemContains(UObject* Item)
 {
-	Super::NativeDestruct();
-	ItemTilePanel->ClearListItems();
+	return (ItemTilePanel->GetIndexForItem(Item) != -1);
 }
 
 void UInventoryWidget::AddItemData(UObject* ItemData)
@@ -30,7 +29,9 @@ void UInventoryWidget::AddItemData(UObject* ItemData)
 	}
 	else 
 	{
-		ItemTilePanel->AddItem(ItemData);
+		UAstroItemData* Item = CastChecked<UAstroItemData>(ItemData);
+		Item->ItemCount = 1;
+		ItemTilePanel->AddItem(Item);
 	}
 }
 
@@ -55,6 +56,9 @@ void UInventoryWidget::SetTextDefault()
 
 void UInventoryWidget::ItemUpdate(UAstroItemData* ItemData)
 {
-	UInventorySlotWidget* Widget = CastChecked<UInventorySlotWidget>(ItemTilePanel->GetEntryWidgetFromItem(ItemData));
-	Widget->ItemCountUp();
+	UInventorySlotWidget* Widget = Cast<UInventorySlotWidget>(ItemTilePanel->GetEntryWidgetFromItem(ItemData));
+	ItemData->ItemCount++;
+	if (Widget)
+		Widget->ItemCountChanged(ItemData);
+		
 }

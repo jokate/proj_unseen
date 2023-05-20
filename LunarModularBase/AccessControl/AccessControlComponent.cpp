@@ -5,6 +5,7 @@
 #include "GameFramework/GameStateBase.h"
 
 #include "Interface/AstroGameStateInterface.h"
+#include "Item/AstroItemData.h"
 #include "Interface/AstroItemInterface.h"
 // Sets default values for this component's properties
 UAccessControlComponent::UAccessControlComponent()
@@ -14,7 +15,7 @@ UAccessControlComponent::UAccessControlComponent()
 
 bool UAccessControlComponent::CanBeActivated(AActor* InCharacterActor)
 {
-	if (NeedItemID.IsNone() && NeedMissionIDs.IsEmpty())
+	if (!NeedItemData && NeedMissionIDs.IsEmpty())
 		return true;
 	return (GameStateChecker() && PlayerItemChecker(InCharacterActor));
 }
@@ -33,10 +34,10 @@ bool UAccessControlComponent::GameStateChecker()
 
 bool UAccessControlComponent::PlayerItemChecker(AActor* InCharacterActor)
 {
-	if (NeedItemID.IsNone())
+	if (!NeedItemData)
 		return true;
 	IAstroItemInterface* ItemChecker = Cast<IAstroItemInterface>(InCharacterActor);
 	if(ItemChecker)
-		return ItemChecker->ContainsItem(NeedItemID);
+		return ItemChecker->ContainsItem(NeedItemData);
 	return false;
 }

@@ -44,8 +44,6 @@ void AAstroHUD::BeginPlay()
 		UserStatusWidget->AddToViewport();
 		InventoryWidget = CreateWidget<UInventoryWidget>(PlayerController, InventoryClass);
 		InventoryWidget->AddToViewport();
-
-
 	}
 }
 
@@ -121,4 +119,9 @@ void AAstroHUD::TextUpdateWhenHovered(class UAstroItemData* InItemData)
 void AAstroHUD::TextUpdateWhenUnHovered()
 {
 	InventoryWidget->SetTextDefault();
+}
+
+bool AAstroHUD::ItemContainCheck(UObject* InItemData)
+{
+	return InventoryWidget->IsItemContains(InItemData);
 }

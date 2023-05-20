@@ -371,7 +371,7 @@ void AAstroCharacter::UseItem(UAstroItemData* InItemData)
 	ItemComponent->ItemUse(InItemData);
 }
 
-bool AAstroCharacter::ContainsItem(FName ItemData)
+bool AAstroCharacter::ContainsItem(UAstroItemData* ItemData)
 {
-	return ItemComponent->ItemContainCheck(ItemData);
+	return ItemComponent->ItemContainCheck(Cast<UObject>(ItemData));
 }

@@ -22,8 +22,6 @@ class LUNARMODULARBASE_API UInventoryWidget : public UUserWidget
 public :
 	virtual void NativeConstruct() override;
 
-	virtual void NativeDestruct() override;
-
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	TObjectPtr<UTileView> ItemTilePanel;
 
@@ -34,8 +32,7 @@ public :
 	TObjectPtr<UTextBlock> ItemDescriptionText;
 
 public :
-	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnItemDataChanged"))
-	void K2_OnItemDataChanged(UObject* ItemData);
+	bool IsItemContains(UObject* Item);
 
 	void AddItemData(UObject* ItemData);
 

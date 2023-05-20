@@ -45,6 +45,8 @@ public :
 
 	virtual void TextUpdateWhenUnHovered() override;
 
+	virtual bool ItemContainCheck(UObject* InItemData) override;
+
 public :
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
 	TSubclassOf<UMissionWidget> MissionWidgetClass;

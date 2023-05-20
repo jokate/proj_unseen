@@ -29,6 +29,6 @@ protected:
 	TArray<FName> NeedMissionIDs;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (PrivateAccess = "true"), Category = NeedToClearMission)
-	FName NeedItemID;
+	TObjectPtr<class UAstroItemData> NeedItemData;
 		
 };
