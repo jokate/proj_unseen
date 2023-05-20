@@ -45,6 +45,11 @@ void UInventorySlotWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 void UInventorySlotWidget::ItemCountChanged(UAstroItemData* InItemData)
 {
 	ItemData = InItemData;
+	if (ItemData->ItemCount <= 0) {
+		IAstroHUDInterface* HUD = CastChecked<IAstroHUDInterface>(GetOwningPlayer()->GetHUD());
+		HUD->RemoveItem(ItemData);
+		return; 
+	}
 	ItemCountText->SetText(FText::FromString(FString::Printf(TEXT("%d"), ItemData->ItemCount)));
 }
 
