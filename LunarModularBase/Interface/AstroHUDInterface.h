@@ -35,9 +35,12 @@ public:
 
 	virtual void AddItem(UObject* InItemData) = 0;
 
+	virtual void RemoveItem(UObject* InItemData) = 0;
+
 	virtual void ActiveItemWidget() = 0;
 
 	virtual void TextUpdateWhenHovered(class UAstroItemData* InItemData) = 0;
 
 	virtual void TextUpdateWhenUnHovered() = 0;
+
 };

@@ -93,6 +93,13 @@ void AAstroHUD::AddItem(UObject* InItemData)
 		InventoryWidget->AddItemData(InItemData);
 }
 
+void AAstroHUD::RemoveItem(UObject* InItemData)
+{
+	ensure(InItemData);
+	if (InItemData != nullptr)
+		InventoryWidget->DeleteItemData(InItemData);
+}
+
 void AAstroHUD::ActiveItemWidget()
 {
 	if (InventoryWidget->GetVisibility() == ESlateVisibility::Visible) {

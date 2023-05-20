@@ -14,6 +14,7 @@
 class UButton;
 class UImage;
 class UItemActivationWidget;
+class UTextBlock;
 
 
 UCLASS()
@@ -31,16 +32,22 @@ public :
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UItemActivationWidget> ItemActivationWidget;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UTextBlock> ItemCountText;
+
 	UPROPERTY()
 	TObjectPtr<class UAstroItemData> ItemData;
-
 	//Base Function
 public :
 	virtual void NativeConstruct() override;
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
+	void ItemCountUp();
 
+	void ItemCountDown();
+
+	int32 ItemCount = 0;
 
 protected :
 	UFUNCTION()
@@ -54,4 +61,5 @@ protected :
 
 	UFUNCTION()
 	void UnHoveredItemButton();
+
 };

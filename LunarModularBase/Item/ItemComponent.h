@@ -79,5 +79,8 @@ protected:
 	//Request Server this Item is For mission
 	UFUNCTION(Server, Reliable)
 	void RequestMissionClearCheck(UAstroItemData* InItemData);
+
+	//UFUNCTION(NetMulticast, Reliable)
+	//void RespItemUse();
 		
 };
