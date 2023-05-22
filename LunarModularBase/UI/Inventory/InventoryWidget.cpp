@@ -21,25 +21,17 @@ bool UInventoryWidget::IsItemContains(UObject* Item)
 
 void UInventoryWidget::AddItemData(UObject* ItemData)
 {
-	if (int32 ItemIndex = ItemTilePanel->GetIndexForItem(ItemData) != -1)
-	{
-		UE_LOG(LogTemp, Log, TEXT("%d"), ItemIndex);
-		UAstroItemData*	ItemData = CastChecked<UAstroItemData>(ItemTilePanel->GetItemAt(ItemIndex - 1));
-		ItemUpdate(ItemData);
-	}
-	else 
-	{
-		UAstroItemData* Item = CastChecked<UAstroItemData>(ItemData);
-		Item->ItemCount = 1;
-		ItemTilePanel->AddItem(Item);
-	}
+	if(ItemTilePanel->GetIndexForItem(ItemData) == -1)
+		ItemTilePanel->AddItem(ItemData);
+	ItemCountUp(CastChecked<UAstroItemData>(ItemData));
 }
 
 void UInventoryWidget::DeleteItemData(UObject* ItemData) 
 {
-	if(ItemTilePanel->GetIndexForItem(ItemData) != -1)
+	if (ItemTilePanel->GetIndexForItem(ItemData) != -1)
 		ItemTilePanel->RemoveItem(ItemData);
 }
+
 
 void UInventoryWidget::SetTextData(UAstroItemData* InItemData)
 {
@@ -54,11 +46,41 @@ void UInventoryWidget::SetTextDefault()
 	ItemDescriptionText->SetText(FText::FromString(TEXT("")));
 }
 
-void UInventoryWidget::ItemUpdate(UAstroItemData* ItemData)
+void UInventoryWidget::ItemCountUp(UAstroItemData* ItemData)
 {
-	UInventorySlotWidget* Widget = Cast<UInventorySlotWidget>(ItemTilePanel->GetEntryWidgetFromItem(ItemData));
-	ItemData->ItemCount++;
-	if (Widget)
-		Widget->ItemCountChanged(ItemData);
-		
+	if (ItemCounter.Find(ItemData))
+	{
+		ItemCounter[ItemData]++;
+	}
+	else
+		ItemCounter.Add(ItemData, 1);
+
+	auto Item = Cast<UInventorySlotWidget>(ItemTilePanel->GetEntryWidgetFromItem(ItemData));
+	if(Item)
+		Item->ItemCountTextUpdate(ItemCounter[ItemData]);
+}
+
+void UInventoryWidget::ItemCountDown(UAstroItemData* ItemData)
+{
+	if (ItemCounter.Find(ItemData))
+	{
+		if (--ItemCounter[ItemData] <= 0)
+		{
+			ItemCounter.Remove(ItemData);
+			DeleteItemData(ItemData);
+			return;
+		}
+	}
+	else
+		return;
+
+	auto Item = Cast<UInventorySlotWidget>(ItemTilePanel->GetEntryWidgetFromItem(ItemData));
+
+	if(Item)
+		Item->ItemCountTextUpdate(ItemCounter[ItemData]);
+}
+
+int32 UInventoryWidget::GetItemCount(UAstroItemData* ItemData)
+{
+	return ItemCounter[ItemData];
 }

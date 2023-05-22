@@ -31,6 +31,9 @@ public :
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> ItemDescriptionText;
 
+	UPROPERTY()
+	TMap<UAstroItemData*, int32> ItemCounter;
+
 public :
 	bool IsItemContains(UObject* Item);
 
@@ -42,5 +45,9 @@ public :
 
 	void DeleteItemData(UObject* ItemData);
 
-	void ItemUpdate(UAstroItemData* ItemData);
+	void ItemCountUp(UAstroItemData* ItemData);
+
+	void ItemCountDown(UAstroItemData* ItemData);
+
+	int32 GetItemCount(UAstroItemData* ItemData);
 };

@@ -37,13 +37,7 @@ public :
 
 	virtual void AddItem(UObject* InItemData) override;
 
-	virtual void RemoveItem(UObject* InItemData) override;
-
 	virtual void ActiveItemWidget() override;
-
-	virtual void TextUpdateWhenHovered(class UAstroItemData* InItemData) override;
-
-	virtual void TextUpdateWhenUnHovered() override;
 
 	virtual bool ItemContainCheck(UObject* InItemData) override;
 

@@ -24,24 +24,15 @@ class LUNARMODULARBASE_API IAstroHUDInterface
 public:
 	virtual void UpdateMissionText(FString& MissionText) = 0;
 
-	UFUNCTION()
 	virtual void UpdateMissionScriptText(FString& MissionScript) = 0;
 
-	UFUNCTION()
 	virtual void SetVisibleUserStatus(bool& InVisible) = 0;
 
-	UFUNCTION()
 	virtual void SetPlayerHPText(uint32& InHp) = 0;
 
 	virtual void AddItem(UObject* InItemData) = 0;
 
-	virtual void RemoveItem(UObject* InItemData) = 0;
-
 	virtual void ActiveItemWidget() = 0;
-
-	virtual void TextUpdateWhenHovered(class UAstroItemData* InItemData) = 0;
-
-	virtual void TextUpdateWhenUnHovered() = 0;
 
 	virtual bool ItemContainCheck(UObject* InItemData) = 0;
 

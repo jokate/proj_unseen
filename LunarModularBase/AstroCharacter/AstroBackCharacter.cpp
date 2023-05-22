@@ -32,7 +32,6 @@ void AAstroBackCharacter::Req_MissionClear(FName ObjectName)
 	FString RequestID = ObjectName.ToString();
 	if (!RequestID.Contains(ASTRO_COOP_ID))
 		RequestID = ASTRO_BACK_ID + RequestID;
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *RequestID);
 	MissionComponent->ClearCheck(FName(*RequestID));
 }
 

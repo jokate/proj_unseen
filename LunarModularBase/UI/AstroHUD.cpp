@@ -91,12 +91,6 @@ void AAstroHUD::AddItem(UObject* InItemData)
 		InventoryWidget->AddItemData(InItemData);
 }
 
-void AAstroHUD::RemoveItem(UObject* InItemData)
-{
-	ensure(InItemData);
-	if (InItemData != nullptr)
-		InventoryWidget->DeleteItemData(InItemData);
-}
 
 void AAstroHUD::ActiveItemWidget()
 {
@@ -111,15 +105,6 @@ void AAstroHUD::ActiveItemWidget()
 	}
 }
 
-void AAstroHUD::TextUpdateWhenHovered(class UAstroItemData* InItemData)
-{
-	InventoryWidget->SetTextData(InItemData);
-}
-
-void AAstroHUD::TextUpdateWhenUnHovered()
-{
-	InventoryWidget->SetTextDefault();
-}
 
 bool AAstroHUD::ItemContainCheck(UObject* InItemData)
 {

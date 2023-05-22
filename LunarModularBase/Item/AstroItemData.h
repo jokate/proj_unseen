@@ -20,9 +20,13 @@ class LUNARMODULARBASE_API UAstroItemData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 	
-	
-	
-	virtual void BeginDestroy() override;
+	bool operator==(const UAstroItemData& InOther) const {
+		return ItemID == InOther.ItemID;
+	}
+
+	friend FORCEINLINE uint32 GetTypeHash(const UAstroItemData& InItemData) {
+		return GetTypeHash(InItemData.ItemID);
+	}
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Type)
@@ -39,7 +43,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ItemDescription)
 	FString ItemDescription;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ItemCount)
-	int32 ItemCount = 1;
 };

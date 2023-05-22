@@ -8,6 +8,7 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Components/ListViewBase.h"
 
 #include "Interface/AstroItemInterface.h"
 #include "Interface/AstroHUDInterface.h"
@@ -24,9 +25,7 @@ void UInventorySlotWidget::NativeConstruct()
 
 void UInventorySlotWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
-	UE_LOG(LogTemp, Log, TEXT("Visible Set"));
 	ItemData = Cast<UAstroItemData>(ListItemObject);
-	this->SetVisibility(ESlateVisibility::Visible);
 
 	check(ItemData);
 	ItemImage->SetBrushFromTexture(ItemData->ItemImage);
@@ -34,7 +33,11 @@ void UInventorySlotWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 	{
 		ItemActivationWidget->ButtonSet(true);
 		ItemActivationWidget->ItemActionButton->OnClicked.AddDynamic(this, &UInventorySlotWidget::OnActivationItemButton);
-		ItemCountText->SetText(FText::FromString(FString::Printf(TEXT("%d"), ItemData->ItemCount)));
+		UInventoryWidget* Widget = Cast<UInventoryWidget>(GetOwningListView()->GetOuter()->GetOuter());
+		if (Widget)
+		{
+			ItemCountTextUpdate(Widget->GetItemCount(this->ItemData));
+		}
 	}
 	else
 	{
@@ -42,16 +45,6 @@ void UInventorySlotWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 	}
 }
 
-void UInventorySlotWidget::ItemCountChanged(UAstroItemData* InItemData)
-{
-	ItemData = InItemData;
-	if (ItemData->ItemCount <= 0) {
-		IAstroHUDInterface* HUD = CastChecked<IAstroHUDInterface>(GetOwningPlayer()->GetHUD());
-		HUD->RemoveItem(ItemData);
-		return; 
-	}
-	ItemCountText->SetText(FText::FromString(FString::Printf(TEXT("%d"), ItemData->ItemCount)));
-}
 
 void UInventorySlotWidget::OnPressedItemButton()
 {
@@ -59,28 +52,41 @@ void UInventorySlotWidget::OnPressedItemButton()
 }
 
 void UInventorySlotWidget::OnActivationItemButton()
-{
-	
+{	
 	IAstroItemInterface* ItemUseComponent = CastChecked<IAstroItemInterface>(GetOwningPlayerPawn());
 
+	UInventoryWidget* Widget = Cast<UInventoryWidget>(GetOwningListView()->GetOuter()->GetOuter());
+	if (Widget)
+	{
+		Widget->ItemCountDown(ItemData);
+	}
 	ItemUseComponent->UseItem(ItemData);
 	ItemActivationWidget->SetItemActivateWidgetActive();
-	ItemData->ItemCount--;
-	ItemCountChanged(this->ItemData);
 }
 
 void UInventorySlotWidget::OnHoveredItemButton()
 {
 	UE_LOG(LogTemp, Log, TEXT("Hovered"));
-	IAstroHUDInterface* HUD =  CastChecked<IAstroHUDInterface>(GetOwningPlayer()->GetHUD());
-	HUD->TextUpdateWhenHovered(ItemData);
+	UInventoryWidget* Widget = Cast<UInventoryWidget>(GetOwningListView()->GetOuter()->GetOuter());
+	if (Widget)
+	{
+		Widget->SetTextData(this->ItemData);
+	}
 }
 
 void UInventorySlotWidget::UnHoveredItemButton()
 {
-	IAstroHUDInterface* HUD = CastChecked<IAstroHUDInterface>(GetOwningPlayer()->GetHUD());
-	HUD->TextUpdateWhenUnHovered();
+	UInventoryWidget* Widget = Cast<UInventoryWidget>(GetOwningListView()->GetOuter()->GetOuter());
+	if (Widget)
+	{
+		Widget->SetTextDefault();
+	}
 	ItemActivationWidget->ItemActionButton->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UInventorySlotWidget::ItemCountTextUpdate(int32 ItemCount)
+{
+	ItemCountText->SetText(FText::FromString(FString::Printf(TEXT("%d"), ItemCount)));
 }
 
 
