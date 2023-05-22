@@ -65,7 +65,7 @@ void UItemComponent::OperateItem(UAstroItemData* InItemData)
 	RequestMissionClearCheck(InItemData);
 }
 
-bool UItemComponent::ItemContainCheck(UObject* InItemData)
+bool UItemComponent::ItemContainCheck(UAstroItemData* InItemData)
 {
 	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
 	if (PlayerHUD != nullptr && GetOwnerRole() == ENetRole::ROLE_AutonomousProxy) {

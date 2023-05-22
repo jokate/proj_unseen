@@ -106,7 +106,7 @@ void AAstroHUD::ActiveItemWidget()
 }
 
 
-bool AAstroHUD::ItemContainCheck(UObject* InItemData)
+bool AAstroHUD::ItemContainCheck(UAstroItemData* InItemData)
 {
 	return InventoryWidget->IsItemContains(InItemData);
 }

@@ -35,7 +35,7 @@ public :
 	TMap<UAstroItemData*, int32> ItemCounter;
 
 public :
-	bool IsItemContains(UObject* Item);
+	bool IsItemContains(UAstroItemData* Item);
 
 	void AddItemData(UObject* ItemData);
 

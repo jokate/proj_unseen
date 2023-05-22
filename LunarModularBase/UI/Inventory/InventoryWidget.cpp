@@ -14,9 +14,9 @@ void UInventoryWidget::NativeConstruct()
 	this->SetVisibility(ESlateVisibility::Hidden);
 }
 
-bool UInventoryWidget::IsItemContains(UObject* Item)
+bool UInventoryWidget::IsItemContains(UAstroItemData* Item)
 {
-	return (ItemTilePanel->GetIndexForItem(Item) != -1);
+	return ItemCounter.Contains(Item);
 }
 
 void UInventoryWidget::AddItemData(UObject* ItemData)

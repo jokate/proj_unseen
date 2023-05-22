@@ -12,6 +12,7 @@
  */
 class UMissionWidget;
 class UAstroCharacterWidget;
+class UAstroItemData;
 class UInventoryWidget;
 
 UCLASS()
@@ -39,7 +40,7 @@ public :
 
 	virtual void ActiveItemWidget() override;
 
-	virtual bool ItemContainCheck(UObject* InItemData) override;
+	virtual bool ItemContainCheck(UAstroItemData* InItemData) override;
 
 public :
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")

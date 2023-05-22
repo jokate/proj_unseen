@@ -61,7 +61,8 @@ public :
 
 	void ItemUse(UAstroItemData* InItemData);
 
-	bool ItemContainCheck(UObject* InItemData);
+	bool ItemContainCheck(UAstroItemData* InItemData);
+
 protected:
 
 	void InstallItem(UAstroItemData* InItemData);

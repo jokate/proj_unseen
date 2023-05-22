@@ -29,15 +29,17 @@ void UInventorySlotWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 
 	check(ItemData);
 	ItemImage->SetBrushFromTexture(ItemData->ItemImage);
+
+	UInventoryWidget* Widget = Cast<UInventoryWidget>(GetOwningListView()->GetOuter()->GetOuter());
+	if (Widget)
+	{
+		ItemCountTextUpdate(Widget->GetItemCount(this->ItemData));
+	}
+
 	if (ItemData->Type == EItemType::Active)
 	{
 		ItemActivationWidget->ButtonSet(true);
 		ItemActivationWidget->ItemActionButton->OnClicked.AddDynamic(this, &UInventorySlotWidget::OnActivationItemButton);
-		UInventoryWidget* Widget = Cast<UInventoryWidget>(GetOwningListView()->GetOuter()->GetOuter());
-		if (Widget)
-		{
-			ItemCountTextUpdate(Widget->GetItemCount(this->ItemData));
-		}
 	}
 	else
 	{
