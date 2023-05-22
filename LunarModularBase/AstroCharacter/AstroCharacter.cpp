@@ -26,7 +26,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "InputMappingContext.h"
-#include "Game/AstroPlayerState.h"
 
 //UserData Assets
 #include "UserDataAsset.h"
@@ -135,6 +134,7 @@ void AAstroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Triggered, this, &AAstroCharacter::Search);
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Completed, this, &AAstroCharacter::UnSearch);
 	PEI->BindAction(InputActions->ItemUse, ETriggerEvent::Triggered, this, &AAstroCharacter::ActiveItemWidget);
+	PEI->BindAction(InputActions->ItemInstall, ETriggerEvent::Triggered, this, &AAstroCharacter::ItemInstall);
 }
 
 
@@ -374,4 +374,32 @@ void AAstroCharacter::UseItem(UAstroItemData* InItemData)
 bool AAstroCharacter::ContainsItem(UAstroItemData* ItemData)
 {
 	return ItemComponent->ItemContainCheck(ItemData);
+}
+
+void AAstroCharacter::ItemInstall(const FInputActionValue& Value)
+{
+	const float Radius = 250.0f;
+	FHitResult Hit;
+	FVector Start = GetActorLocation();
+	Start.Z += GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	FVector End = Start + Camera->GetForwardVector() * FVector2D::Distance(FVector2D::ZeroVector, FVector2D(Start.Z, Radius));
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Visibility, QueryParams);
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
+	if(Hit.bBlockingHit) 
+	{
+		FVector HitPoint = Hit.ImpactPoint;
+		FVector ForDistanceVector = GetActorLocation();
+		HitPoint.Z = ForDistanceVector.Z;
+		double Distance = FVector::Distance(ForDistanceVector, HitPoint);
+		UE_LOG(LogTemp, Warning, TEXT("Distance : %lf"), Distance);
+
+		UE_LOG(LogTemp, Warning, TEXT("%lf, %lf, %lf"), HitPoint.X, HitPoint.Y, HitPoint.Z);
+
+
+	}
 }

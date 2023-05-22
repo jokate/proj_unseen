@@ -4,7 +4,7 @@
 #include "UI/Inventory/InventorySlotWidget.h"
 #include "UI/Inventory/ItemActivationWidget.h"
 #include "UI/Inventory/InventoryWidget.h"
-#include "Item/AstroItemData.h"
+#include "Item/AstroItemDatas.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
@@ -55,10 +55,11 @@ void UInventorySlotWidget::OnPressedItemButton()
 
 void UInventorySlotWidget::OnActivationItemButton()
 {	
+	UAstroActiveItemData* ActiveItem = CastChecked<UAstroActiveItemData>(ItemData);
 	IAstroItemInterface* ItemUseComponent = CastChecked<IAstroItemInterface>(GetOwningPlayerPawn());
 
 	UInventoryWidget* Widget = Cast<UInventoryWidget>(GetOwningListView()->GetOuter()->GetOuter());
-	if (Widget)
+	if (Widget && ActiveItem->ActivationType != EActiveType::PermanentOperational)
 	{
 		Widget->ItemCountDown(ItemData);
 	}

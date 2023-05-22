@@ -12,10 +12,9 @@
 UENUM(BlueprintType)
 enum class EActiveType : uint8
 {
-	Operational = 0,
+	PermanentOperational = 0,
 	Installation,
 	Consumption,
-
 };
 
 UCLASS()

@@ -35,7 +35,6 @@ void UInventoryWidget::DeleteItemData(UObject* ItemData)
 
 void UInventoryWidget::SetTextData(UAstroItemData* InItemData)
 {
-	UE_LOG(LogTemp, Log, TEXT("Item HoverChanged"));
 	ItemNameText->SetText(FText::FromString(InItemData->ItemName));
 	ItemDescriptionText->SetText(FText::FromString(InItemData->ItemDescription));
 }

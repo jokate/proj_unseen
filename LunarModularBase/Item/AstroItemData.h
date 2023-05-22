@@ -20,11 +20,13 @@ class LUNARMODULARBASE_API UAstroItemData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 	
-	bool operator==(const UAstroItemData& InOther) const {
+	bool operator==(const UAstroItemData& InOther) const 
+	{
 		return ItemID == InOther.ItemID;
 	}
 
-	friend FORCEINLINE uint32 GetTypeHash(const UAstroItemData& InItemData) {
+	friend FORCEINLINE uint32 GetTypeHash(const UAstroItemData& InItemData) 
+	{
 		return GetTypeHash(InItemData.ItemID);
 	}
 	

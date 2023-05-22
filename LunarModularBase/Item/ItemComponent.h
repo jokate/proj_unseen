@@ -73,7 +73,4 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void RequestMissionClearCheck(UAstroItemData* InItemData);
 
-	//UFUNCTION(NetMulticast, Reliable)
-	//void RespItemUse();
-		
 };

@@ -146,5 +146,9 @@ protected :
 
 	virtual bool ContainsItem(UAstroItemData* ItemData) override;
 
+	void ItemInstall(const FInputActionValue& Value);
+	
+
 protected :
+
 };

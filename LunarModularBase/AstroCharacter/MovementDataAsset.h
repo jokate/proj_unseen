@@ -43,5 +43,7 @@ public :
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* ItemUse;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UInputAction* ItemInstall;
 	
 };

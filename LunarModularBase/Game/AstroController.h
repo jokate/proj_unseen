@@ -28,8 +28,4 @@ protected :
 	virtual void PostInitializeComponents() override;
 	virtual void SetupInputComponent() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetPawn(APawn* InPawn) override;
-	virtual void OnPossess(APawn* aPawn) override;
-private :
 };
