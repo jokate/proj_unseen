@@ -163,11 +163,10 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void ItemDeEquip_Server();
 
-	UFUNCTION(Server, Reliable)
 	void ItemInstall(const FInputActionValue& Value);
 
 
-	UFUNCTION(NetMulticast, Reliable)
+	UFUNCTION(Server, Reliable)
 	void ItemInstall_Server();
 
 	//For Item Installation

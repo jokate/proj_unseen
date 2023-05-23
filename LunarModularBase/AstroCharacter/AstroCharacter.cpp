@@ -414,8 +414,12 @@ void AAstroCharacter::ItemDeEquip_Server_Implementation()
 	OnHandedItem->SetStaticMesh(nullptr);
 }
 
-void AAstroCharacter::ItemInstall_Implementation(const FInputActionValue& Value)
+void AAstroCharacter::ItemInstall(const FInputActionValue& Value)
 {
+	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
+	if (PlayerHUD != nullptr && GetLocalRole() == ENetRole::ROLE_AutonomousProxy) {
+		PlayerHUD->ItemUsed(OnHandedItemData);
+	}
 	ItemInstall_Server();
 }
 
@@ -458,14 +462,6 @@ void AAstroCharacter::ItemInstall_Server_Implementation()
 			}
 		}
 	} 
-	else 
-	{
-		auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
-		if (PlayerHUD != nullptr && GetLocalRole() == ENetRole::ROLE_AutonomousProxy) {
-			PlayerHUD->ItemUsed(OnHandedItemData);
-		}
-	}
-
 }
 
 
