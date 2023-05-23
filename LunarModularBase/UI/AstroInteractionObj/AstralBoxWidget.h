@@ -14,7 +14,7 @@
 class UBoxUIDataAsset;
 
 UCLASS()
-class LUNARMODULARBASE_API UAstralBoxWidget : public UUserWidget
+class LUNARMODULARBASE_API UAstralBoxWidget : public UUserWidget, public IInteractionWidgetInterface
 {
 	GENERATED_BODY()
 	
@@ -42,7 +42,7 @@ private :
 protected :
 
 	UFUNCTION(BlueprintCallable, Category = UISet)
-	void SetPercentage(float InPercentage);
+	virtual void SetPercentage(float InPercentage) override;
 
 protected :
 	UFUNCTION(BlueprintCallable, Category = UISet)

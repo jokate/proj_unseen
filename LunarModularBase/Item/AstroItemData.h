@@ -45,4 +45,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ItemDescription)
 	FString ItemDescription;
+
+
+	virtual bool IsNameStableForNetworking() const override
+	{
+		return true;
+	};
+
+	virtual bool IsSupportedForNetworking() const override
+	{
+		return true;
+	}
 };

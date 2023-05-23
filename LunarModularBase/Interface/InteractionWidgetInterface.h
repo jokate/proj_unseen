@@ -12,7 +12,6 @@ class UInteractionWidgetInterface : public UInterface
 {
 	GENERATED_BODY()
 };
-DECLARE_DELEGATE(FOnActivated);
 
 /**
  * 
@@ -23,11 +22,8 @@ class LUNARMODULARBASE_API IInteractionWidgetInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void OnActivateButtonPressed() = 0;
-
-	virtual FOnActivated& ActivatedEventBind() = 0;
-
-	virtual void OnActivateButtonReleased() = 0;
 
 	virtual void OnPlayerTriggered(bool bIsTriggered) = 0;
+	
+	virtual void SetPercentage(float InPercent) = 0;
 };

@@ -46,7 +46,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 public:	
+
 	void ItemWidgetActive();
+
 protected :
 
 	//Item Init
@@ -72,5 +74,4 @@ protected:
 	//Request Server this Item is For mission
 	UFUNCTION(Server, Reliable)
 	void RequestMissionClearCheck(UAstroItemData* InItemData);
-
 };

@@ -37,6 +37,8 @@ void UAstralBoxWidget::SetPercentage(float InPercentage)
 
 void UAstralBoxWidget::OnPlayerTriggered(bool bIsTriggered)
 {
+	if (!CanvasPanel)
+		return;
 	if (bIsTriggered) {
 		CanvasPanel->SetVisibility(ESlateVisibility::Visible);
 		return;

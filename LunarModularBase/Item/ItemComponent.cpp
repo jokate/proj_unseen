@@ -2,13 +2,13 @@
 
 
 #include "Item/ItemComponent.h"
-#include "Item/AstroActiveItemData.h"
-#include "Item/AstroPassiveItemData.h"
+#include "Item/AstroItemDatas.h"
 
 #include "GameFrameWork/GameModeBase.h"
 #include "GameFrameWork/HUD.h"
 
 #include "Interface/AstroMissionManager.h"
+#include "Interface/AstroItemInterface.h"
 #include "Interface/AstroHUDInterface.h"
 #include "Net/UnrealNetwork.h"
 // Sets default values for this component's properties
@@ -55,6 +55,11 @@ void UItemComponent::ItemUse(UAstroItemData* InItemData)
 
 void UItemComponent::InstallItem(UAstroItemData* InItemData)
 {
+	UAstroActiveItemData* ActiveItemData = CastChecked<UAstroActiveItemData>(InItemData);
+
+	IAstroItemInterface* UserForItem = CastChecked<IAstroItemInterface>(GetOwner());
+	UserForItem->ItemEquip(ActiveItemData);
+
 	UE_LOG(LogTemp, Warning, TEXT("Item Installed"));
 	RequestMissionClearCheck(InItemData);
 }
@@ -64,6 +69,8 @@ void UItemComponent::OperateItem(UAstroItemData* InItemData)
 	UE_LOG(LogTemp, Warning, TEXT("Item Operated"));
 	RequestMissionClearCheck(InItemData);
 }
+
+
 
 bool UItemComponent::ItemContainCheck(UAstroItemData* InItemData)
 {

@@ -105,6 +105,11 @@ void AAstroHUD::ActiveItemWidget()
 	}
 }
 
+void AAstroHUD::ItemUsed(UAstroItemData* InItemData)
+{
+	InventoryWidget->ItemCountDown(InItemData);
+}
+
 
 bool AAstroHUD::ItemContainCheck(UAstroItemData* InItemData)
 {

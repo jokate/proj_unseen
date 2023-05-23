@@ -7,7 +7,9 @@
 #include "AstroItemInterface.generated.h"
 
 // This class does not need to be modified.
+
 DECLARE_DELEGATE_OneParam(FOnTakeItemDelegate, class UAstroItemData*);
+class UAstroActiveItemData;
 UINTERFACE(MinimalAPI)
 class UAstroItemInterface : public UInterface
 {
@@ -23,9 +25,13 @@ class LUNARMODULARBASE_API IAstroItemInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void UseItem(class UAstroItemData* InItemData) = 0;
+	virtual void UseItem(UAstroItemData* InItemData) = 0;
 
 	virtual bool ContainsItem(UAstroItemData* ItemData) = 0;
 
 	virtual void OnItemObjectCollided(FOnTakeItemDelegate& ItemDelegate) = 0;
+
+	virtual void ItemEquip(UAstroActiveItemData* InItemData) = 0;
+
+	virtual void ItemDeEquip() = 0;
 };

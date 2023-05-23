@@ -5,6 +5,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
 #include "Interface/AstroCharacterInterface.h"
+#include "Interface/InteractionWidgetInterface.h"
 #include "GameFramework/GameStateBase.h"
 
 #include "AccessControl/AccessControlComponent.h"
@@ -27,10 +28,10 @@ AAstroInteractableObject::AAstroInteractableObject()
 
 
 	check(DataAsset != nullptr);
+	RootComponent = Mesh;
 	ObjectTrigger->SetupAttachment(Mesh);
 	ObjectTrigger->SetSphereRadius(DataAsset->SphereRadius);
 	ObjectTrigger->SetCollisionProfileName(TEXT("ObjectTrigger"));
-
 	ActivationWidget->SetupAttachment(Mesh);
 	ActivationWidget->SetRelativeLocation(DataAsset->RelativeLocation);
 	ActivationWidget->SetWidgetSpace(EWidgetSpace::Screen);
@@ -47,8 +48,6 @@ AAstroInteractableObject::AAstroInteractableObject()
 void AAstroInteractableObject::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	
 }
 void AAstroInteractableObject::PostInitializeComponents()
 {
@@ -85,8 +84,8 @@ void AAstroInteractableObject::StopActivating()
 void AAstroInteractableObject::SetPercentage(float Infloat)
 {
 	ActivationPercent = Infloat;
-	K2_OnActivateFunctionCall(ActivationPercent);
-
+	IInteractionWidgetInterface* Widget = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
+	Widget->SetPercentage(ActivationPercent);
 	if (ActivationPercent > ActivationFullPercent)
 	{
 		SetObjActiveComplete();
@@ -104,7 +103,8 @@ void AAstroInteractableObject::OnCharacterOverlap(UPrimitiveComponent* Overlappe
 	{
 		CharacterInterface->ReturnActivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::OnActivating);
 		CharacterInterface->ReturnDeactivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::StopActivating);
-		K2_OnCharacterOverlapped();
+		IInteractionWidgetInterface* Widget = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
+		Widget->OnPlayerTriggered(true);
 	}
 }
 
@@ -122,6 +122,7 @@ void AAstroInteractableObject::OnCharacterOverlapOut(UPrimitiveComponent* Overla
 		{
 			CharacterInterface->ActivationComplete(this);
 		}
-		K2_OnCharacterOverlapOut();
+		IInteractionWidgetInterface* Widget = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
+		Widget->OnPlayerTriggered(false);
 	}
 }

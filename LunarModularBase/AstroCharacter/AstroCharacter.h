@@ -58,6 +58,9 @@ public :
 	UPROPERTY(VisibleAnywhere, Category = HUD)
 	TObjectPtr<class AHUD> AstroHUD;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = EquippedItem, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UStaticMeshComponent> OnHandedItem;
+
 public:
 	//Move
 	virtual void UpDown(const FInputActionValue& Value) override;
@@ -146,9 +149,34 @@ protected :
 
 	virtual bool ContainsItem(UAstroItemData* ItemData) override;
 
+	//Item RPC Calls
+protected:
+	UFUNCTION(Server, Reliable)
+	virtual void ItemEquip(UAstroActiveItemData* InItemData) override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ItemEquip_Server(UAstroActiveItemData* InItemData);
+
+	UFUNCTION(Server, Reliable)
+	virtual void ItemDeEquip() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ItemDeEquip_Server();
+
+	UFUNCTION(Server, Reliable)
 	void ItemInstall(const FInputActionValue& Value);
-	
+
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ItemInstall_Server();
+
+	//For Item Installation
+protected :
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
+	TObjectPtr<UAstroActiveItemData> OnHandedItemData;
+
+	UPROPERTY(EditAnywhere, Category = ItemInstallClass, Meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AAstroInstallItem> ItemInstallClass;
 
 protected :
-
 };

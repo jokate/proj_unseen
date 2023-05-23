@@ -15,11 +15,6 @@ void AAstroFrontCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	PlayerTypeSetting(EPlayerType::PLAYER_FRONT);
-	//FOnMissionObjectActive Event = UAstroMissionSingleton::Get().GetMissionObjectDelegate();
-	//if (!Event.IsBoundToObject(this)) {
-	//	Event.AddUObject(this, &AAstroFrontCharacter::Req_MissionClear);
-	//	UE_LOG(LogTemp, Log, TEXT("Not Bound Bound Completed"));
-	//}
 }
 
 void AAstroFrontCharacter::PostInitializeComponents()

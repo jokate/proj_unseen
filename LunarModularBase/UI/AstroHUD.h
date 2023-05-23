@@ -40,6 +40,8 @@ public :
 
 	virtual void ActiveItemWidget() override;
 
+	virtual void ItemUsed(UAstroItemData* InItemData) override;
+
 	virtual bool ItemContainCheck(UAstroItemData* InItemData) override;
 
 public :

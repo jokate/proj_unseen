@@ -59,7 +59,7 @@ void UInventorySlotWidget::OnActivationItemButton()
 	IAstroItemInterface* ItemUseComponent = CastChecked<IAstroItemInterface>(GetOwningPlayerPawn());
 
 	UInventoryWidget* Widget = Cast<UInventoryWidget>(GetOwningListView()->GetOuter()->GetOuter());
-	if (Widget && ActiveItem->ActivationType != EActiveType::PermanentOperational)
+	if (Widget && ActiveItem->ActivationType == EActiveType::Consumption)
 	{
 		Widget->ItemCountDown(ItemData);
 	}

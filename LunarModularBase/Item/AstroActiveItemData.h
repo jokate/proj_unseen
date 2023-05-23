@@ -27,4 +27,7 @@ public :
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ActivationType)
 	EActiveType ActivationType;
+
+	UPROPERTY(EditAnywhere, Category = InstallationGroundMesh)
+	TSoftObjectPtr<UStaticMesh> InstallationGroundMesh;
 };
