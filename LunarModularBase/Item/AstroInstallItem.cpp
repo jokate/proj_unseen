@@ -22,10 +22,6 @@ void AAstroInstallItem::Initialize(UAstroActiveItemData* InItemData)
 void AAstroInstallItem::BeginPlay()
 {
 	Super::BeginPlay();
-	if (ActivationItemData)
-		Mesh->SetStaticMesh(ActivationItemData->InstallationGroundMesh.Get());
-	else
-		UE_LOG(LogTemp, Warning, TEXT("Item Is Not Valid"));
 }
 
 void AAstroInstallItem::SetMeshofItem()
