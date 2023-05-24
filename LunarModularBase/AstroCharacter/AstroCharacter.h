@@ -63,8 +63,7 @@ public :
 
 public:
 	//Move
-	virtual void UpDown(const FInputActionValue& Value) override;
-	virtual void LeftRight(const FInputActionValue& Value) override;
+	virtual void Move(const FInputActionValue& Value) override;
 	virtual void LookUp(const FInputActionValue& Value) override;
 	virtual void Turn(const FInputActionValue& Value) override;
 	virtual void Swift(const FInputActionValue& Value) override;

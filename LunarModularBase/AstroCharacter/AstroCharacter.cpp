@@ -8,6 +8,7 @@
 
 //For Widget
 #include "AstroCharacterStatusComponent.h"
+#include "AstroCharacter/AstroAnimInstance.h"
 #include "Interface/InteractableObjectInterface.h"
 #include "Interface/AstroHUDInterface.h"
 #include "Components/WidgetComponent.h"
@@ -129,7 +130,7 @@ void AAstroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 	// Get the EnhancedInputComponent
 	UEnhancedInputComponent* PEI = Cast<UEnhancedInputComponent>(InputComponent);
-	PEI->BindAction(InputActions->InputUpDown, ETriggerEvent::Triggered, this, &AAstroCharacter::UpDown);
+	PEI->BindAction(InputActions->InputMove, ETriggerEvent::Triggered, this, &AAstroCharacter::Move);
 	PEI->BindAction(InputActions->InputLook, ETriggerEvent::Triggered, this, &AAstroCharacter::LookUp);
 	PEI->BindAction(InputActions->InputTurn, ETriggerEvent::Triggered, this, &AAstroCharacter::Turn);
 	PEI->BindAction(InputActions->InputExplore, ETriggerEvent::Triggered, this, &AAstroCharacter::Exploring);
@@ -137,7 +138,6 @@ void AAstroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PEI->BindAction(InputActions->InputSprint, ETriggerEvent::Triggered, this, &AAstroCharacter::Swift);
 	PEI->BindAction(InputActions->InputSprint, ETriggerEvent::Completed, this, &AAstroCharacter::StopSwift);
 	PEI->BindAction(InputActions->InputJump, ETriggerEvent::Triggered, this, &AAstroCharacter::Jumping);
-	PEI->BindAction(InputActions->InputLeftRight, ETriggerEvent::Triggered, this, &AAstroCharacter::LeftRight);
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Triggered, this, &AAstroCharacter::Search);
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Completed, this, &AAstroCharacter::UnSearch);
 	PEI->BindAction(InputActions->ItemUse, ETriggerEvent::Triggered, this, &AAstroCharacter::ActiveItemWidget);
@@ -152,30 +152,29 @@ void AAstroCharacter::PostInitializeComponents()
 
 #pragma region For Control
 
-void AAstroCharacter::UpDown(const FInputActionValue& Value)
+void AAstroCharacter::Move(const FInputActionValue& Value)
 {
-	float NewAxisValue = Value.Get<float>();
+	FVector2D MovementVector = Value.Get<FVector2D>();
+	if (Controller != nullptr)
+	{
+		// find out which way is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		// get forward vector
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-	if (CharacterStat->bSearch) return;
-	AddMovementInput(ForwardDirection, NewAxisValue);
+		// get right vector 
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		const FVector ScaledMovementInput = (ForwardDirection * MovementVector.Y + RightDirection * MovementVector.X).GetSafeNormal();
+		if (CharacterStat->bSearch) return;
+		// add movement 
+
+		AddMovementInput(ScaledMovementInput);
+	}
 
 }
 
-void AAstroCharacter::LeftRight(const FInputActionValue& Value)
-{
-	float NewAxisValue = Value.Get<float>();
-
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-	if (CharacterStat->bSearch) return;
-	AddMovementInput(RightDirection, NewAxisValue);
-}
 
 void AAstroCharacter::LookUp(const FInputActionValue& Value)
 {
@@ -293,9 +292,9 @@ void AAstroCharacter::SetControlMode() {
 	SpringArm->bInheritYaw = true;
 	SpringArm->bDoCollisionTest = true;
 	bUseControllerRotationYaw = false;
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->bUseControllerDesiredRotation = false;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.0f, 0.0f);
 	
 }
 

@@ -24,8 +24,7 @@ class LUNARMODULARBASE_API IAstroCharacterInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void UpDown(const FInputActionValue& Value) = 0;
-	virtual void LeftRight(const FInputActionValue& Value) = 0;
+	virtual void Move(const FInputActionValue& Value) = 0;
 	virtual void LookUp(const FInputActionValue& Value) = 0;
 	virtual void Turn(const FInputActionValue& Value) = 0;
 	virtual void Swift(const FInputActionValue& Value) = 0;

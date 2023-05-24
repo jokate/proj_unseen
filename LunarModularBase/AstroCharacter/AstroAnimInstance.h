@@ -32,5 +32,11 @@ public :
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	float JumpVelocity;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	float LeftRight;
+
+	FTimerHandle AnimTimer;
+
+public :
 
 };

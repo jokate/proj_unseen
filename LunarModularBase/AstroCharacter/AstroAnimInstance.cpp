@@ -24,6 +24,8 @@ void UAstroAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			Speed = Character->GetCharacterMovement()->MaxWalkSpeed;
 			IsExploring = Character->CharacterStat->GetExplore();
 			JumpVelocity = Character->GetCharacterMovement()->JumpZVelocity;
+			LeftRight = CalculateDirection(Character->GetVelocity(), Character->GetActorRotation());
 		}
 	}
 }
+

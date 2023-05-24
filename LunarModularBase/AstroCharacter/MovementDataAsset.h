@@ -17,10 +17,7 @@ class LUNARMODULARBASE_API UMovementDataAsset : public UDataAsset
 	
 public :
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputUpDown;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputLeftRight;
+	UInputAction* InputMove;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputJump;
