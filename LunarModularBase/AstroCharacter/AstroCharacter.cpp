@@ -433,9 +433,9 @@ void AAstroCharacter::ItemInstall_Server_Implementation()
 		FVector Start = GetActorLocation();
 		Start.Z += GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 		FVector End = Start + Camera->GetForwardVector() * FVector2D::Distance(FVector2D::ZeroVector, FVector2D(Start.Z, MaxRadius));
-
 		FCollisionQueryParams QueryParams;
 		QueryParams.AddIgnoredActor(this);
+		FRotator CameraRotator = FRotator(0, Camera->GetComponentRotation().Yaw + 180.0f, 0);
 
 		GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Visibility, QueryParams);
 
@@ -447,7 +447,7 @@ void AAstroCharacter::ItemInstall_Server_Implementation()
 			FVector ForDistanceVector = GetActorLocation();
 			ForDistanceVector.Z = HitPoint.Z;
 			double Distance = FVector::Distance(HitPoint, ForDistanceVector);
-			const FTransform SpawnTransform(HitPoint);
+			const FTransform SpawnTransform(CameraRotator, HitPoint);
 
 			if (MinRadius <= Distance && Distance <= MaxRadius)
 			{
