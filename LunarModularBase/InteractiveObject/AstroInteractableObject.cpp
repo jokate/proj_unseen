@@ -21,7 +21,6 @@ AAstroInteractableObject::AAstroInteractableObject()
 		DataAsset = BOX_DATA.Object;
 	}
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BOX"));
 	ActivationWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("ACTIVATION"));
 	AccessChecker = CreateDefaultSubobject<UAccessControlComponent>(TEXT("ACCESSCHECKER"));
 	ObjectTrigger = CreateDefaultSubobject<USphereComponent>(TEXT("OBJECTTRIGGER"));

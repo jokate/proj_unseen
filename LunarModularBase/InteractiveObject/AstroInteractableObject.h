@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "InteractiveObject/AstroTriggerResponseObject.h"
 #include "Interface/InteractableObjectInterface.h"
 #include "AstroInteractableObject.generated.h"
 
 UCLASS()
-class LUNARMODULARBASE_API AAstroInteractableObject : public AActor, public IInteractableObjectInterface
+class LUNARMODULARBASE_API AAstroInteractableObject : public AAstroTriggerResponseObject, public IInteractableObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -24,9 +24,6 @@ protected:
 
 	//Basic Component
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Box)
-	TObjectPtr<UStaticMeshComponent> Mesh;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
 	TObjectPtr<class UWidgetComponent> ActivationWidget;
 
@@ -61,18 +58,7 @@ protected :
 	void SetPercentage(float Infloat);
 
 	//For BlueprintEventFunction
-protected:
-	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnCharacterOverlapCPP"))
-	void K2_OnCharacterOverlapOut();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnCharacterOverlapOutCPP"))
-	void K2_OnCharacterOverlapped();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = PercentSet, Meta = (DisplayName = "OnSetPercentageCPP"))
-	void K2_OnActivateFunctionCall(float Infloat);
-
-	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnObjectActiveCPP"))
-	void K2_OnObjectActive();
+public :
 
 	//Overlap Function
 protected :

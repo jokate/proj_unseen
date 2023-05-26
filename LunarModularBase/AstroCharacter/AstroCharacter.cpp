@@ -424,43 +424,41 @@ void AAstroCharacter::ItemInstall(const FInputActionValue& Value)
 
 void AAstroCharacter::ItemInstall_Server_Implementation()
 {
-	if (HasAuthority()) {
-		if (!OnHandedItemData)
-			return;
-		const float MaxRadius = 300.0f;
-		const float MinRadius = 100.0f;
-		FHitResult Hit;
-		FVector Start = GetActorLocation();
-		Start.Z += GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-		FVector End = Start + Camera->GetForwardVector() * FVector2D::Distance(FVector2D::ZeroVector, FVector2D(Start.Z, MaxRadius));
-		FCollisionQueryParams QueryParams;
-		QueryParams.AddIgnoredActor(this);
-		FRotator CameraRotator = FRotator(0, Camera->GetComponentRotation().Yaw + 180.0f, 0);
+	if (!OnHandedItemData)
+		return;
+	const float MaxRadius = 300.0f;
+	const float MinRadius = 100.0f;
+	FHitResult Hit;
+	FVector Start = GetActorLocation();
+	Start.Z += GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	FVector End = Start + Camera->GetForwardVector() * FVector2D::Distance(FVector2D::ZeroVector, FVector2D(Start.Z, MaxRadius));
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+	FRotator CameraRotator = FRotator(0, Camera->GetComponentRotation().Yaw + 180.0f, 0);
 
-		GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Visibility, QueryParams);
+	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Visibility, QueryParams);
 
-		DrawDebugLine(GetWorld(), Start, End, FColor::Red);
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
 
-		if (Hit.bBlockingHit)
+	if (Hit.bBlockingHit)
+	{
+		FVector HitPoint = Hit.ImpactPoint;
+		FVector ForDistanceVector = GetActorLocation();
+		ForDistanceVector.Z = HitPoint.Z;
+		double Distance = FVector::Distance(HitPoint, ForDistanceVector);
+		const FTransform SpawnTransform(CameraRotator, HitPoint);
+
+		if (MinRadius <= Distance && Distance <= MaxRadius)
 		{
-			FVector HitPoint = Hit.ImpactPoint;
-			FVector ForDistanceVector = GetActorLocation();
-			ForDistanceVector.Z = HitPoint.Z;
-			double Distance = FVector::Distance(HitPoint, ForDistanceVector);
-			const FTransform SpawnTransform(CameraRotator, HitPoint);
+			AAstroInstallItem* InstalledItem = GetWorld()->SpawnActorDeferred<AAstroInstallItem>(ItemInstallClass, SpawnTransform);
 
-			if (MinRadius <= Distance && Distance <= MaxRadius)
-			{
-				AAstroInstallItem* InstalledItem = GetWorld()->SpawnActorDeferred<AAstroInstallItem>(ItemInstallClass, SpawnTransform);
+			UE_LOG(LogTemp, Warning, TEXT("Item Installed %s"), *OnHandedItemData->InstallationGroundMesh->GetName());
 
-				UE_LOG(LogTemp, Warning, TEXT("Item Installed %s"), *OnHandedItemData->InstallationGroundMesh->GetName());
-
-				InstalledItem->Initialize(OnHandedItemData);
-				InstalledItem->FinishSpawning(SpawnTransform);
-				ItemDeEquip();
-			}
+			InstalledItem->Initialize(OnHandedItemData);
+			InstalledItem->FinishSpawning(SpawnTransform);
+			ItemDeEquip();
 		}
-	} 
+	}
 }
 
 
