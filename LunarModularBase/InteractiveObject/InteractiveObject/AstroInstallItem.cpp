@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Item/AstroInstallItem.h"
+#include "InteractiveObject/InteractiveObject/AstroInstallItem.h"
 #include "Item/AstroItemDatas.h"
 #include "Net/UnrealNetwork.h"
 

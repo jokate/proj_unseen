@@ -14,13 +14,13 @@
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "InteractiveObject/InteractiveObject/AstroInstallItem.h"
 
 //Mission
 #include "Mission/MissionComponent.h"
 
 //Item Component
 #include "Item/ItemComponent.h"
-#include "Item/AstroInstallItem.h"
 #include "Item/AstroItemDatas.h"
 
 //For Movement 
@@ -438,11 +438,12 @@ void AAstroCharacter::ItemInstall_Server_Implementation()
 
 	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Visibility, QueryParams);
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
 
 	if (Hit.bBlockingHit)
 	{
+		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false , 5.0f);
 		FVector HitPoint = Hit.ImpactPoint;
+		UE_LOG(LogTemp, Warning, TEXT("HitPoint %f"), HitPoint.Z);
 		FVector ForDistanceVector = GetActorLocation();
 		ForDistanceVector.Z = HitPoint.Z;
 		double Distance = FVector::Distance(HitPoint, ForDistanceVector);

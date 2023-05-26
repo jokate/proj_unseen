@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractiveObject/AstroItemContainerObject.h"
+#include "InteractiveObject/InteractiveObject/AstroItemContainerObject.h"
 #include "AstroInstallItem.generated.h"
 
 class UAstroActiveItemData;

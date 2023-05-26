@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "InteractiveObject/AstroInteractableObject.h"
+#include "InteractiveObject/InteractiveObject/AstroInteractableObject.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
 #include "Interface/AstroCharacterInterface.h"
@@ -9,7 +9,7 @@
 #include "GameFramework/GameStateBase.h"
 
 #include "AccessControl/AccessControlComponent.h"
-#include "InteractionObjDataAsset.h"
+#include "InteractiveObject/InteractionObjDataAsset.h"
 
 // Sets default values
 AAstroInteractableObject::AAstroInteractableObject()
@@ -28,6 +28,7 @@ AAstroInteractableObject::AAstroInteractableObject()
 
 	check(DataAsset != nullptr);
 	RootComponent = Mesh;
+	Mesh->SetCollisionProfileName(TEXT("InteractiveObject"));
 	ObjectTrigger->SetupAttachment(Mesh);
 	ObjectTrigger->SetSphereRadius(DataAsset->SphereRadius);
 	ObjectTrigger->SetCollisionProfileName(TEXT("ObjectTrigger"));
@@ -36,7 +37,7 @@ AAstroInteractableObject::AAstroInteractableObject()
 	ActivationWidget->SetWidgetSpace(EWidgetSpace::Screen);
 	ActivationWidget->SetWidgetClass(DataAsset->BoxCountWidget->GetClass());
 	ActivationWidget->SetDrawSize(DataAsset->InteracionDrawSize);
-
+	
 	Mesh->SetStaticMesh(DataAsset->MeshData);
 	Mesh->SetRelativeLocation(FVector(0.0f, -3.5f, 0.0f));
 	bReplicates = true;

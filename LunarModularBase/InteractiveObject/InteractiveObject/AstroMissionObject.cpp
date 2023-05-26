@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "InteractiveObject/AstroMissionObject.h"
+#include "InteractiveObject/InteractiveObject/AstroMissionObject.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
 #include "AccessControl/AccessControlComponent.h"

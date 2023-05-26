@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractiveObject/AstroTriggerResponseObject.h"
+#include "InteractiveObject/InteractiveObject/AstroTriggerResponseObject.h"
 #include "Interface/InteractableObjectInterface.h"
 #include "AstroInteractableObject.generated.h"
 
