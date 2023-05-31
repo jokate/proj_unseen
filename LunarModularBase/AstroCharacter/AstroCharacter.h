@@ -164,7 +164,6 @@ protected:
 
 	void ItemInstall(const FInputActionValue& Value);
 
-
 	UFUNCTION(Server, Reliable)
 	void ItemInstall_Server();
 

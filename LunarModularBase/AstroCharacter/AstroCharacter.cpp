@@ -441,9 +441,9 @@ void AAstroCharacter::ItemInstall_Server_Implementation()
 
 	if (Hit.bBlockingHit)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Object : %s"), *Hit.GetActor()->GetName())
 		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false , 5.0f);
 		FVector HitPoint = Hit.ImpactPoint;
-		UE_LOG(LogTemp, Warning, TEXT("HitPoint %f"), HitPoint.Z);
 		FVector ForDistanceVector = GetActorLocation();
 		ForDistanceVector.Z = HitPoint.Z;
 		double Distance = FVector::Distance(HitPoint, ForDistanceVector);
@@ -452,8 +452,6 @@ void AAstroCharacter::ItemInstall_Server_Implementation()
 		if (MinRadius <= Distance && Distance <= MaxRadius)
 		{
 			AAstroInstallItem* InstalledItem = GetWorld()->SpawnActorDeferred<AAstroInstallItem>(ItemInstallClass, SpawnTransform);
-
-			UE_LOG(LogTemp, Warning, TEXT("Item Installed %s"), *OnHandedItemData->InstallationGroundMesh->GetName());
 
 			InstalledItem->Initialize(OnHandedItemData);
 			InstalledItem->FinishSpawning(SpawnTransform);

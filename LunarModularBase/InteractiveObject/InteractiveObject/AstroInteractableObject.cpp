@@ -65,7 +65,8 @@ void AAstroInteractableObject::SetObjActiveComplete()
 {
 	K2_OnObjectActive();
 	ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	SetPercentage(0.0f);
+	if(!HasAuthority())
+		SetPercentage(0.0f);
 }
 
 void AAstroInteractableObject::OnActivating()
@@ -84,12 +85,14 @@ void AAstroInteractableObject::StopActivating()
 void AAstroInteractableObject::SetPercentage(float Infloat)
 {
 	ActivationPercent = Infloat;
-	IInteractionWidgetInterface* Widget = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
-	Widget->SetPercentage(ActivationPercent);
-	if (ActivationPercent > ActivationFullPercent)
-	{
-		SetObjActiveComplete();
-		GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
+	IInteractionWidgetInterface* Widget = Cast<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
+	if (Widget) {
+		Widget->SetPercentage(ActivationPercent);
+		if (ActivationPercent > ActivationFullPercent)
+		{
+			SetObjActiveComplete();
+			GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
+		}
 	}
 }
 
@@ -103,8 +106,9 @@ void AAstroInteractableObject::OnCharacterOverlap(UPrimitiveComponent* Overlappe
 	{
 		CharacterInterface->ReturnActivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::OnActivating);
 		CharacterInterface->ReturnDeactivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::StopActivating);
-		IInteractionWidgetInterface* Widget = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
-		Widget->OnPlayerTriggered(true);
+		IInteractionWidgetInterface* Widget = Cast<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
+		if(Widget)
+			Widget->OnPlayerTriggered(true);
 	}
 }
 
@@ -122,7 +126,8 @@ void AAstroInteractableObject::OnCharacterOverlapOut(UPrimitiveComponent* Overla
 		{
 			CharacterInterface->ActivationComplete(this);
 		}
-		IInteractionWidgetInterface* Widget = CastChecked<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
-		Widget->OnPlayerTriggered(false);
+		IInteractionWidgetInterface* Widget = Cast<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
+		if(Widget)
+			Widget->OnPlayerTriggered(false);
 	}
 }

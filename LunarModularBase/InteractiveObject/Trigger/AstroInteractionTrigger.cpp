@@ -15,14 +15,15 @@ AAstroInteractionTrigger::AAstroInteractionTrigger()
 	RootComponent = ObjectMesh;
 	TriggerVolume->SetupAttachment(RootComponent);
 	TriggerVolume->SetCollisionProfileName(TEXT("ObjectTrigger"));
+
 }
 
 // Called when the game starts or when spawned
 void AAstroInteractionTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-	TriggerVolume->OnComponentBeginOverlap.AddDynamic(this, &AAstroInteractionTrigger::OnOverlapBegin);
-	TriggerVolume->OnComponentEndOverlap.AddDynamic(this, &AAstroInteractionTrigger::OnOverlapEnd);
+	TriggerVolume->OnComponentBeginOverlap.AddUniqueDynamic(this, &AAstroInteractionTrigger::OnOverlapBegin);
+	TriggerVolume->OnComponentEndOverlap.AddUniqueDynamic(this, &AAstroInteractionTrigger::OnOverlapEnd);
 }
 
 void AAstroInteractionTrigger::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

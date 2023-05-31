@@ -14,8 +14,8 @@ AAstroItemInteractionTrigger::AAstroItemInteractionTrigger()
 void AAstroItemInteractionTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-	TriggerVolume->OnComponentBeginOverlap.AddDynamic(this, &AAstroItemInteractionTrigger::OnOverlapBegin);
-	TriggerVolume->OnComponentEndOverlap.AddDynamic(this, &AAstroItemInteractionTrigger::OnOverlapEnd);
+	TriggerVolume->OnComponentBeginOverlap.AddUniqueDynamic(this, &AAstroItemInteractionTrigger::OnOverlapBegin);
+	TriggerVolume->OnComponentEndOverlap.AddUniqueDynamic(this, &AAstroItemInteractionTrigger::OnOverlapEnd);
 }
 
 void AAstroItemInteractionTrigger::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

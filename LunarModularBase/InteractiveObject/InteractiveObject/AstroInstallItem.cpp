@@ -10,7 +10,7 @@ void AAstroInstallItem::Initialize(UAstroActiveItemData* InItemData)
 	if (InItemData)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *InItemData->InstallationGroundMesh->GetName())
-		ActivationItemData = InItemData;;
+		ActivationItemData = InItemData;
 	}
 	else 
 	{
@@ -33,7 +33,7 @@ void AAstroInstallItem::SetMeshofItem()
 	Mesh->SetStaticMesh(ActivationItemData->InstallationGroundMesh.Get());
 
 	FVector LocationVector = GetActorLocation();
-	float Height = Mesh->GetStaticMesh()->GetBounds().BoxExtent.Z;
+	float Height = LocationVector.Z + Mesh->GetStaticMesh()->GetBounds().BoxExtent.Z;
 	LocationVector.Z = Height;
 	SetActorLocation(LocationVector);
 }
