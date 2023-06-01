@@ -9,6 +9,7 @@
 #include "GameFramework/HUD.h"
 #include "GameFramework/GameStateBase.h"
 #include "Engine/AssetManager.h"
+#include "Player/AstroController.h"
 
 #include "Mission/MissionManagementComponent.h"
 
@@ -46,6 +47,8 @@ AAstroGameMode::AAstroGameMode()
 	
 	MissionManager = CreateDefaultSubobject<UMissionManagementComponent>("MISSIONMANAGER");
 
+	bUseSeamlessTravel = true;
+
 }
 
 void AAstroGameMode::PostInitializeComponents()
@@ -59,23 +62,13 @@ void AAstroGameMode::BeginPlay()
 	Super::BeginPlay();
 }
 
-
-APlayerController* AAstroGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
+void AAstroGameMode::SwapPlayerControllers(APlayerController* OldPC, APlayerController* NewPC)
 {
-	if (NumberOfPlayer % PlayerSide == 0) {
-		DefaultPawnClass = ClassDataAsset->AstroCharacterClasses[0];
-	}
-	else {
-		DefaultPawnClass = ClassDataAsset->AstroCharacterClasses[1];
-	}
-	++NumberOfPlayer;
+	Super::SwapPlayerControllers(OldPC, NewPC);
+	auto NewAstroController = CastChecked<AAstroController>(NewPC);
+	auto OldAstroController = CastChecked<AAstroController>(OldPC);
+	NewAstroController->CurrentPlayerType = OldAstroController->CurrentPlayerType;
 
-	return Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage);
-}
-
-void AAstroGameMode::PostLogin(APlayerController* NewPlayer)
-{
-	Super::PostLogin(NewPlayer);
 }
 
 

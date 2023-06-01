@@ -4,12 +4,13 @@
 #include "Player/AstroController.h"
 #include "Game/AstroPlayerState.h"
 #include "Interface/AstroCharacterInterface.h"
+#include "Net/UnrealNetwork.h"
 
 
 AAstroController::AAstroController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-
+	CurrentPlayerType = EPlayerType::PLAYER_NONE;
 }
 
 
@@ -33,7 +34,6 @@ void AAstroController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 }
-
 
 
 

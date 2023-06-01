@@ -7,7 +7,6 @@
 AAstroPlayerState::AAstroPlayerState()
 {
 	PlayerType = EPlayerType::PLAYER_NONE;
-	PlayerHp = 100;
 	bReplicates = true;
 }
 
@@ -15,9 +14,6 @@ void AAstroPlayerState::InitData(EPlayerType InPlayerType)
 {
 	PlayerType = InPlayerType;
 
-	GetWorld()->GetTimerManager().SetTimer(HPTimer, [&]() {
-		--PlayerHp;
-	}, 20.0f, true);
 
 
 }
@@ -26,6 +22,5 @@ void AAstroPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AAstroPlayerState, PlayerType);
-	DOREPLIFETIME(AAstroPlayerState, PlayerHp);
 }
 

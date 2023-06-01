@@ -33,7 +33,7 @@ void AAstroMissionObject::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp
 
 	auto MissionClearInterface = Cast<IAstroMissionClearInterface>(OtherActor);
 
-	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && MissionClearInterface)
+	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && MissionClearInterface)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player IN"));
 		MissionClearInterface->OnMissionObjectCollided(OnActiveCompleted);
@@ -46,7 +46,7 @@ void AAstroMissionObject::OnCharacterOverlapOut(UPrimitiveComponent* OverlappedC
 
 	auto MissionClearInterface = Cast<IAstroMissionClearInterface>(OtherActor);
 
-	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && MissionClearInterface)
+	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && MissionClearInterface)
 	{
 		OnActiveCompleted.Unbind();
 	}

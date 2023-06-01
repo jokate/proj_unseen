@@ -30,7 +30,7 @@ void AAstroItemContainerObject::OnCharacterOverlap(UPrimitiveComponent* Overlapp
 	Super::OnCharacterOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
 	auto ItemInterfaceCast = Cast<IAstroItemInterface>(OtherActor);
-	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && ItemInterfaceCast)
+	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && ItemInterfaceCast)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player Init"));
 		ItemInterfaceCast->OnItemObjectCollided(OnItemIsGiven);
@@ -41,7 +41,7 @@ void AAstroItemContainerObject::OnCharacterOverlapOut(UPrimitiveComponent* Overl
 {
 	Super::OnCharacterOverlapOut(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
 	auto ItemInterfaceCast = Cast<IAstroItemInterface>(OtherActor);
-	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && ItemInterfaceCast)
+	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && ItemInterfaceCast)
 	{
 		OnItemIsGiven.Unbind();
 	}

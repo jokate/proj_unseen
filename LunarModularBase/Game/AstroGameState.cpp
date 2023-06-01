@@ -19,12 +19,32 @@ void AAstroGameState::SetFrontMissionID(FName InMissionID)
 {
 	AddClearedMissionToList(CurrentFrontMissionID);
 	CurrentFrontMissionID = InMissionID;
+
+	if (HasAuthority()) {
+		IAstroMissionClearInterface* Pawn = Cast<IAstroMissionClearInterface>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		if (Pawn) {
+			if (Pawn->ReturnTag() == EPlayerType::PLAYER_FRONT) {
+				UE_LOG(LogTemp, Log, TEXT("SERVER_FRONTMISSIONUPDATED"));
+				Pawn->HUDUpdate(CurrentFrontMissionID);
+			}
+		}
+	}
 }
 
 void AAstroGameState::SetBackMissionID(FName InMissionID)
 {
 	AddClearedMissionToList(CurrentBackMissionID);
 	CurrentBackMissionID = InMissionID;
+
+	if (HasAuthority()) {
+		IAstroMissionClearInterface* Pawn = Cast<IAstroMissionClearInterface>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		if (Pawn) {
+			if (Pawn->ReturnTag() == EPlayerType::PLAYER_BACK) {
+				UE_LOG(LogTemp, Log, TEXT("SERVER_BACKMISSIONUPDATED"));
+				Pawn->HUDUpdate(CurrentBackMissionID);
+			}
+		}
+	}
 }
 
 void AAstroGameState::BeginPlay()
@@ -44,19 +64,23 @@ void AAstroGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 void AAstroGameState::FrontMissionIDUpdated()
 {
-	IAstroMissionClearInterface* Pawn = CastChecked<IAstroMissionClearInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetPawn());
-	if (Pawn->ReturnTag() == EPlayerType::PLAYER_FRONT) {
-		UE_LOG(LogTemp, Log, TEXT("FRONTMISSIONUPDATED"));
-		Pawn->HUDUpdate(CurrentFrontMissionID);
+	IAstroMissionClearInterface* Pawn = Cast<IAstroMissionClearInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetPawn());
+	if (Pawn) {
+		if (Pawn->ReturnTag() == EPlayerType::PLAYER_FRONT) {
+			UE_LOG(LogTemp, Log, TEXT("FRONTMISSIONUPDATED"));
+			Pawn->HUDUpdate(CurrentFrontMissionID);
+		}
 	}
 }
 
 void AAstroGameState::BackMissionIDUpdated()
 {
-	IAstroMissionClearInterface* Pawn = CastChecked<IAstroMissionClearInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetPawn());
-	if (Pawn->ReturnTag() == EPlayerType::PLAYER_BACK) {
-		UE_LOG(LogTemp, Log, TEXT("BACKMISSIONUPDATED"));
-		Pawn->HUDUpdate(CurrentBackMissionID);
+	IAstroMissionClearInterface* Pawn = Cast<IAstroMissionClearInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetPawn());
+	if (Pawn) {
+		if (Pawn->ReturnTag() == EPlayerType::PLAYER_BACK) {
+			UE_LOG(LogTemp, Log, TEXT("BACKMISSIONUPDATED"));
+			Pawn->HUDUpdate(CurrentBackMissionID);
+		}
 	}
 }
 

@@ -11,6 +11,19 @@ void AAstroInstallItem::Initialize(UAstroActiveItemData* InItemData)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *InItemData->InstallationGroundMesh->GetName())
 		ActivationItemData = InItemData;
+		if (HasAuthority()) 
+		{
+			if (ActivationItemData->InstallationGroundMesh.IsPending())
+			{
+				ActivationItemData->InstallationGroundMesh.LoadSynchronous();
+			}
+			Mesh->SetStaticMesh(ActivationItemData->InstallationGroundMesh.Get());
+			FVector LocationVector = GetActorLocation();
+			float Height = LocationVector.Z + Mesh->GetStaticMesh()->GetBounds().BoxExtent.Z;
+			LocationVector.Z = Height;
+			SetActorLocation(LocationVector);
+		}
+
 	}
 	else 
 	{
@@ -31,11 +44,6 @@ void AAstroInstallItem::SetMeshofItem()
 		ActivationItemData->InstallationGroundMesh.LoadSynchronous();
 	}
 	Mesh->SetStaticMesh(ActivationItemData->InstallationGroundMesh.Get());
-
-	FVector LocationVector = GetActorLocation();
-	float Height = LocationVector.Z + Mesh->GetStaticMesh()->GetBounds().BoxExtent.Z;
-	LocationVector.Z = Height;
-	SetActorLocation(LocationVector);
 }
 
 void AAstroInstallItem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

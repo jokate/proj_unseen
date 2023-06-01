@@ -34,8 +34,8 @@ void UMissionComponent::MissionHUDUpdate(FName InMissionID)
 
 void UMissionComponent::MissionDescriptionUpdate(FName InMissionID)
 {
-	auto SampleHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
-	if (SampleHUD != nullptr && GetOwnerRole() == ENetRole::ROLE_AutonomousProxy) {
+	auto SampleHUD = Cast<IAstroHUDInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetHUD());
+	if (SampleHUD != nullptr) {
 		FString InString = FString::Printf(TEXT("현재 미션 : %s"), *UAstroMissionSingleton::Get().ReturnMissionDescription(InMissionID));
 		SampleHUD->UpdateMissionText(InString);
 
@@ -44,8 +44,9 @@ void UMissionComponent::MissionDescriptionUpdate(FName InMissionID)
 
 void UMissionComponent::MissionClearScriptUpdate(FName InMissionID)
 {
-	auto SampleHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
-	if (SampleHUD != nullptr && GetOwnerRole() == ENetRole::ROLE_AutonomousProxy) {
+	
+	auto SampleHUD = Cast<IAstroHUDInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetHUD());
+	if (SampleHUD != nullptr) {
 		FString CompleteString = *UAstroMissionSingleton::Get().ReturnMissionScript(InMissionID);
 		if(!CompleteString.IsEmpty())
 			SampleHUD->UpdateMissionScriptText(CompleteString);

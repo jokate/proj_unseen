@@ -4,6 +4,7 @@
 
 #include "EngineMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "AstroDefinition.h"
 #include "Engine/StreamableManager.h"
 #include "AstroController.generated.h"
 
@@ -28,4 +29,11 @@ protected :
 	virtual void PostInitializeComponents() override;
 	virtual void SetupInputComponent() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+public :
+	UPROPERTY(BlueprintReadOnly)
+	EPlayerType CurrentPlayerType;
+
+
+
 };

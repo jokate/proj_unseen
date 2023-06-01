@@ -18,14 +18,9 @@ class LUNARMODULARBASE_API AAstroPlayerState : public APlayerState
 public :
 	AAstroPlayerState();
 
-
 	void InitData(EPlayerType InPlayerType);
 
 	EPlayerType GetPlayerType() { return PlayerType; }
-
-	int32 GetPlayerHp() { return PlayerHp; }
-
-	void HpMinus() { --PlayerHp; }
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -34,8 +29,4 @@ protected:
 	UPROPERTY(Replicated, VisibleAnywhere, meta = (PrivateAccess = "true"))
 	EPlayerType PlayerType;
 
-	UPROPERTY(Replicated, VisibleAnywhere, meta = (PrivateAccess = "true"))
-	int32 PlayerHp;
-	
-	FTimerHandle HPTimer;
 };

@@ -27,8 +27,8 @@ void UItemComponent::BeginPlay()
 
 void UItemComponent::ItemWidgetActive()
 {
-	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
-	if (PlayerHUD != nullptr && GetOwnerRole() == ENetRole::ROLE_AutonomousProxy) {
+	auto PlayerHUD = Cast<IAstroHUDInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetHUD());;
+	if (PlayerHUD != nullptr) {
 		PlayerHUD->ActiveItemWidget();
 	}
 }
@@ -37,8 +37,8 @@ void UItemComponent::InitItem(UAstroItemData* ItemData)
 {	
 	if (!ItemData)
 		return;
-	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
-	if (PlayerHUD != nullptr && GetOwnerRole() == ENetRole::ROLE_AutonomousProxy) {
+	auto PlayerHUD = Cast<IAstroHUDInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetHUD());
+	if (PlayerHUD != nullptr) {
 		PlayerHUD->AddItem(ItemData);
 	}
 }

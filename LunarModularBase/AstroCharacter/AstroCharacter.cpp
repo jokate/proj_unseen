@@ -207,17 +207,41 @@ void AAstroCharacter::UnSearch(const FInputActionValue& Value)
 	OnDeActivateEvent.ExecuteIfBound();
 }
 
-void AAstroCharacter::ActivationComplete_Implementation(AActor* InActor)
+void AAstroCharacter::ActivationComplete(AActor* InActor)
 {
-	ActivationComplete_Server(InActor);
+	if (HasAuthority()) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Server Initiated"));
+		ActivationComplete_Client(InActor);
+	}
+	else 
+	{
+		ActivationComplete_Server(InActor);
+	}
 }
+
 
 void AAstroCharacter::ActivationComplete_Server_Implementation(AActor* InActor)
 {
+	ActivationComplete_Multicast(InActor);
+}
+
+void AAstroCharacter::ActivationComplete_Multicast_Implementation(AActor* InActor)
+{
 	IInteractableObjectInterface* InteractableObject = Cast <IInteractableObjectInterface>(InActor);
-	if(InteractableObject) 
+	if (InteractableObject)
 	{
 		InteractableObject->SetObjActiveComplete();
+	}
+}
+void AAstroCharacter::ActivationComplete_Client_Implementation(AActor* InActor)
+{
+	if (!HasAuthority()) {
+		IInteractableObjectInterface* InteractableObject = Cast <IInteractableObjectInterface>(InActor);
+		if (InteractableObject)
+		{
+			InteractableObject->SetObjActiveComplete();
+		}
 	}
 }
 
@@ -268,6 +292,8 @@ void AAstroCharacter::HUDUpdate(FName InMissionID)
 
 
 #pragma endregion
+
+
 
 void AAstroCharacter::ExploreCheck(float DeltaTime)
 {
@@ -332,12 +358,7 @@ void AAstroCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 void AAstroCharacter::ExploreWidgetVisibleSet(bool InVisible) 
 {
-	UFunction* Function = AstroHUD->GetClass()->FindFunctionByName("SetVisibleUserStatus");
-	if (Function) 
-	{
-		CharacterStat->SetExploring(InVisible);
-		AstroHUD->ProcessEvent(Function, &CharacterStat->GetExplore());
-	}
+
 }
 
 
@@ -416,7 +437,7 @@ void AAstroCharacter::ItemDeEquip_Server_Implementation()
 void AAstroCharacter::ItemInstall(const FInputActionValue& Value)
 {
 	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
-	if (PlayerHUD != nullptr && GetLocalRole() == ENetRole::ROLE_AutonomousProxy) {
+	if (PlayerHUD != nullptr) {
 		PlayerHUD->ItemUsed(OnHandedItemData);
 	}
 	ItemInstall_Server();

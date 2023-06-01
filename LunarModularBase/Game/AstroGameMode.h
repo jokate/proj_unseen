@@ -19,17 +19,11 @@ public:
 	AAstroGameMode();
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
-	virtual APlayerController* Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
-	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void SwapPlayerControllers(APlayerController* OldPC, APlayerController* NewPC) override;
 
 	virtual void InMissionIDEventOccured(FName InID) override;
 public :
 
-	UPROPERTY(BlueprintReadWrite, Meta = (PrivateAccess = true))
-	int32 NumberOfPlayer = 0;
-
-	UPROPERTY(BlueprintReadOnly)
-	int32 PlayerSide = 2;
 
 	UPROPERTY()
 	TObjectPtr<class UMissionManagementComponent> MissionManager;

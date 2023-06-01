@@ -23,7 +23,11 @@ UMissionManagementComponent::UMissionManagementComponent()
 void UMissionManagementComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
+}
 
+void UMissionManagementComponent::BeginPlay()
+{
+	Super::BeginPlay();
 	//For Test
 	BackwardMission = UAstroMissionSingleton::Get().GetMission("B_01");
 	BackwardMission->SetOwningActor(GetOwner());

@@ -36,6 +36,8 @@ public:
 	UMissionManagementComponent();
 
 	virtual void InitializeComponent() override;
+
+	virtual void BeginPlay() override;
 	
 	//Mission Clear Check Functions
 public :

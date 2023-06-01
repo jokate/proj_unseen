@@ -55,8 +55,6 @@ public :
 
 	virtual void OnCreateSessionComplete(FName SessionName, bool Succeeded);
 
-	void OnStartGameSessionCompleted(FName SessionName, bool Succeeded);
-
 	UFUNCTION(BlueprintCallable)
 	void JoinGameSession(FResultConstructor Result);
 
@@ -77,5 +75,10 @@ public :
 
 	UPROPERTY(BlueprintReadWrite)
 	FName CurrentRoomName;
+
+	UFUNCTION(BlueprintCallable)
+	void StartSession();
+
+	void OnStartGameSessionCompleted(FName SessionName, bool Succeeded);
 
 };

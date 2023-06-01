@@ -102,7 +102,7 @@ void AAstroInteractableObject::OnCharacterOverlap(UPrimitiveComponent* Overlappe
 		return;
 
 	auto CharacterInterface = Cast<IAstroCharacterInterface>(OtherActor);
-	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy && CharacterInterface) 
+	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && CharacterInterface)
 	{
 		CharacterInterface->ReturnActivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::OnActivating);
 		CharacterInterface->ReturnDeactivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::StopActivating);
@@ -118,7 +118,7 @@ void AAstroInteractableObject::OnCharacterOverlapOut(UPrimitiveComponent* Overla
 		return;
 
 	auto CharacterInterface = Cast<IAstroCharacterInterface>(OtherActor);
-	if (OtherActor->GetLocalRole() == ENetRole::ROLE_AutonomousProxy &&  CharacterInterface)
+	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && CharacterInterface)
 	{
 		CharacterInterface->ReturnActivateObjectDelegate().Unbind();
 		CharacterInterface->ReturnDeactivateObjectDelegate().Unbind();
