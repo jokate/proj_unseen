@@ -42,6 +42,8 @@ protected:
 public :
 	virtual bool IsContainMissionID(FName InMissionID) override;
 
+	virtual FName GetInitiailizedMissionID(EPlayerType PlayerType);
+
 private:
 	UPROPERTY(ReplicatedUsing = FrontMissionIDUpdated, VisibleAnywhere, Meta = (PrivateAccess = "true"))
 	FName CurrentFrontMissionID;

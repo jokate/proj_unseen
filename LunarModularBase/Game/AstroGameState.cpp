@@ -94,3 +94,11 @@ bool AAstroGameState::IsContainMissionID(FName InMissionID)
 {
 	return ClearedMissionList.Contains(InMissionID);
 }
+
+FName AAstroGameState::GetInitiailizedMissionID(EPlayerType PlayerType)
+{
+	if (PlayerType == EPlayerType::PLAYER_FRONT)
+		return CurrentFrontMissionID;
+	else
+		return CurrentBackMissionID;
+}

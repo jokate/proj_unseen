@@ -4,8 +4,9 @@
 #include "Game/AstroGameInstance.h"
 #include "OnlineSubsystemUtils.h"
 #include "Kismet/GameplayStatics.h"
-
-const static FName SESSION_NAME = TEXT("Game");
+#include "AstroDefinition.h"
+#include "Lobby/LobbyGameMode.h"
+#include "Player/AstroController.h"
 
 void UAstroGameInstance::Init()
 {
@@ -21,6 +22,7 @@ void UAstroGameInstance::Init()
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UAstroGameInstance::OnFindSessionsComplete);
 			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UAstroGameInstance::OnJoinGameSessionCompleted);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UAstroGameInstance::OnDestroySessionComplete);
+			bIsHost = false;
 		}
 	}
 	
@@ -30,7 +32,7 @@ void UAstroGameInstance::HostGameSession(FString String)
 {
 	const int MaxNumofPlayer = 2;
 	FOnlineSessionSettings OnlineSessionSettings;
-	OnlineSessionSettings.bAllowJoinInProgress = true;
+	OnlineSessionSettings.bAllowJoinInProgress = false;
 	OnlineSessionSettings.bAllowJoinViaPresence = true;
 	OnlineSessionSettings.NumPublicConnections = 2;
 	OnlineSessionSettings.bUsesPresence = true;
@@ -48,12 +50,13 @@ void UAstroGameInstance::HostGameSession(FString String)
 }
 
 void UAstroGameInstance::OnCreateSessionComplete(FName SessionName, bool Succeeded)
-
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnCreateSession Complete, Succeeded : %d"), Succeeded);
 	if (Succeeded)
 	{
+		CurrentRoomName = SessionName;
 		SessionInterface->UpdateSession(SessionName, SessionInterface->GetNamedSession(SessionName)->SessionSettings);
+		bIsHost = true;
 		GetWorld()->ServerTravel("/Game/Level/LobbyScene?listen");
 	}
 }
@@ -75,6 +78,7 @@ void UAstroGameInstance::OnJoinGameSessionCompleted(FName SessionName, EOnJoinSe
 			UE_LOG(LogTemp, Warning, TEXT("%s"), *JointAddress);
 			if (JointAddress != "")
 			{
+				CurrentRoomName = SessionName;
 				PlayerController->ClientTravel(JointAddress, ETravelType::TRAVEL_Absolute);
 			}
 		}
@@ -88,7 +92,6 @@ void UAstroGameInstance::FindGameSession()
 	LastSessionSearch->bIsLanQuery = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL");
 	LastSessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 	SessionInterface->FindSessions(0, LastSessionSearch.ToSharedRef());
-	
 }
 
 void UAstroGameInstance::OnFindSessionsComplete(bool Succeeded)
@@ -122,10 +125,10 @@ void UAstroGameInstance::OnDestroySessionComplete(FName SessionName, bool Succee
 {
 	if(Succeeded) 
 	{
+		CurrentRoomName = "";
 		SessionInterface->UpdateSession(SessionName, SessionInterface->GetNamedSession(SessionName)->SessionSettings);
 		APlayerController* PlayerController = GetFirstLocalPlayerController();
 		if (PlayerController) {
-
 			PlayerController->ClientTravel("/Game/Level/MainScene", ETravelType::TRAVEL_Absolute);
 		}
 	}
@@ -136,6 +139,7 @@ void UAstroGameInstance::StartSession()
 	if (SessionInterface) 
 	{
 		SessionInterface->StartSession(SESSION_NAME);
+	
 	}
 }
 
@@ -143,10 +147,25 @@ void UAstroGameInstance::OnStartGameSessionCompleted(FName SessionName, bool Suc
 {
 	if (Succeeded)
 	{
-		APlayerController* PlayerController = GetFirstLocalPlayerController();
 		GetWorld()->ServerTravel("/Game/ThirdPerson/Maps/NewWorld?listen");
 	}
 }
+
+bool UAstroGameInstance::IsThisPlayerHostInThisSession()
+{
+	return bIsHost;
+}
+
+void UAstroGameInstance::ReverseTypeOfPlayer()
+{
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController->GetLocalRole() == ENetRole::ROLE_Authority) 
+	{
+		auto LobbyGameMode = Cast<ALobbyGameMode>(GetWorld()->GetAuthGameMode());
+		LobbyGameMode->ChangePlayerType();
+	}
+}
+
 
 
 

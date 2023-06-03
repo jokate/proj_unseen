@@ -40,7 +40,9 @@ public :
 	FOnCharacterStopActivateObject OnDeActivateEvent;
 
 	virtual FOnCharacterActivateObject& ReturnActivateObjectDelegate() override;
+
 	virtual FOnCharacterStopActivateObject& ReturnDeactivateObjectDelegate() override;
+
 	virtual void OnMissionObjectCollided(FOnActivatedComplete& InActivaedDelegate) override;
 
 	virtual void OnItemObjectCollided(FOnTakeItemDelegate& ItemDelegate) override;

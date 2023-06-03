@@ -24,16 +24,19 @@ class LUNARMODULARBASE_API AAstroController : public APlayerController
 public : 
 	AAstroController(const FObjectInitializer& ObjectInitializer  = FObjectInitializer::Get());
 
+	void ReverseType();
+
 protected :
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 	virtual void SetupInputComponent() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void OnNetCleanup(UNetConnection* Connection) override;
+
 
 public :
 	UPROPERTY(BlueprintReadOnly)
 	EPlayerType CurrentPlayerType;
-
 
 
 };

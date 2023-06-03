@@ -10,6 +10,7 @@
 
 #include "Interface/AstroHUDInterface.h"
 #include "Interface/AstroMissionManager.h"
+#include "Interface/AstroGameStateInterface.h"
 #include "Interface/AstroMissionClearInterface.h"
 
 
@@ -18,6 +19,17 @@ UMissionComponent::UMissionComponent()
 {
 	PlayerType = EPlayerType::PLAYER_NONE;
 
+}
+
+void UMissionComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	auto AstroGameState = CastChecked<IAstroGameStateInterface>(GetWorld()->GetGameState());
+	auto OwningCharacter = CastChecked<IAstroMissionClearInterface>(GetOwner());
+	if (GetOwner()->GetLocalRole() == ENetRole::ROLE_Authority) {
+		FName InitializedMission = AstroGameState->GetInitiailizedMissionID(OwningCharacter->ReturnTag());
+		MissionHUDUpdate(InitializedMission);
+	}
 }
 
 void UMissionComponent::ClearCheck_Implementation(FName ObjectName)

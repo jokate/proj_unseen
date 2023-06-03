@@ -27,4 +27,6 @@ public:
 	virtual void SetFrontMissionID(FName InMissionID) = 0;
 
 	virtual void SetBackMissionID(FName InMissionID) = 0;
+
+	virtual FName GetInitiailizedMissionID(EPlayerType PlayerType) = 0;
 };

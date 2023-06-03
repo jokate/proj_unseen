@@ -7,6 +7,9 @@
 #include "Engine/DataTable.h"
 #include "AstroDefinition.generated.h"
 
+
+const static FName SESSION_NAME = TEXT("Game");
+
 #define ASTRO_FRONT_ID TEXT("F_")
 #define ASTRO_BACK_ID TEXT("B_")
 #define ASTRO_COOP_ID TEXT("C_")

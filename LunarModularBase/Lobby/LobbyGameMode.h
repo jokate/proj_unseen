@@ -34,17 +34,25 @@ public :
 	virtual void Logout(AController* Exiting) override;
 
 	virtual void BeginPlay() override;
+
+	void LogOutProcess(APlayerController* ExitPlayer);
+
+	void ChangePlayerType();
 	
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FUserInfo> UserInfos;
 
 public :
-	UPROPERTY(BlueprintReadWrite, Meta = (PrivateAccess = true))
-	int32 NumberOfPlayer = 0;
-
-	UPROPERTY(BlueprintReadOnly)
-	int32 PlayerSide = 2;
 
 	UPROPERTY()
 	TObjectPtr<class UAstroClassDataSet> ClassDataAsset;
+
+	std::atomic<int32> BackwardCount = 0;
+
+	std::atomic<int32> FrontwardCount = 0;
+
+	UPROPERTY(BlueprintReadWrite)
+	TSet<class AAstroController*> PlayerControllers;
+
+
 };

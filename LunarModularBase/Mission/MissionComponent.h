@@ -31,6 +31,8 @@ public:
 
 public :
 
+	virtual void BeginPlay() override;
+
 	FORCEINLINE void SetPlayerType(EPlayerType InPlayerType) { PlayerType = InPlayerType; }
 
 	UFUNCTION(Server, Reliable)

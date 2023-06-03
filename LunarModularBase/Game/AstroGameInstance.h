@@ -53,32 +53,47 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void HostGameSession(FString InString);
 
-	virtual void OnCreateSessionComplete(FName SessionName, bool Succeeded);
-
 	UFUNCTION(BlueprintCallable)
 	void JoinGameSession(FResultConstructor Result);
-
-	void OnJoinGameSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	UFUNCTION(BlueprintCallable)
 	void FindGameSession();
 
-	void OnFindSessionsComplete(bool Succeeded);
-
-	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnFindCompletedCPP"))
-	void K2_FindCompleted(const TArray<FResultConstructor>& FoundResults);
-
 	UFUNCTION(BlueprintCallable)
 	void DestroySession(FName SessionName);
+
+	UFUNCTION(BlueprintCallable)
+	void StartSession();
 
 	virtual void OnDestroySessionComplete(FName SessionName, bool Succeeded);
 
 	UPROPERTY(BlueprintReadWrite)
 	FName CurrentRoomName;
+	
+public :
+	virtual void OnCreateSessionComplete(FName SessionName, bool Succeeded);
 
-	UFUNCTION(BlueprintCallable)
-	void StartSession();
+	void OnJoinGameSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+
+	void OnFindSessionsComplete(bool Succeeded);
 
 	void OnStartGameSessionCompleted(FName SessionName, bool Succeeded);
+
+public :
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnFindCompletedCPP"))
+	void K2_FindCompleted(const TArray<FResultConstructor>& FoundResults);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnCharacterCountChangedCPP"))
+	void K2_OnPlayerChanged(int32 CurrentPlayer);
+
+
+public:
+	UFUNCTION(BlueprintCallable)
+	bool IsThisPlayerHostInThisSession();
+
+	uint8 bIsHost : 1;
+
+	UFUNCTION(BlueprintCallable)
+	void ReverseTypeOfPlayer();
 
 };
