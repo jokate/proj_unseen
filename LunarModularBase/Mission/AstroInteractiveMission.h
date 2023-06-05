@@ -35,7 +35,7 @@ public :
 	EInteractiveType InteractionType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FName MissionItemID;
+	TArray<FName> MissionItemIDs;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	FName NeedToClear;
@@ -47,6 +47,8 @@ public :
 	float ActiveTime;
 
 	int32 OriginalActCount;
+
+	int32 SequentialIndex;
 
 	FTimerHandle ActivationTimer;
 
@@ -64,6 +66,8 @@ public :
 	bool InteractiveMissionClearInTime(FName InObjID);
 
 	bool InteractiveMissionClearNormal(FName InObjID);
+
+	bool InteractiveMissionClearSequential(FName InObjID);
 
 public :
 

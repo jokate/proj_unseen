@@ -8,6 +8,7 @@ UAstroInteractiveMission::UAstroInteractiveMission()
 	MissionType = EMissionType::MISSION_INTERACTION;
 	ClearChecker.Add(EInteractiveType::NORMAL, FInteractiveMissionChecker(FOnInteractiveMissionClear::CreateUObject(this, &UAstroInteractiveMission::InteractiveMissionClearNormal)));
 	ClearChecker.Add(EInteractiveType::TIMELIMIT, FInteractiveMissionChecker(FOnInteractiveMissionClear::CreateUObject(this, &UAstroInteractiveMission::InteractiveMissionClearInTime)));
+	ClearChecker.Add(EInteractiveType::SEQUENTIAL, FInteractiveMissionChecker(FOnInteractiveMissionClear::CreateUObject(this, &UAstroInteractiveMission::InteractiveMissionClearSequential)));
 }
 
 bool UAstroInteractiveMission::ClearCheck(FName ObjID)
@@ -29,7 +30,7 @@ void UAstroInteractiveMission::OnTimerUnCleared()
 
 bool UAstroInteractiveMission::InteractiveMissionClearInTime(FName InObjID)
 {
-	if (!MissionItemID.IsEqual(InObjID))
+	if (!MissionItemIDs.Contains(InObjID))
 		return false;
 
 	if (!InteractiveMissionClearNormal(InObjID)) {
@@ -44,11 +45,27 @@ bool UAstroInteractiveMission::InteractiveMissionClearInTime(FName InObjID)
 
 bool UAstroInteractiveMission::InteractiveMissionClearNormal(FName InObjID)
 {
-	if (InObjID == MissionItemID) {
+	if (MissionItemIDs.Contains(InObjID)) {
 		--ActCount;
 		if (ActCount == 0) {
 			return true;
 		}
+	}
+	return false;
+}
+
+bool UAstroInteractiveMission::InteractiveMissionClearSequential(FName InObjID)
+{
+	if(MissionItemIDs[SequentialIndex].IsEqual(InObjID)) 
+	{
+		SequentialIndex = FMath::Clamp(SequentialIndex + 1, 0, MissionItemIDs.Num());
+		UE_LOG(LogTemp, Warning, TEXT("%s : Index : %d"), *GetName(), SequentialIndex)
+		if (SequentialIndex == MissionItemIDs.Num())
+			return true;
+	}
+	else if(MissionItemIDs.Contains(InObjID))
+	{
+		SequentialIndex = 0;
 	}
 	return false;
 }
@@ -59,7 +76,7 @@ void UAstroInteractiveMission::Initialize(FName InMissionID, const FMissionData 
 	ActCount = InteractiveMissionData.ActCount;
 	OriginalActCount = ActCount;
 	InteractionType = InteractiveMissionData.InteractionType;
-	MissionItemID = InteractiveMissionData.MissionItemID;
+	MissionItemIDs = InteractiveMissionData.MissionItemIDs;
 	ActiveTime = InteractiveMissionData.Time;
 }
 

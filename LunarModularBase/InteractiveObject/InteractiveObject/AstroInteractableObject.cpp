@@ -63,7 +63,7 @@ void AAstroInteractableObject::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 
 void AAstroInteractableObject::SetObjActiveComplete()
 {
-	K2_OnObjectActive();
+	Super::SetObjActiveComplete();
 	ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	if(!HasAuthority())
 		SetPercentage(0.0f);

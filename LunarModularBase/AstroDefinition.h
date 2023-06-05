@@ -25,7 +25,8 @@ UENUM(BlueprintType)
 enum class EInteractiveType : uint8 
 {
 	NORMAL,
-	TIMELIMIT
+	TIMELIMIT,
+	SEQUENTIAL
 };
 
 USTRUCT(BlueprintType)
@@ -59,7 +60,7 @@ public :
 	EInteractiveType InteractionType = EInteractiveType::NORMAL;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FName MissionItemID = "";
+	TArray<FName> MissionItemIDs;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int32 ActCount = 0;

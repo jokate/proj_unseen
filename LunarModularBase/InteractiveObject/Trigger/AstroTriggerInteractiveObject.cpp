@@ -5,7 +5,7 @@
 
 void AAstroTriggerInteractiveObject::SetObjActiveComplete()
 {
-	TriggerObject->K2_OnObjectActive();
+	TriggerObject->SetObjActiveComplete();
 
 	Super::SetObjActiveComplete();
 }

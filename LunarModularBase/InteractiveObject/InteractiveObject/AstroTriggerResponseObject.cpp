@@ -16,3 +16,8 @@ void AAstroTriggerResponseObject::BeginPlay()
 	Super::BeginPlay();
 	
 }
+
+void AAstroTriggerResponseObject::SetObjActiveComplete()
+{
+	K2_OnObjectActive();
+}

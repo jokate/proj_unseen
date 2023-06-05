@@ -8,7 +8,7 @@
 #include "AstroInteractableObject.generated.h"
 
 UCLASS()
-class LUNARMODULARBASE_API AAstroInteractableObject : public AAstroTriggerResponseObject, public IInteractableObjectInterface
+class LUNARMODULARBASE_API AAstroInteractableObject : public AAstroTriggerResponseObject
 {
 	GENERATED_BODY()
 	

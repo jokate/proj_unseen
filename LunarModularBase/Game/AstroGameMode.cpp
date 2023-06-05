@@ -48,7 +48,6 @@ AAstroGameMode::AAstroGameMode()
 	MissionManager = CreateDefaultSubobject<UMissionManagementComponent>("MISSIONMANAGER");
 
 	bUseSeamlessTravel = true;
-
 }
 
 void AAstroGameMode::PostInitializeComponents()

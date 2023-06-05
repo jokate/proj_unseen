@@ -44,7 +44,6 @@ void UMissionManagementComponent::BeginPlay()
 
 void UMissionManagementComponent::InMissionIDEventOccured(FName InID)
 {
-	UE_LOG(LogTemp, Warning, TEXT("In ID : %s"), *InID.ToString())
 	MissionClearChecker.Broadcast(InID);
 }
 
@@ -53,6 +52,7 @@ void UMissionManagementComponent::InMissionIDEventOccured(FName InID)
 
 void UMissionManagementComponent::FrontwardMissionClearChecker(FName InID)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Front In ID : %s"), *InID.ToString())
 	check(FrontwardMission)
 	if (MissionClearCheckEvent[FrontwardMission->MissionType].MissionClearCheck.Execute(FrontwardMission, InID))
 	{
@@ -81,6 +81,7 @@ void UMissionManagementComponent::FrontwardGameStateSetter()
 
 void UMissionManagementComponent::BackwardMissionClearChecker(FName InID)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Back In ID : %s"), *InID.ToString())
 	check(BackwardMission)
 		if (MissionClearCheckEvent[BackwardMission->MissionType].MissionClearCheck.Execute(BackwardMission, InID))
 		{
