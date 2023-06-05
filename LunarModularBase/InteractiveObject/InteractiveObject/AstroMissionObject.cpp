@@ -42,12 +42,13 @@ void AAstroMissionObject::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp
 
 void AAstroMissionObject::OnCharacterOverlapOut(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+
+	Super::OnCharacterOverlapOut(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
+
 	auto MissionClearInterface = Cast<IAstroMissionClearInterface>(OtherActor);
 
 	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && MissionClearInterface)
 	{
 		OnActiveCompleted.Unbind();
 	}
-
-	Super::OnCharacterOverlapOut(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
 }
