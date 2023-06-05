@@ -32,11 +32,12 @@ protected :
 	virtual void SetupInputComponent() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void OnNetCleanup(UNetConnection* Connection) override;
-
-
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 public :
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(ReplicatedUsing = UpdatedType, BlueprintReadOnly)
 	EPlayerType CurrentPlayerType;
 
+	UFUNCTION()
+	void UpdatedType();
 
 };

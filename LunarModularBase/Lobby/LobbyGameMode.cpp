@@ -62,13 +62,13 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	auto AstroGameInstance = CastChecked<UAstroGameInstance>(GetGameInstance());
 	PlayerControllers.Add(Player);
 	UE_LOG(LogTemp, Warning, TEXT("PlayerCount = %d"), PlayerControllers.Num())
+	AstroGameInstance->OnPlayerUpdated(PlayerControllers);
 	AstroGameInstance->K2_OnPlayerChanged(PlayerControllers.Num());
 }
 
 void ALobbyGameMode::Logout(AController* Exiting)
 {
 	Super::Logout(Exiting);
-
 }
 
 void ALobbyGameMode::BeginPlay()
@@ -112,6 +112,7 @@ void ALobbyGameMode::LogOutProcess(APlayerController* ExitPlayer)
 	}
 	auto AstroGameInstance = CastChecked<UAstroGameInstance>(GetGameInstance());
 	PlayerControllers.Remove(Player);
+	AstroGameInstance->OnPlayerUpdated(PlayerControllers);
 	AstroGameInstance->K2_OnPlayerChanged(PlayerControllers.Num());
 }
 
@@ -134,4 +135,6 @@ void ALobbyGameMode::ChangePlayerType()
 			PlayerController->ReverseType();
 		}
 	}
+	auto AstroGameInstance = CastChecked<UAstroGameInstance>(GetGameInstance());
+	AstroGameInstance->OnPlayerUpdated(PlayerControllers);
 }

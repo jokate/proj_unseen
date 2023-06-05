@@ -143,6 +143,7 @@ void UAstroGameInstance::StartSession()
 	}
 }
 
+
 void UAstroGameInstance::OnStartGameSessionCompleted(FName SessionName, bool Succeeded)
 {
 	if (Succeeded)
@@ -163,6 +164,24 @@ void UAstroGameInstance::ReverseTypeOfPlayer()
 	{
 		auto LobbyGameMode = Cast<ALobbyGameMode>(GetWorld()->GetAuthGameMode());
 		LobbyGameMode->ChangePlayerType();
+	}
+}
+
+void UAstroGameInstance::OnPlayerUpdated(const TSet<AAstroController*>& Controllers)
+{
+	K2_OnPlayerUpdateTriggered();
+	for(auto Controller : Controllers) 
+	{
+		K2_OnPlayerUpdated(Controller);
+	}
+}
+
+void UAstroGameInstance::OnPlayerTypeChanged()
+{
+	for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It) 
+	{
+		auto AstroController = CastChecked<AAstroController>(It->Get());
+		K2_OnPlayerUpdated(AstroController);
 	}
 }
 

@@ -26,7 +26,7 @@ void UMissionComponent::BeginPlay()
 	Super::BeginPlay();
 	auto AstroGameState = CastChecked<IAstroGameStateInterface>(GetWorld()->GetGameState());
 	auto OwningCharacter = CastChecked<IAstroMissionClearInterface>(GetOwner());
-	if (GetOwner()->GetLocalRole() == ENetRole::ROLE_Authority) {
+	if (GetOwner()->GetLocalRole() == ENetRole::ROLE_AutonomousProxy) {
 		FName InitializedMission = AstroGameState->GetInitiailizedMissionID(OwningCharacter->ReturnTag());
 		MissionHUDUpdate(InitializedMission);
 	}

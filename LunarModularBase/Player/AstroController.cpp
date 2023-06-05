@@ -4,6 +4,7 @@
 #include "Player/AstroController.h"
 #include "Game/AstroPlayerState.h"
 #include "Lobby/LobbyGameMode.h"
+#include "Game/AstroGameInstance.h"
 #include "Interface/AstroCharacterInterface.h"
 #include "Net/UnrealNetwork.h"
 
@@ -12,6 +13,7 @@ AAstroController::AAstroController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	CurrentPlayerType = EPlayerType::PLAYER_NONE;
+	bReplicates = true;
 }
 
 void AAstroController::ReverseType()
@@ -60,6 +62,20 @@ void AAstroController::OnNetCleanup(UNetConnection* Connection)
 	}
 	Super::OnNetCleanup(Connection);
 }
+
+void AAstroController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AAstroController, CurrentPlayerType);
+}
+
+void AAstroController::UpdatedType()
+{
+	auto AstroGameInstance = CastChecked<UAstroGameInstance>(GetGameInstance());
+	AstroGameInstance->OnPlayerTypeChanged();
+}
+
+
 
 
 

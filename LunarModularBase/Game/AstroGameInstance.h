@@ -8,6 +8,8 @@
 #include "OnlineSessionSettings.h"
 #include "AstroGameInstance.generated.h"
 
+class AAstroController;
+
 USTRUCT(BlueprintType)
 struct FResultConstructor
 {
@@ -65,19 +67,19 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void StartSession();
 
-	virtual void OnDestroySessionComplete(FName SessionName, bool Succeeded);
-
 	UPROPERTY(BlueprintReadWrite)
 	FName CurrentRoomName;
 	
 public :
 	virtual void OnCreateSessionComplete(FName SessionName, bool Succeeded);
 
-	void OnJoinGameSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	virtual void OnJoinGameSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
-	void OnFindSessionsComplete(bool Succeeded);
+	virtual void OnFindSessionsComplete(bool Succeeded);
 
-	void OnStartGameSessionCompleted(FName SessionName, bool Succeeded);
+	virtual void OnStartGameSessionCompleted(FName SessionName, bool Succeeded);
+
+	virtual void OnDestroySessionComplete(FName SessionName, bool Succeeded);
 
 public :
 	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnFindCompletedCPP"))
@@ -86,6 +88,17 @@ public :
 	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnCharacterCountChangedCPP"))
 	void K2_OnPlayerChanged(int32 CurrentPlayer);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnPlayerUpdatedCPP"))
+	void K2_OnPlayerUpdated(AAstroController* PlayerControllers);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnPlayerUpdateTriggeredCPP"))
+	void K2_OnPlayerUpdateTriggered();
+
+	UFUNCTION(BlueprintCallable)
+	void OnPlayerUpdated(const TSet<AAstroController*>& Controllers);
+
+	UFUNCTION(BlueprintCallable)
+	void OnPlayerTypeChanged();
 
 public:
 	UFUNCTION(BlueprintCallable)
