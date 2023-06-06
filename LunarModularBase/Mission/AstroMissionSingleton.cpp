@@ -20,7 +20,7 @@ UAstroMissionSingleton::UAstroMissionSingleton()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_INTERACTIVEMISSION(TEXT("/Script/Engine.DataTable'/Game/GameData/AstroInteractiveMissionData.AstroInteractiveMissionData'"));
-	if(DT_INTERACTIVEMISSION.Object) 
+	if (DT_INTERACTIVEMISSION.Object)
 	{
 		InteractiveMissionDatabase = DT_INTERACTIVEMISSION.Object;
 		TMap<FName, uint8*> InteractiveMissionMap = InteractiveMissionDatabase->GetRowMap();
@@ -84,16 +84,16 @@ UAstroMissionBase* UAstroMissionSingleton::GetMission(FName MissionID)
 	if (MissionGenerator.Find(MissionData->MissionType)) {
 		return MissionGenerator[MissionData->MissionType].MissionChange.Execute(MissionID);
 	}
-	return nullptr; 
+	return nullptr;
 }
 
-FString UAstroMissionSingleton::ReturnMissionScript(FName InMissionID)
+TArray<FString> UAstroMissionSingleton::ReturnMissionScript(FName InMissionID)
 {
 	auto MissionData = Missions.Find(InMissionID);
-	FString ReturnString;
+	TArray<FString> ReturnString;
 	check(MissionData);
-	if (!MissionData->MissionScript.IsEmpty() || !MissionData->MissionScript.Equals(TEXT("")))
-		return MissionData->MissionScript;
+	if (!MissionData->MissionScripts.IsEmpty())
+		return MissionData->MissionScripts;
 	return ReturnString;
 }
 

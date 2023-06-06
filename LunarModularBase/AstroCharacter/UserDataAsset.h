@@ -11,48 +11,48 @@
 #include "UserDataAsset.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class LUNARMODULARBASE_API UUserDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
-	
-	
-public :
+
+
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UAstroCharacterWidget> UIAsset;
+		TObjectPtr<UAstroCharacterWidget> UIAsset;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<USkeletalMesh> AstroMesh;
+		TObjectPtr<USkeletalMesh> AstroMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UAnimInstance> AnimInstance;
+		TSubclassOf<UAnimInstance> AnimInstance;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UInputMappingContext> InputMappingContextAsset;
+		TObjectPtr<UInputMappingContext> InputMappingContextAsset;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UMovementDataAsset> MovementDataAsset;
+		TObjectPtr<UMovementDataAsset> MovementDataAsset;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float GravityScale = 0.5f;
+		float GravityScale = 0.5f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float JumpZVelocity = 420.0f;
+		float JumpZVelocity = 420.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float WalkSpeed = 200.0f;
+		float WalkSpeed = 200.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float RunningSpeed = 400.0f;
+		float RunningSpeed = 400.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FVector RelativeLocation;
+		FVector RelativeLocation;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FRotator RelativeRotation;
+		FRotator RelativeRotation;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UAnimMontage> AnimMontage;
+		TObjectPtr<UAnimMontage> AnimMontage;
 };

@@ -22,7 +22,7 @@ enum class EMissionType : uint8 {
 };
 
 UENUM(BlueprintType)
-enum class EInteractiveType : uint8 
+enum class EInteractiveType : uint8
 {
 	NORMAL,
 	TIMELIMIT,
@@ -37,36 +37,36 @@ struct FMissionData : public FTableRowBase
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	EMissionType MissionType = EMissionType::MISSION_INTERACTION;
+		EMissionType MissionType = EMissionType::MISSION_INTERACTION;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FString MissionDesc = "";
+		FString MissionDesc = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FName NextMissionID = "";
+		FName NextMissionID = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FString MissionScript = "";
+		TArray<FString> MissionScripts;
 
 };
 
 USTRUCT(BlueprintType)
-struct FInteractiveMissionData : public FTableRowBase 
+struct FInteractiveMissionData : public FTableRowBase
 {
 	GENERATED_BODY()
-	
-public :
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	EInteractiveType InteractionType = EInteractiveType::NORMAL;
+		EInteractiveType InteractionType = EInteractiveType::NORMAL;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	TArray<FName> MissionItemIDs;
+		TArray<FName> MissionItemIDs;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32 ActCount = 0;
+		int32 ActCount = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	float Time = 0;
+		float Time = 0;
 };
 
 
@@ -77,7 +77,7 @@ struct FWaitMissionData : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FName NeedToClear = "";
+		FName NeedToClear = "";
 };
 
 
@@ -89,11 +89,11 @@ enum class EPlayerType : uint8 {
 };
 
 /**
- * 
+ *
  */
 UCLASS()
 class LUNARMODULARBASE_API UAstroDefinition : public UObject
 {
 	GENERATED_BODY()
-	
+
 };

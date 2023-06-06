@@ -14,17 +14,19 @@ class UAstroHUDInterface : public UInterface
 };
 
 /**
- * 
+ *
  */
 class LUNARMODULARBASE_API IAstroHUDInterface
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
+		// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void UpdateMissionText(FString& MissionText) = 0;
+	virtual void UpdateMissionText(FString& MissionScript) = 0;
 
-	virtual void UpdateMissionScriptText(FString& MissionScript) = 0;
+	virtual void UpdateMissionDialogText(const TArray<FString>& InStrings) = 0;
+
+	virtual void ReactivateMissionText() = 0;
 
 	virtual void SetVisibleUserStatus(bool& InVisible) = 0;
 

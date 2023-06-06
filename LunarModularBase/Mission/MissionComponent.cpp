@@ -21,15 +21,21 @@ UMissionComponent::UMissionComponent()
 
 }
 
+void UMissionComponent::Init()
+{
+	auto AstroGameState = CastChecked<IAstroGameStateInterface>(GetWorld()->GetGameState());
+	auto OwningCharacter = CastChecked<IAstroMissionClearInterface>(GetOwner());
+	if (OwningCharacter->GetLocalPlayerTag() == OwningCharacter->ReturnTag() && GetOwner()->GetLocalRole() == ENetRole::ROLE_Authority) {
+		FName InitializedMission = AstroGameState->GetInitiailizedMissionID(OwningCharacter->ReturnTag());
+		if (!InitializedMission.IsNone())
+			MissionHUDUpdate(InitializedMission);
+	}
+}
+
 void UMissionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	auto AstroGameState = CastChecked<IAstroGameStateInterface>(GetWorld()->GetGameState());
-	auto OwningCharacter = CastChecked<IAstroMissionClearInterface>(GetOwner());
-	if (GetOwner()->GetLocalRole() == ENetRole::ROLE_AutonomousProxy) {
-		FName InitializedMission = AstroGameState->GetInitiailizedMissionID(OwningCharacter->ReturnTag());
-		MissionHUDUpdate(InitializedMission);
-	}
+	GetWorld()->OnWorldBeginPlay.AddUObject(this, &UMissionComponent::Init);
 }
 
 void UMissionComponent::ClearCheck_Implementation(FName ObjectName)
@@ -48,7 +54,7 @@ void UMissionComponent::MissionDescriptionUpdate(FName InMissionID)
 {
 	auto SampleHUD = Cast<IAstroHUDInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetHUD());
 	if (SampleHUD != nullptr) {
-		FString InString = FString::Printf(TEXT("현재 미션 : %s"), *UAstroMissionSingleton::Get().ReturnMissionDescription(InMissionID));
+		FString InString = FString::Printf(TEXT("%s"), *UAstroMissionSingleton::Get().ReturnMissionDescription(InMissionID));
 		SampleHUD->UpdateMissionText(InString);
 
 	}
@@ -56,12 +62,11 @@ void UMissionComponent::MissionDescriptionUpdate(FName InMissionID)
 
 void UMissionComponent::MissionClearScriptUpdate(FName InMissionID)
 {
-	
+
 	auto SampleHUD = Cast<IAstroHUDInterface>(GEngine->GetFirstLocalPlayerController(GetWorld())->GetHUD());
 	if (SampleHUD != nullptr) {
-		FString CompleteString = *UAstroMissionSingleton::Get().ReturnMissionScript(InMissionID);
-		if(!CompleteString.IsEmpty())
-			SampleHUD->UpdateMissionScriptText(CompleteString);
+		TArray<FString> CompleteString = UAstroMissionSingleton::Get().ReturnMissionScript(InMissionID);
+		SampleHUD->UpdateMissionDialogText(CompleteString);
 	}
 
 }

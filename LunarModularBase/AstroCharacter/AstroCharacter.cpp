@@ -35,10 +35,11 @@
 //UserData Assets
 #include "UserDataAsset.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/AstroController.h"
 
 
 const float SwiftSpeed = 400.0f;
-const float DefaultSpeed  = 200.0f;
+const float DefaultSpeed = 200.0f;
 const float DefaultDistance = 500.0f;
 const float ZoomInDistance = 350.0f;
 
@@ -49,17 +50,17 @@ AAstroCharacter::AAstroCharacter()
 	TObjectPtr<UUserDataAsset> UserDataAsset = nullptr;
 
 	static ConstructorHelpers::FObjectFinder<UUserDataAsset> USER_DATA(TEXT("/Script/LunarModularBase.UserDataAsset'/Game/DataAsset/AstroCharacterAsset.AstroCharacterAsset'"));
-	
+
 	check(USER_DATA.Succeeded())
 
-	if (USER_DATA.Succeeded()) {
-		UserDataAsset = USER_DATA.Object;
-	}
+		if (USER_DATA.Succeeded()) {
+			UserDataAsset = USER_DATA.Object;
+		}
 
 	check(UserDataAsset)
 
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+		// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+		PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	CharacterStat = CreateDefaultSubobject<UAstroCharacterStatusComponent>(TEXT("ASTROSTATUS"));
@@ -142,6 +143,7 @@ void AAstroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Completed, this, &AAstroCharacter::UnSearch);
 	PEI->BindAction(InputActions->ItemUse, ETriggerEvent::Triggered, this, &AAstroCharacter::ActiveItemWidget);
 	PEI->BindAction(InputActions->ItemInstall, ETriggerEvent::Triggered, this, &AAstroCharacter::ItemInstall);
+	PEI->BindAction(InputActions->ReactivateMissionWidget, ETriggerEvent::Triggered, this, &AAstroCharacter::ReactivateMissionWidget);
 }
 
 
@@ -197,7 +199,7 @@ void AAstroCharacter::StopSwift(const FInputActionValue& Value)
 	Server_Swift(DefaultSpeed);
 }
 
-void AAstroCharacter::Search(const FInputActionValue& Value) 
+void AAstroCharacter::Search(const FInputActionValue& Value)
 {
 	OnActivateEvent.ExecuteIfBound();
 }
@@ -209,12 +211,12 @@ void AAstroCharacter::UnSearch(const FInputActionValue& Value)
 
 void AAstroCharacter::ActivationComplete(AActor* InActor)
 {
-	if (HasAuthority()) 
+	if (HasAuthority())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Server Initiated"));
 		ActivationComplete_Client(InActor);
 	}
-	else 
+	else
 	{
 		ActivationComplete_Server(InActor);
 	}
@@ -254,14 +256,14 @@ void AAstroCharacter::Exploring(const FInputActionValue& Value)
 }
 
 void AAstroCharacter::UnExploring(const FInputActionValue& Value)
-{	
+{
 	ExploreWidgetVisibleSet(false);
 
 }
 
 
 void AAstroCharacter::Jumping(const FInputActionValue& Value)
-{	
+{
 	Super::Jump();
 	ExploreWidgetVisibleSet(false);
 }
@@ -280,6 +282,12 @@ EPlayerType AAstroCharacter::ReturnTag()
 	return MissionComponent->GetPlayerType();
 }
 
+EPlayerType AAstroCharacter::GetLocalPlayerTag()
+{
+	AAstroController* AstroController = CastChecked<AAstroController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+	return AstroController->CurrentPlayerType;
+}
+
 void AAstroCharacter::PlayerTypeSetting(EPlayerType InPlayerType)
 {
 	MissionComponent->SetPlayerType(InPlayerType);
@@ -294,6 +302,14 @@ void AAstroCharacter::HUDUpdate(FName InMissionID)
 #pragma endregion
 
 
+
+void AAstroCharacter::ReactivateMissionWidget()
+{
+	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
+	if (PlayerHUD != nullptr) {
+		PlayerHUD->ReactivateMissionText();
+	}
+}
 
 void AAstroCharacter::ExploreCheck(float DeltaTime)
 {
@@ -321,7 +337,7 @@ void AAstroCharacter::SetControlMode() {
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.0f, 0.0f);
-	
+
 }
 
 #pragma region Speed Request
@@ -356,7 +372,7 @@ void AAstroCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 }
 
 
-void AAstroCharacter::ExploreWidgetVisibleSet(bool InVisible) 
+void AAstroCharacter::ExploreWidgetVisibleSet(bool InVisible)
 {
 
 }
@@ -413,12 +429,12 @@ void AAstroCharacter::ItemEquip_Server_Implementation(UAstroActiveItemData* InIt
 {
 	if (InItemData)
 	{
-		if (InItemData->InstallationGroundMesh.IsPending()) 
+		if (InItemData->InstallationGroundMesh.IsPending())
 		{
 			InItemData->InstallationGroundMesh.LoadSynchronous();
 		}
 		OnHandedItemData = InItemData;
-	
+
 		OnHandedItem->SetStaticMesh(InItemData->InstallationGroundMesh.Get());
 	}
 }
@@ -463,7 +479,7 @@ void AAstroCharacter::ItemInstall_Server_Implementation()
 	if (Hit.bBlockingHit)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit Object : %s"), *Hit.GetActor()->GetName())
-		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false , 5.0f);
+			DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 5.0f);
 		FVector HitPoint = Hit.ImpactPoint;
 		FVector ForDistanceVector = GetActorLocation();
 		ForDistanceVector.Z = HitPoint.Z;

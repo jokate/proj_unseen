@@ -17,13 +17,13 @@ class UAstroMissionClearInterface : public UInterface
 };
 
 /**
- * 
+ *
  */
 class LUNARMODULARBASE_API IAstroMissionClearInterface
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
+		// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual void Req_MissionClear(FName ObjectName) = 0;
 
@@ -36,4 +36,6 @@ public:
 	virtual void TakeItem(class UAstroItemData* InItemData) = 0;
 
 	virtual void OnMissionObjectCollided(FOnActivatedComplete& InActivaedDelegate) = 0;
+
+	virtual EPlayerType GetLocalPlayerTag() = 0;
 };

@@ -12,49 +12,51 @@ DECLARE_DELEGATE_RetVal_OneParam(bool, FOnObjectValidate, FName)
 USTRUCT(BlueprintType)
 struct FObjectValidateWrapper {
 	GENERATED_BODY()
-	
-	FObjectValidateWrapper() {};
+
+		FObjectValidateWrapper() {};
 	FObjectValidateWrapper(const FOnObjectValidate& InObjectValidate) : ObjectValidate(InObjectValidate) {}
 
 	FOnObjectValidate ObjectValidate;
 };
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class LUNARMODULARBASE_API UMissionComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UMissionComponent();
 
-public :
+public:
+
+	void Init();
 
 	virtual void BeginPlay() override;
 
 	FORCEINLINE void SetPlayerType(EPlayerType InPlayerType) { PlayerType = InPlayerType; }
 
 	UFUNCTION(Server, Reliable)
-	void ClearCheck(FName ObjectName);
+		void ClearCheck(FName ObjectName);
 
 	FORCEINLINE EPlayerType GetPlayerType() { return PlayerType; }
 
 	//Validate Checker
-protected :
+protected:
 	UPROPERTY()
-	TMap<EPlayerType, FObjectValidateWrapper> ValidateEvents;
+		TMap<EPlayerType, FObjectValidateWrapper> ValidateEvents;
 
 	//HUD CODE
-public :
+public:
 	void MissionHUDUpdate(FName InMissionID);
 
 	void MissionDescriptionUpdate(FName InMissionID);
 
 	void MissionClearScriptUpdate(FName InMissionID);
-protected :
+protected:
 	UPROPERTY(VisibleAnywhere)
-	EPlayerType PlayerType;
+		EPlayerType PlayerType;
 
 
 };

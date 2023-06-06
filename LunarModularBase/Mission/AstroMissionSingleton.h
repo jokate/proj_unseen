@@ -9,7 +9,7 @@
 
 
 /**
- * 
+ *
  */
 DECLARE_DELEGATE_RetVal_OneParam(class UAstroMissionBase*, FOnMissionChanged, FName);
 
@@ -17,7 +17,7 @@ USTRUCT(BlueprintType)
 struct	FMissionGenerator {
 	GENERATED_BODY()
 
-	FMissionGenerator() {}
+		FMissionGenerator() {}
 	FMissionGenerator(const FOnMissionChanged& InMissionChangeEvent) : MissionChange(InMissionChangeEvent) {}
 
 	FOnMissionChanged MissionChange;
@@ -29,44 +29,44 @@ UCLASS()
 class LUNARMODULARBASE_API UAstroMissionSingleton : public UObject
 {
 	GENERATED_BODY()
-	
-	//DataTables
-protected :
+
+		//DataTables
+protected:
 
 	UPROPERTY()
-	TObjectPtr<class UDataTable> MissionTable;
+		TObjectPtr<class UDataTable> MissionTable;
 
 	UPROPERTY()
-	TObjectPtr<class UDataTable> InteractiveMissionDatabase;
+		TObjectPtr<class UDataTable> InteractiveMissionDatabase;
 
 	UPROPERTY()
-	TObjectPtr<class UDataTable> WaitMissionDatabase;
+		TObjectPtr<class UDataTable> WaitMissionDatabase;
 
 	UPROPERTY(VisibleAnywhere)
-	TMap<FName, FMissionData> Missions;
+		TMap<FName, FMissionData> Missions;
 
 	UPROPERTY(VisibleAnywhere)
-	TMap<FName, FInteractiveMissionData> InteractiveMissionData;
+		TMap<FName, FInteractiveMissionData> InteractiveMissionData;
 
 	UPROPERTY(VisibleAnywhere)
-	TMap<FName, FWaitMissionData> WaitMissionData;
+		TMap<FName, FWaitMissionData> WaitMissionData;
 
-public :
+public:
 	TMap<EMissionType, FMissionGenerator> MissionGenerator;
 
 	UAstroMissionBase* InteractiveMissionReturn(FName InMissionID);
 
 	UAstroMissionBase* WaitMissionReturn(FName InMissionID);
 
-public :
+public:
 
 	UAstroMissionSingleton();
-	
+
 	static UAstroMissionSingleton& Get();
 
 	UAstroMissionBase* GetMission(FName MissionID);
 
-	FString ReturnMissionScript(FName InMissionID);
+	TArray<FString> ReturnMissionScript(FName InMissionID);
 
 	FString ReturnMissionDescription(FName InMissionID);
 

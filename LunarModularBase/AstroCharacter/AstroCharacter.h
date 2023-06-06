@@ -23,7 +23,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -35,7 +35,7 @@ public:
 	void ExploreWidgetVisibleSet(bool OnVisible);
 
 	//On Collision To Object
-public :
+public:
 	FOnCharacterActivateObject OnActivateEvent;
 	FOnCharacterStopActivateObject OnDeActivateEvent;
 
@@ -46,22 +46,22 @@ public :
 	virtual void OnMissionObjectCollided(FOnActivatedComplete& InActivaedDelegate) override;
 
 	virtual void OnItemObjectCollided(FOnTakeItemDelegate& ItemDelegate) override;
-public :
+public:
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
-	TObjectPtr<USpringArmComponent> SpringArm;
+		TObjectPtr<USpringArmComponent> SpringArm;
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
-	TObjectPtr<UCameraComponent> Camera;
+		TObjectPtr<UCameraComponent> Camera;
 
 	UPROPERTY(VisibleAnywhere, Category = Status)
-	TObjectPtr<class UAstroCharacterStatusComponent> CharacterStat;
+		TObjectPtr<class UAstroCharacterStatusComponent> CharacterStat;
 
 	UPROPERTY(VisibleAnywhere, Category = HUD)
-	TObjectPtr<class AHUD> AstroHUD;
+		TObjectPtr<class AHUD> AstroHUD;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = EquippedItem, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UStaticMeshComponent> OnHandedItem;
+		TObjectPtr<class UStaticMeshComponent> OnHandedItem;
 
 public:
 	//Move
@@ -74,19 +74,21 @@ public:
 	virtual void UnExploring(const FInputActionValue& Value) override;
 
 	//MissionClear Part
-protected :
+protected:
 	UPROPERTY(VisibleAnywhere, Meta = (PrivateAccess = "true"))
-	TObjectPtr<class UMissionComponent> MissionComponent;
+		TObjectPtr<class UMissionComponent> MissionComponent;
 
 	virtual void Req_MissionClear(FName ObjectName) override;
 
 	virtual EPlayerType ReturnTag() override;
 
+	virtual EPlayerType GetLocalPlayerTag() override;
+
 	virtual void PlayerTypeSetting(EPlayerType InPlayerType) override;
 
 	virtual void HUDUpdate(FName InMissionID);
 
-	
+
 public:
 	//Jump / Search / MissionClear Check Function
 	void Jumping(const FInputActionValue& Value);
@@ -98,13 +100,15 @@ public:
 	virtual void ActivationComplete(AActor* InActor) override;
 
 	UFUNCTION(Server, Reliable)
-	void ActivationComplete_Server(AActor* InActor);
+		void ActivationComplete_Server(AActor* InActor);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void ActivationComplete_Multicast(AActor* InActor);
+		void ActivationComplete_Multicast(AActor* InActor);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void ActivationComplete_Client(AActor* InActor);
+		void ActivationComplete_Client(AActor* InActor);
+
+	void ReactivateMissionWidget();
 
 	void ExploreCheck(float DeltaTime);
 
@@ -117,9 +121,9 @@ protected:
 	float ArmRotationSpeed = 0.0f;
 
 	//Relicated Variable and Event
-protected :
+protected:
 	UPROPERTY(ReplicatedUsing = On_RepMovementSpeedUpdate)
-	float MovementSpeed;
+		float MovementSpeed;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -128,24 +132,24 @@ protected :
 	void OnMovementSpeedUpdate();
 
 	UFUNCTION()
-	void On_RepMovementSpeedUpdate();
+		void On_RepMovementSpeedUpdate();
 
 	UFUNCTION(Server, Reliable)
-	void Server_Swift(float InSpeed);
+		void Server_Swift(float InSpeed);
 
 	//Input Actions
-protected :
+protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
-	class UInputMappingContext* InputMapping;
+		class UInputMappingContext* InputMapping;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
-	class UMovementDataAsset* InputActions;
-	
+		class UMovementDataAsset* InputActions;
+
 	//Item Section
-protected :
+protected:
 	UPROPERTY(VisibleAnywhere, Category = "Item Component", Meta = (PrivateAccess = "true"))
-	TObjectPtr<class UItemComponent> ItemComponent;
+		TObjectPtr<class UItemComponent> ItemComponent;
 
 	void ActiveItemWidget();
 
@@ -158,29 +162,30 @@ protected :
 	//Item RPC Calls
 protected:
 	UFUNCTION(Server, Reliable)
-	virtual void ItemEquip(UAstroActiveItemData* InItemData) override;
+		virtual void ItemEquip(UAstroActiveItemData* InItemData) override;
 
 	UFUNCTION(NetMulticast, Reliable)
-	void ItemEquip_Server(UAstroActiveItemData* InItemData);
+		void ItemEquip_Server(UAstroActiveItemData* InItemData);
 
 	UFUNCTION(Server, Reliable)
-	virtual void ItemDeEquip() override;
+		virtual void ItemDeEquip() override;
 
 	UFUNCTION(NetMulticast, Reliable)
-	void ItemDeEquip_Server();
+		void ItemDeEquip_Server();
 
 	void ItemInstall(const FInputActionValue& Value);
 
 	UFUNCTION(Server, Reliable)
-	void ItemInstall_Server();
+		void ItemInstall_Server();
 
 	//For Item Installation
-protected :
+protected:
 	UPROPERTY(VisibleAnywhere, Category = "Item Data")
-	TObjectPtr<UAstroActiveItemData> OnHandedItemData;
+		TObjectPtr<UAstroActiveItemData> OnHandedItemData;
 
 	UPROPERTY(EditAnywhere, Category = ItemInstallClass, Meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class AAstroInstallItem> ItemInstallClass;
+		TSubclassOf<class AAstroInstallItem> ItemInstallClass;
 
-protected :
+protected:
+
 };

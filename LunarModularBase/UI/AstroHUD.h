@@ -8,7 +8,7 @@
 #include "AstroHUD.generated.h"
 
 /**
- * 
+ *
  */
 class UMissionWidget;
 class UAstroCharacterWidget;
@@ -26,15 +26,17 @@ public:
 	virtual void DrawHUD() override;
 
 	//HUD Setting Function
-public :
-	virtual void UpdateMissionText(FString& MissionText) override;
+public:
+	virtual void UpdateMissionText(FString& MissionScript) override;
 
-	virtual void UpdateMissionScriptText(FString& MissionScript) override;
+	virtual void UpdateMissionDialogText(const TArray<FString>& InStrings) override;
+
+	virtual void ReactivateMissionText() override;
 
 	UFUNCTION()
-	virtual void SetVisibleUserStatus(bool& InVisible) override;
+		virtual void SetVisibleUserStatus(bool& InVisible) override;
 	UFUNCTION()
-	virtual	void SetPlayerHPText(uint32& InHp) override;
+		virtual	void SetPlayerHPText(uint32& InHp) override;
 
 	virtual void AddItem(UObject* InItemData) override;
 
@@ -44,24 +46,24 @@ public :
 
 	virtual bool ItemContainCheck(UAstroItemData* InItemData) override;
 
-public :
+public:
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
-	TSubclassOf<UMissionWidget> MissionWidgetClass;
+		TSubclassOf<UMissionWidget> MissionWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "User Status Widget")
-	TSubclassOf<UAstroCharacterWidget> UserStatusClass;
+		TSubclassOf<UAstroCharacterWidget> UserStatusClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Widget")
-	TSubclassOf<UInventoryWidget> InventoryClass;
+		TSubclassOf<UInventoryWidget> InventoryClass;
 
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
-	TObjectPtr<UMissionWidget> MissionWidget;
+		TObjectPtr<UMissionWidget> MissionWidget;
 
 	UPROPERTY(EditDefaultsOnly, Category = "User Status Widget")
-	TObjectPtr<UAstroCharacterWidget> UserStatusWidget;
+		TObjectPtr<UAstroCharacterWidget> UserStatusWidget;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Widget")
-	TObjectPtr<UInventoryWidget> InventoryWidget;
+		TObjectPtr<UInventoryWidget> InventoryWidget;
 };

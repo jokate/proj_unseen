@@ -22,7 +22,7 @@ AAstroHUD::AAstroHUD()
 	if (ASTRO_WIDGET.Succeeded()) {
 		UserStatusClass = ASTRO_WIDGET.Class;
 	}
-	if (ASTRO_INVEN_WIDGET.Class) 
+	if (ASTRO_INVEN_WIDGET.Class)
 	{
 		InventoryClass = ASTRO_INVEN_WIDGET.Class;
 	}
@@ -35,7 +35,7 @@ void AAstroHUD::BeginPlay()
 	Super::BeginPlay();
 
 	const auto PlayerController = GetOwningPlayerController();
-	if (IsValid(MissionWidgetClass) && IsValid(UserStatusClass)) 
+	if (IsValid(MissionWidgetClass) && IsValid(UserStatusClass))
 	{
 		MissionWidget = CreateWidget<UMissionWidget>(PlayerController, MissionWidgetClass);
 		MissionWidget->AddToViewport();
@@ -52,24 +52,34 @@ void AAstroHUD::DrawHUD()
 	Super::DrawHUD();
 }
 
-void AAstroHUD::UpdateMissionText(FString& MissionText) 
+void AAstroHUD::UpdateMissionText(FString& MissionScript)
 {
 	if (MissionWidget)
 	{
-		MissionWidget->UpdateMissionWidget(MissionText);
+		MissionWidget->UpdateMissionText(MissionScript);
 	}
 }
 
-void AAstroHUD::UpdateMissionScriptText(FString& MissionScript)
+void AAstroHUD::UpdateMissionDialogText(const TArray<FString>& InStrings)
 {
-	if(MissionWidget) {
-		MissionWidget->UpdateMissionScript(MissionScript);
+	if (MissionWidget) {
+		InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+		GetOwningPlayerController()->bShowMouseCursor = false;
+		MissionWidget->UpdateMissionDialogWidget(InStrings);
+	}
+}
+
+void AAstroHUD::ReactivateMissionText()
+{
+	if (MissionWidget)
+	{
+		MissionWidget->ReactivateMissionTextBorder();
 	}
 }
 
 void AAstroHUD::SetVisibleUserStatus(bool& InVisible)
 {
-	if (UserStatusWidget) 
+	if (UserStatusWidget)
 	{
 		UserStatusWidget->ExploreUIActive(InVisible);
 	}
@@ -87,7 +97,7 @@ void AAstroHUD::AddItem(UObject* InItemData)
 {
 	ensure(InItemData);
 
-	if(InItemData != nullptr)
+	if (InItemData != nullptr)
 		InventoryWidget->AddItemData(InItemData);
 }
 
@@ -98,7 +108,7 @@ void AAstroHUD::ActiveItemWidget()
 		InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
 		GetOwningPlayerController()->bShowMouseCursor = false;
 	}
-	else 
+	else
 	{
 		InventoryWidget->SetVisibility(ESlateVisibility::Visible);
 		GetOwningPlayerController()->bShowMouseCursor = true;

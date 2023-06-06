@@ -7,37 +7,48 @@
 #include "MissionWidget.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class LUNARMODULARBASE_API UMissionWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
-public :
+
+public:
 	UMissionWidget(const FObjectInitializer& ObjectInitializer);
-	
+
 	virtual void NativeConstruct() override;
 
-	void UpdateMissionWidget(FString& MissionDescription);
+	void UpdateMissionDialogWidget(const TArray<FString>& MissionDescription);
 
-	void UpdateMissionScript(FString& MissionScript);
+	void UpdateMissionText(FString& MissionScript);
+
+	void ReactivateMissionTextBorder();
 
 
-	UPROPERTY()
-	TObjectPtr<class UTextBlock> MissionTextBlock;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<FString> DialogString;
 
-	UPROPERTY()
-	TObjectPtr<class UBorder> MissionBorder;
+	UFUNCTION(BlueprintCallable)
+		void DialogStringUpdate();
 
-	UPROPERTY()
-	TObjectPtr<class UTextBlock> MissionScriptTextBlock;
+	int32 DialogIndex = 0;
 
-	UPROPERTY()
-	TObjectPtr<class UBorder> MissionScriptBorder;
+
+	UPROPERTY(meta = (BindWidget))
+		TObjectPtr<class UTextBlock> MissionText;
+
+	UPROPERTY(meta = (BindWidget))
+		TObjectPtr<class UBorder> MissionTextBorder;
+
+	UPROPERTY(meta = (BindWidget))
+		TObjectPtr<class UTextBlock> MissionDialogText;
+
+	UPROPERTY(meta = (BindWidget))
+		TObjectPtr<class UBorder> MissionDialogBorder;
 
 private:
 
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	TObjectPtr<UWidgetAnimation> MissionComplete;
+		TObjectPtr<UWidgetAnimation> MissionComplete;
 };

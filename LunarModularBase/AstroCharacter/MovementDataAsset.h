@@ -8,39 +8,41 @@
 #include "MovementDataAsset.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class LUNARMODULARBASE_API UMovementDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
-	
-public :
+
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputMove;
+		UInputAction* InputMove;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputJump;
+		UInputAction* InputJump;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputLook;
+		UInputAction* InputLook;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputSearch;
+		UInputAction* InputSearch;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputSprint;
+		UInputAction* InputSprint;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputExplore;
+		UInputAction* InputExplore;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputTurn;
-		
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* ItemUse;
+		UInputAction* InputTurn;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* ItemInstall;
-	
+		UInputAction* ItemUse;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		UInputAction* ItemInstall;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		UInputAction* ReactivateMissionWidget;
 };
