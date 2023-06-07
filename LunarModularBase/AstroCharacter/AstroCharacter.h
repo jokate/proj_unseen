@@ -23,6 +23,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void InputSystemInit();
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -33,6 +35,7 @@ public:
 	virtual void PostInitializeComponents() override;
 
 	void ExploreWidgetVisibleSet(bool OnVisible);
+
 
 	//On Collision To Object
 public:

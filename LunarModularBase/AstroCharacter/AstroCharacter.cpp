@@ -5,8 +5,8 @@
 
 #include "GameFramework/HUD.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
-//For Widget
 #include "AstroCharacterStatusComponent.h"
 #include "AstroCharacter/AstroAnimInstance.h"
 #include "Interface/InteractableObjectInterface.h"
@@ -25,7 +25,6 @@
 
 //For Movement 
 #include "Kismet/GameplayStatics.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "MovementDataAsset.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -34,6 +33,7 @@
 
 //UserData Assets
 #include "UserDataAsset.h"
+
 #include "Net/UnrealNetwork.h"
 #include "Player/AstroController.h"
 
@@ -60,7 +60,7 @@ AAstroCharacter::AAstroCharacter()
 	check(UserDataAsset)
 
 		// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-		PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	CharacterStat = CreateDefaultSubobject<UAstroCharacterStatusComponent>(TEXT("ASTROSTATUS"));
@@ -96,22 +96,29 @@ AAstroCharacter::AAstroCharacter()
 void AAstroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	AstroHUD = GetWorld()->GetFirstPlayerController()->GetHUD();
 
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController) {
 		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
-		Subsystem->AddMappingContext(InputMapping, 0);
+		if (Subsystem)
+			Subsystem->AddMappingContext(InputMapping, 0);
 	}
 
-	AstroHUD = GetWorld()->GetFirstPlayerController()->GetHUD();
+	GetWorld()->OnWorldBeginPlay.AddUObject(this, &AAstroCharacter::InputSystemInit);
 
-	if (HasAuthority())
-	{
-		UE_LOG(LogTemp, Log, TEXT("%s : I'm Server"), *GetName());
+}
+
+void AAstroCharacter::InputSystemInit()
+{
+	//For Defending Error
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if (PlayerController) {
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		if(Subsystem)
+			Subsystem->AddMappingContext(InputMapping, 0);
 	}
-	else {
-		UE_LOG(LogTemp, Log, TEXT("%s : I'm Client"), *GetName());
-	}
+
 }
 
 

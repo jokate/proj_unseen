@@ -25,6 +25,7 @@ void UMissionWidget::NativeConstruct()
 void UMissionWidget::UpdateMissionDialogWidget(const TArray<FString>& MissionDescription)
 {
 	if (!MissionDescription.IsEmpty()) {
+		GetOwningPlayer()->bShowMouseCursor = true;
 		if (DialogString.IsEmpty()) {
 			DialogString = MissionDescription;
 			MissionDialogText->SetText(FText::FromString(DialogString[DialogIndex]));
@@ -32,7 +33,6 @@ void UMissionWidget::UpdateMissionDialogWidget(const TArray<FString>& MissionDes
 			MissionDialogBorder->SetVisibility(ESlateVisibility::Visible);
 			AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 			CurrentActor->DisableInput(GetOwningPlayer());
-			GetOwningPlayer()->bShowMouseCursor = true;
 		}
 		else
 		{
