@@ -89,6 +89,7 @@ AAstroCharacter::AAstroCharacter()
 	ArmRotationSpeed = 10.0f;
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("AstroCharacter"));
 	ItemInstallClass = AAstroInstallItem::StaticClass();
+
 	bReplicates = true;
 }
 
@@ -375,7 +376,6 @@ void AAstroCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AAstroCharacter, MovementSpeed);
-
 }
 
 
@@ -425,14 +425,23 @@ bool AAstroCharacter::ContainsItem(UAstroItemData* ItemData)
 	return ItemComponent->ItemContainCheck(ItemData);
 }
 
-
-void AAstroCharacter::ItemEquip_Implementation(UAstroActiveItemData* InItemData)
+void AAstroCharacter::ItemEquip(UAstroActiveItemData* InItemData)
 {
-	if (HasAuthority())
-		ItemEquip_Server(InItemData);
+	if (OnHandedItemData)
+	{
+		ItemComponent->InitItem(OnHandedItemData);
+	}
+
+	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
+	if (PlayerHUD != nullptr) {
+		PlayerHUD->ItemUsed(InItemData);
+	}
+
+	ItemEquip_Server(InItemData);
+
 }
 
-void AAstroCharacter::ItemEquip_Server_Implementation(UAstroActiveItemData* InItemData)
+void AAstroCharacter::ItemEquip_Multicast_Implementation(UAstroActiveItemData* InItemData)
 {
 	if (InItemData)
 	{
@@ -441,37 +450,56 @@ void AAstroCharacter::ItemEquip_Server_Implementation(UAstroActiveItemData* InIt
 			InItemData->InstallationGroundMesh.LoadSynchronous();
 		}
 		OnHandedItemData = InItemData;
-
+		ToBeInstalled = OnHandedItemData;		
 		OnHandedItem->SetStaticMesh(InItemData->InstallationGroundMesh.Get());
+
 	}
 }
 
-void AAstroCharacter::ItemDeEquip_Implementation()
+
+void AAstroCharacter::ItemEquip_Server_Implementation(UAstroActiveItemData* InItemData)
 {
-	ItemDeEquip_Server();
+	ItemEquip_Multicast(InItemData);
 }
 
-void AAstroCharacter::ItemDeEquip_Server_Implementation()
+void AAstroCharacter::ItemDeEquip_Implementation(bool CanDequip)
 {
-	OnHandedItemData = nullptr;
-	OnHandedItem->SetStaticMesh(nullptr);
+	ItemDeEquip_Server(CanDequip);
+}
+
+void AAstroCharacter::ItemDeEquip_Server_Implementation(bool CanDequip)
+{
+	if (CanDequip) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item Install Complete"));
+		OnHandedItemData = nullptr;
+		OnHandedItem->SetStaticMesh(nullptr);
+	}
+	else 
+	{
+		OnHandedItemData = ToBeInstalled;
+		UE_LOG(LogTemp, Warning, TEXT("Item Install NonComplete"));
+	}
 }
 
 void AAstroCharacter::ItemInstall(const FInputActionValue& Value)
 {
-	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
-	if (PlayerHUD != nullptr) {
-		PlayerHUD->ItemUsed(OnHandedItemData);
+	if (OnHandedItemData) {
+		UE_LOG(LogTemp, Warning, TEXT("Item Install Initiate"));
+		OnHandedItemData = nullptr;
+		ItemInstall_Server();
 	}
-	ItemInstall_Server();
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item Install Cannot Be Initiated"));
+	}
 }
 
 void AAstroCharacter::ItemInstall_Server_Implementation()
 {
-	if (!OnHandedItemData)
-		return;
 	const float MaxRadius = 300.0f;
 	const float MinRadius = 100.0f;
+	bool IsInstalled = false;
 	FHitResult Hit;
 	FVector Start = GetActorLocation();
 	Start.Z += GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
@@ -485,8 +513,9 @@ void AAstroCharacter::ItemInstall_Server_Implementation()
 
 	if (Hit.bBlockingHit)
 	{
+
 		UE_LOG(LogTemp, Warning, TEXT("Hit Object : %s"), *Hit.GetActor()->GetName())
-			DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 5.0f);
+		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 5.0f);
 		FVector HitPoint = Hit.ImpactPoint;
 		FVector ForDistanceVector = GetActorLocation();
 		ForDistanceVector.Z = HitPoint.Z;
@@ -497,11 +526,12 @@ void AAstroCharacter::ItemInstall_Server_Implementation()
 		{
 			AAstroInstallItem* InstalledItem = GetWorld()->SpawnActorDeferred<AAstroInstallItem>(ItemInstallClass, SpawnTransform);
 
-			InstalledItem->Initialize(OnHandedItemData);
+			InstalledItem->Initialize(ToBeInstalled);
 			InstalledItem->FinishSpawning(SpawnTransform);
-			ItemDeEquip();
+			IsInstalled = true;
 		}
 	}
+	ItemDeEquip(IsInstalled);
 }
 
 

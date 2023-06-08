@@ -33,5 +33,5 @@ public:
 
 	virtual void ItemEquip(UAstroActiveItemData* InItemData) = 0;
 
-	virtual void ItemDeEquip() = 0;
+	virtual void ItemDeEquip(bool CanDequip) = 0;
 };

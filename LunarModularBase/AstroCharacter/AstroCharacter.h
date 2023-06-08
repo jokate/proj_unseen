@@ -164,30 +164,39 @@ protected:
 
 	//Item RPC Calls
 protected:
-	UFUNCTION(Server, Reliable)
-		virtual void ItemEquip(UAstroActiveItemData* InItemData) override;
 
-	UFUNCTION(NetMulticast, Reliable)
-		void ItemEquip_Server(UAstroActiveItemData* InItemData);
+	virtual void ItemEquip(UAstroActiveItemData* InItemData) override;
 
 	UFUNCTION(Server, Reliable)
-		virtual void ItemDeEquip() override;
+		virtual void ItemEquip_Server(UAstroActiveItemData* InItemData);
 
 	UFUNCTION(NetMulticast, Reliable)
-		void ItemDeEquip_Server();
+		void ItemEquip_Multicast(UAstroActiveItemData* InItemData);
+
+	UFUNCTION(Server, Reliable)
+		virtual void ItemDeEquip(bool CanDequip) override;
+
+	UFUNCTION(NetMulticast, Reliable)
+		void ItemDeEquip_Server(bool CanDequip);
 
 	void ItemInstall(const FInputActionValue& Value);
 
 	UFUNCTION(Server, Reliable)
-		void ItemInstall_Server();
+	void ItemInstall_Server();
+
+
 
 	//For Item Installation
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 		TObjectPtr<UAstroActiveItemData> OnHandedItemData;
 
+	UPROPERTY(VisibleAnywhere, Category = "Item Data")
+	TObjectPtr<UAstroActiveItemData> ToBeInstalled;
+
+
 	UPROPERTY(EditAnywhere, Category = ItemInstallClass, Meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<class AAstroInstallItem> ItemInstallClass;
+	TSubclassOf<class AAstroInstallItem> ItemInstallClass;
 
 protected:
 

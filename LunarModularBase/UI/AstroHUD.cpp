@@ -63,7 +63,9 @@ void AAstroHUD::UpdateMissionText(FString& MissionScript)
 void AAstroHUD::UpdateMissionDialogText(const TArray<FString>& InStrings)
 {
 	if (MissionWidget) {
-		InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+		if (InventoryWidget->GetVisibility() == ESlateVisibility::Visible) {
+			ActiveItemWidget();
+		}
 		GetOwningPlayerController()->bShowMouseCursor = false;
 		MissionWidget->UpdateMissionDialogWidget(InStrings);
 	}
@@ -107,11 +109,13 @@ void AAstroHUD::ActiveItemWidget()
 	if (InventoryWidget->GetVisibility() == ESlateVisibility::Visible) {
 		InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
 		GetOwningPlayerController()->bShowMouseCursor = false;
+		GetOwningPlayerController()->SetIgnoreLookInput(false);
 	}
 	else
 	{
 		InventoryWidget->SetVisibility(ESlateVisibility::Visible);
 		GetOwningPlayerController()->bShowMouseCursor = true;
+		GetOwningPlayerController()->SetIgnoreLookInput(true);
 	}
 }
 
