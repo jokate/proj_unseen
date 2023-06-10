@@ -21,3 +21,8 @@ void AAstroTriggerResponseObject::SetObjActiveComplete()
 {
 	K2_OnObjectActive();
 }
+
+void AAstroTriggerResponseObject::SetObjDeActivateComplete()
+{
+	K2_OnObjectDeactive();
+}

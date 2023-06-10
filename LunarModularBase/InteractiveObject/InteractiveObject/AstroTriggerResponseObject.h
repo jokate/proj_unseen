@@ -27,6 +27,9 @@ public :
 
 	UFUNCTION(BlueprintCallable)
 	virtual void SetObjActiveComplete() override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void SetObjDeActivateComplete();
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnObjectActiveCPP"))
 	void K2_OnObjectActive();

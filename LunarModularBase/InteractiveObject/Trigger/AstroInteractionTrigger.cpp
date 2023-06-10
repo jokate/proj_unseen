@@ -30,7 +30,7 @@ void AAstroInteractionTrigger::OnOverlapBegin(UPrimitiveComponent* OverlappedCom
 {
 	if (TriggerResponseObject)
 	{
-		TriggerResponseObject->K2_OnObjectActive();
+		TriggerResponseObject->SetObjActiveComplete();
 	}
 
 }
@@ -39,6 +39,6 @@ void AAstroInteractionTrigger::OnOverlapEnd(UPrimitiveComponent* OverlappedCompo
 {
 	if(TriggerResponseObject) 
 	{
-		TriggerResponseObject->K2_OnObjectDeactive();
+		TriggerResponseObject->SetObjDeActivateComplete();
 	}
 }

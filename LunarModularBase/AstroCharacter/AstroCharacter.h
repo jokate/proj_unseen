@@ -93,8 +93,6 @@ protected:
 
 
 public:
-	//Jump / Search / MissionClear Check Function
-	void Jumping(const FInputActionValue& Value);
 
 	void Search(const FInputActionValue& Value);
 

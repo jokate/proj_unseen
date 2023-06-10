@@ -130,6 +130,7 @@ void UAstroGameInstance::OnDestroySessionComplete(FName SessionName, bool Succee
 		APlayerController* PlayerController = GetFirstLocalPlayerController();
 		if (PlayerController) {
 			PlayerController->ClientTravel("/Game/Level/MainScene", ETravelType::TRAVEL_Absolute);
+			bIsHost = false;
 		}
 	}
 }

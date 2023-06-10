@@ -146,7 +146,6 @@ void AAstroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PEI->BindAction(InputActions->InputExplore, ETriggerEvent::Completed, this, &AAstroCharacter::UnExploring);
 	PEI->BindAction(InputActions->InputSprint, ETriggerEvent::Triggered, this, &AAstroCharacter::Swift);
 	PEI->BindAction(InputActions->InputSprint, ETriggerEvent::Completed, this, &AAstroCharacter::StopSwift);
-	PEI->BindAction(InputActions->InputJump, ETriggerEvent::Triggered, this, &AAstroCharacter::Jumping);
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Triggered, this, &AAstroCharacter::Search);
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Completed, this, &AAstroCharacter::UnSearch);
 	PEI->BindAction(InputActions->ItemUse, ETriggerEvent::Triggered, this, &AAstroCharacter::ActiveItemWidget);
@@ -270,11 +269,6 @@ void AAstroCharacter::UnExploring(const FInputActionValue& Value)
 }
 
 
-void AAstroCharacter::Jumping(const FInputActionValue& Value)
-{
-	Super::Jump();
-	ExploreWidgetVisibleSet(false);
-}
 
 #pragma endregion
 
@@ -473,6 +467,7 @@ void AAstroCharacter::ItemDeEquip_Server_Implementation(bool CanDequip)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Item Install Complete"));
 		OnHandedItemData = nullptr;
+		ToBeInstalled = nullptr;
 		OnHandedItem->SetStaticMesh(nullptr);
 	}
 	else 
