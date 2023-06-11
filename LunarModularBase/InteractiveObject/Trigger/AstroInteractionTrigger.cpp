@@ -15,6 +15,7 @@ AAstroInteractionTrigger::AAstroInteractionTrigger()
 	RootComponent = ObjectMesh;
 	TriggerVolume->SetupAttachment(RootComponent);
 	TriggerVolume->SetCollisionProfileName(TEXT("ObjectTrigger"));
+	bIsTriggered = false;
 
 }
 
@@ -30,7 +31,8 @@ void AAstroInteractionTrigger::OnOverlapBegin(UPrimitiveComponent* OverlappedCom
 {
 	if (TriggerResponseObject)
 	{
-		TriggerResponseObject->SetObjActiveComplete();
+		bIsTriggered = true;
+		TriggerResponseObject->CheckActivationByTrigger();
 	}
 
 }
@@ -39,6 +41,7 @@ void AAstroInteractionTrigger::OnOverlapEnd(UPrimitiveComponent* OverlappedCompo
 {
 	if(TriggerResponseObject) 
 	{
-		TriggerResponseObject->SetObjDeActivateComplete();
+		bIsTriggered = false;
+		TriggerResponseObject->CheckActivationByTrigger();
 	}
 }

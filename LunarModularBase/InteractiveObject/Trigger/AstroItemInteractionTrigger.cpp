@@ -25,7 +25,8 @@ void AAstroItemInteractionTrigger::OnOverlapBegin(UPrimitiveComponent* Overlappe
 	{
 		if(NeedToActivateItem == InstalledItem->ActivationItemData && TriggerResponseObject) 
 		{
-			TriggerResponseObject->K2_OnObjectActive();
+			bIsTriggered = true;
+			TriggerResponseObject->CheckActivationByTrigger();
 		}
 	}
 }
@@ -34,6 +35,8 @@ void AAstroItemInteractionTrigger::OnOverlapEnd(UPrimitiveComponent* OverlappedC
 {
 	if (TriggerResponseObject)
 	{
+		bIsTriggered = false;
 		TriggerResponseObject->K2_OnObjectDeactive();
+		TriggerResponseObject->CheckActivationByTrigger();
 	}
 }

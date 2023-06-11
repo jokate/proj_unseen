@@ -23,7 +23,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Box)
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = NeedToTrigger)
+	TArray<class AAstroInteractionTrigger*> NeedToTrigger;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IsActivated)
+	uint8 bIsActivated : 1;
+
 public :
+
+
+	UFUNCTION(BlueprintCallable)
+	virtual void CheckActivationByTrigger();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void SetObjActiveComplete() override;
@@ -37,4 +47,5 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnObjectDeactiveCPP"))
 	void K2_OnObjectDeactive();
+
 };

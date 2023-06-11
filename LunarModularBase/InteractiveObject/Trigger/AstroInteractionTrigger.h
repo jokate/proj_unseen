@@ -30,6 +30,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Mesh)
 	TObjectPtr<class UStaticMeshComponent> ObjectMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = isTriggered)
+	uint8 bIsTriggered : 1;
+
 	UFUNCTION()
 	virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
