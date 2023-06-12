@@ -81,6 +81,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Meta = (PrivateAccess = "true"))
 		TObjectPtr<class UMissionComponent> MissionComponent;
 
+	UFUNCTION(BlueprintCallable)
 	virtual void Req_MissionClear(FName ObjectName) override;
 
 	virtual EPlayerType ReturnTag() override;

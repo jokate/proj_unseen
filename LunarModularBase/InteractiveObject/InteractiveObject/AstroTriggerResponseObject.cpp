@@ -24,9 +24,10 @@ void AAstroTriggerResponseObject::CheckActivationByTrigger()
 		return;
 	for(auto Trigger : NeedToTrigger) 
 	{
-		if(!Trigger->bIsTriggered && bIsActivated) 
+		if(!Trigger->bIsTriggered) 
 		{
-			SetObjDeActivateComplete();
+			if(bIsActivated)
+				SetObjDeActivateComplete();
 			return;
 		}
 	}

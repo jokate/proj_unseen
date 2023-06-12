@@ -40,7 +40,7 @@
 
 const float SwiftSpeed = 400.0f;
 const float DefaultSpeed = 200.0f;
-const float DefaultDistance = 400.0f;
+const float DefaultDistance = 450.0f;
 const float ZoomInDistance = 350.0f;
 
 

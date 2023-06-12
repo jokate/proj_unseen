@@ -19,7 +19,7 @@ void AAstroInstallItem::Initialize(UAstroActiveItemData* InItemData)
 			}
 			Mesh->SetStaticMesh(ActivationItemData->InstallationGroundMesh.Get());
 			FVector LocationVector = GetActorLocation();
-			float Height = LocationVector.Z + Mesh->GetStaticMesh()->GetBounds().BoxExtent.Z;
+			float Height = LocationVector.Z;
 			LocationVector.Z = Height;
 			SetActorLocation(LocationVector);
 		}
