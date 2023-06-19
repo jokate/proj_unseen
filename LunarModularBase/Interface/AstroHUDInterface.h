@@ -36,8 +36,9 @@ public:
 
 	virtual void ActiveItemWidget() = 0;
 
-	virtual void ItemUsed(UAstroItemData* InItemData) = 0;
+	virtual void ItemUsed(class UAstroItemData* InItemData) = 0;
 
 	virtual bool ItemContainCheck(class UAstroItemData* InItemData) = 0;
+
 
 };

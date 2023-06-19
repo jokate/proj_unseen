@@ -14,6 +14,7 @@ class UMissionWidget;
 class UAstroCharacterWidget;
 class UAstroItemData;
 class UInventoryWidget;
+class UAstroInteractPassword;
 
 UCLASS()
 class LUNARMODULARBASE_API AAstroHUD : public AHUD, public IAstroHUDInterface
@@ -56,6 +57,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Widget")
 		TSubclassOf<UInventoryWidget> InventoryClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Password Widget")
+		TSubclassOf<UAstroInteractPassword> PasswordClass;
+
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
@@ -66,4 +70,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Widget")
 		TObjectPtr<UInventoryWidget> InventoryWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Password Widget")
+		TObjectPtr<UAstroInteractPassword> PasswordWidget;	
 };

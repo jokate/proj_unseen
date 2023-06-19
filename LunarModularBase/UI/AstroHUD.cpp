@@ -7,7 +7,7 @@
 #include "UI/AstroPlayer/AstroCharacterWidget.h"
 #include "UI/AstroInteractionObj/AstralBoxWidget.h"
 #include "UI/Inventory/InventoryWidget.h"
-
+#include "UI/AstroInteractionObj/AstroInteractPassword.h"
 #include "Item/AstroItemData.h"
 
 AAstroHUD::AAstroHUD()
@@ -26,7 +26,6 @@ AAstroHUD::AAstroHUD()
 	{
 		InventoryClass = ASTRO_INVEN_WIDGET.Class;
 	}
-
 
 }
 

@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "InteractableObjectInterface.generated.h"
+#include "AstroPwInteractInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UInteractableObjectInterface : public UInterface
+class UAstroPwInteractInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,13 +16,13 @@ class UInteractableObjectInterface : public UInterface
 /**
  * 
  */
-class LUNARMODULARBASE_API IInteractableObjectInterface
+class LUNARMODULARBASE_API IAstroPwInteractInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void SetObjActiveComplete() = 0; 
+	virtual bool ComparePassword(const FString& InPassword) = 0;
 
-	virtual void SetTriggerEnable() = 0;
+	virtual AActor* ReturnTriggerObject() = 0;
 };

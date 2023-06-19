@@ -131,3 +131,8 @@ void AAstroInteractableObject::OnCharacterOverlapOut(UPrimitiveComponent* Overla
 			Widget->OnPlayerTriggered(false);
 	}
 }
+
+void AAstroInteractableObject::SetTriggerEnable()
+{
+	ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}

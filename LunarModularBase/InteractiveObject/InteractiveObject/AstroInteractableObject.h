@@ -11,8 +11,8 @@ UCLASS()
 class LUNARMODULARBASE_API AAstroInteractableObject : public AAstroTriggerResponseObject
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AAstroInteractableObject();
 
@@ -25,28 +25,28 @@ protected:
 	//Basic Component
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
-	TObjectPtr<class UWidgetComponent> ActivationWidget;
+		TObjectPtr<class UWidgetComponent> ActivationWidget;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = AccessChecker)
-	TObjectPtr<class UAccessControlComponent> AccessChecker;
+		TObjectPtr<class UAccessControlComponent> AccessChecker;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Box)
-	TObjectPtr<class USphereComponent> ObjectTrigger;
+		TObjectPtr<class USphereComponent> ObjectTrigger;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	//Object Activation
-protected :
+protected:
 
 	virtual void SetObjActiveComplete() override;
 
 	virtual void OnActivating();
 
 	virtual void StopActivating();
-	
+
 	//Activation Setter
-protected :
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float ActivationPercent = 0.0f;
+		float ActivationPercent = 0.0f;
 
 	const float ActivateIncreasePercentage = 0.05f;
 
@@ -55,17 +55,19 @@ protected :
 	FTimerHandle ActivationTimer;
 
 	UFUNCTION(BlueprintCallable)
-	void SetPercentage(float Infloat);
+		virtual void SetPercentage(float Infloat);
 
 	//For BlueprintEventFunction
-public :
+public:
 
 	//Overlap Function
-protected :
+protected:
 	UFUNCTION()
 	virtual void OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
 	virtual void OnCharacterOverlapOut(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	virtual void SetTriggerEnable() override;
 
 };

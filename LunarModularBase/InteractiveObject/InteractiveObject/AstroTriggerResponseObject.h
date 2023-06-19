@@ -48,4 +48,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnObjectDeactiveCPP"))
 	void K2_OnObjectDeactive();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void SetTriggerEnable() override {}
+
 };
