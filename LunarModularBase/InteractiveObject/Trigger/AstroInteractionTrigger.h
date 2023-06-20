@@ -22,7 +22,7 @@ protected:
 public:	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class AAstroTriggerResponseObject> TriggerResponseObject;
+	TArray<class AAstroTriggerResponseObject*> TriggerResponseObject;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TriggerVolume)
 	TObjectPtr<class UBoxComponent> TriggerVolume;

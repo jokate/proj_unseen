@@ -23,20 +23,27 @@ void AAstroItemInteractionTrigger::OnOverlapBegin(UPrimitiveComponent* Overlappe
 	AAstroInstallItem* InstalledItem = Cast<AAstroInstallItem>(OtherActor);
 	if (InstalledItem) 
 	{
-		if(NeedToActivateItem == InstalledItem->ActivationItemData && TriggerResponseObject) 
+		if(NeedToActivateItem == InstalledItem->ActivationItemData && !TriggerResponseObject.IsEmpty()) 
 		{
 			bIsTriggered = true;
-			TriggerResponseObject->CheckActivationByTrigger();
+			for (auto TriggerResponseObj : TriggerResponseObject) {
+				UE_LOG(LogTemp, Warning, TEXT("Trigger IN"))
+				TriggerResponseObj->CheckActivationByTrigger();
+			}
 		}
 	}
 }
 
 void AAstroItemInteractionTrigger::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (TriggerResponseObject)
+	AAstroInstallItem* InstalledItem = Cast<AAstroInstallItem>(OtherActor);
+	if (InstalledItem)
 	{
-		bIsTriggered = false;
-		TriggerResponseObject->K2_OnObjectDeactive();
-		TriggerResponseObject->CheckActivationByTrigger();
+		if (NeedToActivateItem == InstalledItem->ActivationItemData && !TriggerResponseObject.IsEmpty())
+		{
+			bIsTriggered = false;
+			for (auto TriggerResponseObj : TriggerResponseObject)
+				TriggerResponseObj->CheckActivationByTrigger();
+		}
 	}
 }

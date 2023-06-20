@@ -29,19 +29,21 @@ void AAstroInteractionTrigger::BeginPlay()
 
 void AAstroInteractionTrigger::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (TriggerResponseObject)
+	if (!TriggerResponseObject.IsEmpty())
 	{
 		bIsTriggered = true;
-		TriggerResponseObject->CheckActivationByTrigger();
+		for(auto TriggerResponseObj : TriggerResponseObject)
+			TriggerResponseObj->CheckActivationByTrigger();
 	}
 
 }
 
 void AAstroInteractionTrigger::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if(TriggerResponseObject) 
+	if(!TriggerResponseObject.IsEmpty()) 
 	{
 		bIsTriggered = false;
-		TriggerResponseObject->CheckActivationByTrigger();
+		for (auto TriggerResponseObj : TriggerResponseObject)
+			TriggerResponseObj->CheckActivationByTrigger();
 	}
 }

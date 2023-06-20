@@ -25,11 +25,6 @@ class LUNARMODULARBASE_API AAstroTriggerInteractiveObjectPW : public AAstroTrigg
 	virtual void SetPercentage(float Infloat) override;
 
 protected  :
-	UPROPERTY()
-	TSubclassOf<class UAstroInteractPassword> PasswordClass;
-
-	UPROPERTY(VisibleAnywhere, Category = PasswordWidget)
-	TObjectPtr<UAstroInteractPassword> PasswordWidget;
 
 	UPROPERTY(EditAnywhere, Category = PassWord, meta = (PrivateAccess = "true"))
 	FString PasswordString;

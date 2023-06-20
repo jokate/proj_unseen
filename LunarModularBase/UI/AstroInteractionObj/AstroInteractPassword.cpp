@@ -12,9 +12,7 @@ void UAstroInteractPassword::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
-	CurrentActor->DisableInput(GetOwningPlayer());
-	GetOwningPlayer()->bShowMouseCursor = true;
+	SetVisibility(ESlateVisibility::Hidden);
 }
 void UAstroInteractPassword::PasswordButtonPress(UButton* InButton)
 {
@@ -67,8 +65,13 @@ void UAstroInteractPassword::ClosingAction()
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->EnableInput(GetOwningPlayer());
 	GetOwningPlayer()->bShowMouseCursor = false;
+	CancelButtonPress();
+	SetVisibility(ESlateVisibility::Hidden);
+}
 
-	RemoveFromParent();
-	RemoveFromViewport();
-	RemoveFromRoot();
+void UAstroInteractPassword::OnVisible()
+{
+	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
+	CurrentActor->DisableInput(GetOwningPlayer());
+	GetOwningPlayer()->bShowMouseCursor = true;
 }

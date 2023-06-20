@@ -32,6 +32,9 @@ class LUNARMODULARBASE_API UAstroInteractPassword : public UUserWidget
 	void CloseButtonPress();
 
 	void ClosingAction();
+public :
+
+	void OnVisible();
 
 public :
 	UPROPERTY(BlueprintReadWrite)

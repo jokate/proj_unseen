@@ -65,8 +65,6 @@ void AAstroInteractableObject::SetObjActiveComplete()
 {
 	Super::SetObjActiveComplete();
 	ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	if(!HasAuthority())
-		SetPercentage(0.0f);
 }
 
 void AAstroInteractableObject::OnActivating()
@@ -92,6 +90,7 @@ void AAstroInteractableObject::SetPercentage(float Infloat)
 		{
 			SetObjActiveComplete();
 			GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
+			SetPercentage(0.0f);
 		}
 	}
 }

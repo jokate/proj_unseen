@@ -47,6 +47,8 @@ public:
 
 	virtual bool ItemContainCheck(UAstroItemData* InItemData) override;
 
+	virtual void SetPasswordVisible(AActor* InOwner) override;
+
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
 		TSubclassOf<UMissionWidget> MissionWidgetClass;

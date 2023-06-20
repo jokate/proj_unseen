@@ -3,16 +3,13 @@
 
 #include "InteractiveObject/Trigger/AstroTriggerInteractiveObjectPW.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/HUD.h"
+#include "Interface/AstroHUDInterface.h"
 #include "UI/AstroInteractionObj/AstroInteractPassword.h"
 #include "InteractiveObject/InteractionObjDataAsset.h"
 #include "Interface/InteractionWidgetInterface.h"
 AAstroTriggerInteractiveObjectPW::AAstroTriggerInteractiveObjectPW() 
 {
-	static ConstructorHelpers::FClassFinder<UAstroInteractPassword> ASTRO_PASSWORD_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_Password.ASTRO_Password_C'"));
-	if(ASTRO_PASSWORD_WIDGET.Class) 
-	{
-		PasswordClass = ASTRO_PASSWORD_WIDGET.Class;
-	}
 }
 
 
@@ -43,9 +40,8 @@ void AAstroTriggerInteractiveObjectPW::SetPercentage(float Infloat)
 			if (PlayerController)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("PASSWORD SET"));
-				PasswordWidget = CastChecked<UAstroInteractPassword>(CreateWidget(PlayerController, PasswordClass));
-				PasswordWidget->AddToViewport();
-				PasswordWidget->SetOwner(this);
+				auto HUD = CastChecked<IAstroHUDInterface>(PlayerController->GetHUD());
+				HUD->SetPasswordVisible(this);
 				SetPercentage(0.0f);
 			}
 			GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);

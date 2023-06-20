@@ -40,5 +40,6 @@ public:
 
 	virtual bool ItemContainCheck(class UAstroItemData* InItemData) = 0;
 
+	virtual void SetPasswordVisible(AActor* Owner) = 0;
 
 };

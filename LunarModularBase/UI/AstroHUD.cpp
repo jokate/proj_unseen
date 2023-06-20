@@ -15,6 +15,12 @@ AAstroHUD::AAstroHUD()
 	static ConstructorHelpers::FClassFinder<UMissionWidget> MISSION_UI_CLASS(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/MissionWidget.MissionWidget_C'"));
 	static ConstructorHelpers::FClassFinder<UAstroCharacterWidget> ASTRO_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/UserStatusWidget.UserStatusWidget_C'"));
 	static ConstructorHelpers::FClassFinder<UInventoryWidget> ASTRO_INVEN_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_Inventory.ASTRO_Inventory_C'"));
+	static ConstructorHelpers::FClassFinder<UAstroInteractPassword> ASTRO_PASSWORD_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_Password.ASTRO_Password_C'"));
+	if (ASTRO_PASSWORD_WIDGET.Class)
+	{
+		PasswordClass = ASTRO_PASSWORD_WIDGET.Class;
+	}
+
 	if (MISSION_UI_CLASS.Succeeded()) {
 		MissionWidgetClass = MISSION_UI_CLASS.Class;
 	}
@@ -43,6 +49,8 @@ void AAstroHUD::BeginPlay()
 		UserStatusWidget->AddToViewport();
 		InventoryWidget = CreateWidget<UInventoryWidget>(PlayerController, InventoryClass);
 		InventoryWidget->AddToViewport();
+		PasswordWidget = CreateWidget<UAstroInteractPassword>(PlayerController, PasswordClass);
+		PasswordWidget->AddToViewport();
 	}
 }
 
@@ -127,4 +135,11 @@ void AAstroHUD::ItemUsed(UAstroItemData* InItemData)
 bool AAstroHUD::ItemContainCheck(UAstroItemData* InItemData)
 {
 	return InventoryWidget->IsItemContains(InItemData);
+}
+
+void AAstroHUD::SetPasswordVisible(AActor* InOwner)
+{
+	PasswordWidget->SetVisibility(ESlateVisibility::Visible);
+	PasswordWidget->OnVisible();
+	PasswordWidget->SetOwner(InOwner);
 }

@@ -14,6 +14,7 @@ class LUNARMODULARBASE_API AAstroTriggerInteractiveObject : public AAstroInterac
 {
 	GENERATED_BODY()
 
+protected :
 	virtual void SetObjActiveComplete() override;
 
 protected:
