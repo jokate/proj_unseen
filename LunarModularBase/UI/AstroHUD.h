@@ -15,6 +15,7 @@ class UAstroCharacterWidget;
 class UAstroItemData;
 class UInventoryWidget;
 class UAstroInteractPassword;
+class UImageBoardingWidget;
 
 UCLASS()
 class LUNARMODULARBASE_API AAstroHUD : public AHUD, public IAstroHUDInterface
@@ -35,9 +36,9 @@ public:
 	virtual void ReactivateMissionText() override;
 
 	UFUNCTION()
-		virtual void SetVisibleUserStatus(bool& InVisible) override;
+	virtual void SetVisibleUserStatus(bool& InVisible) override;
 	UFUNCTION()
-		virtual	void SetPlayerHPText(uint32& InHp) override;
+	virtual	void SetPlayerHPText(uint32& InHp) override;
 
 	virtual void AddItem(UObject* InItemData) override;
 
@@ -48,6 +49,10 @@ public:
 	virtual bool ItemContainCheck(UAstroItemData* InItemData) override;
 
 	virtual void SetPasswordVisible(AActor* InOwner) override;
+
+	virtual void DialogStringOnBoard(const TArray<FString>& InString) override;
+
+	virtual void ImageWidgetSet(class UTexture2D* InTexture) override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
@@ -61,6 +66,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Password Widget")
 		TSubclassOf<UAstroInteractPassword> PasswordClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Image Board Widget")
+		TSubclassOf<UImageBoardingWidget> ImageBoardClass;
 
 
 private:
@@ -75,4 +83,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Password Widget")
 		TObjectPtr<UAstroInteractPassword> PasswordWidget;	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Image Board Widget")
+		TObjectPtr<UImageBoardingWidget> ImageBoardWidget;
 };

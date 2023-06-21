@@ -20,16 +20,13 @@ void AAstroTriggerResponseObject::BeginPlay()
 
 void AAstroTriggerResponseObject::CheckActivationByTrigger()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ACTIVATION Check START"))
 	if (NeedToTrigger.IsEmpty())
 		return;
 	for(auto Trigger : NeedToTrigger) 
 	{
 		if(!Trigger->bIsTriggered) 
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Something Is Not Activating"))
 			if (bIsActivated) {
-				UE_LOG(LogTemp, Warning, TEXT("DEACTIVATED"))
 				SetObjDeActivateComplete();
 			}
 			return;

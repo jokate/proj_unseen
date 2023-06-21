@@ -35,7 +35,6 @@ void AAstroMissionObject::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp
 
 	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && MissionClearInterface)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player IN"));
 		MissionClearInterface->OnMissionObjectCollided(OnActiveCompleted);
 	}
 }

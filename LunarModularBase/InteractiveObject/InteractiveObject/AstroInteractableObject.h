@@ -55,7 +55,7 @@ protected:
 	FTimerHandle ActivationTimer;
 
 	UFUNCTION(BlueprintCallable)
-		virtual void SetPercentage(float Infloat);
+	virtual void SetPercentage(float Infloat);
 
 	//For BlueprintEventFunction
 public:

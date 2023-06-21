@@ -6,6 +6,7 @@
 #include "UI/Mission/MissionWidget.h"
 #include "UI/AstroPlayer/AstroCharacterWidget.h"
 #include "UI/AstroInteractionObj/AstralBoxWidget.h"
+#include "UI/Mission/ImageBoardingWidget.h"
 #include "UI/Inventory/InventoryWidget.h"
 #include "UI/AstroInteractionObj/AstroInteractPassword.h"
 #include "Item/AstroItemData.h"
@@ -16,6 +17,7 @@ AAstroHUD::AAstroHUD()
 	static ConstructorHelpers::FClassFinder<UAstroCharacterWidget> ASTRO_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/UserStatusWidget.UserStatusWidget_C'"));
 	static ConstructorHelpers::FClassFinder<UInventoryWidget> ASTRO_INVEN_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_Inventory.ASTRO_Inventory_C'"));
 	static ConstructorHelpers::FClassFinder<UAstroInteractPassword> ASTRO_PASSWORD_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_Password.ASTRO_Password_C'"));
+	static ConstructorHelpers::FClassFinder<UImageBoardingWidget> ASTRO_IMAGE_BOARD_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_IMAGE_BOARDER.ASTRO_IMAGE_BOARDER_C'"));
 	if (ASTRO_PASSWORD_WIDGET.Class)
 	{
 		PasswordClass = ASTRO_PASSWORD_WIDGET.Class;
@@ -31,6 +33,11 @@ AAstroHUD::AAstroHUD()
 	if (ASTRO_INVEN_WIDGET.Class)
 	{
 		InventoryClass = ASTRO_INVEN_WIDGET.Class;
+	}
+
+	if(ASTRO_IMAGE_BOARD_WIDGET.Class) 
+	{
+		ImageBoardClass = ASTRO_IMAGE_BOARD_WIDGET.Class;
 	}
 
 }
@@ -51,6 +58,8 @@ void AAstroHUD::BeginPlay()
 		InventoryWidget->AddToViewport();
 		PasswordWidget = CreateWidget<UAstroInteractPassword>(PlayerController, PasswordClass);
 		PasswordWidget->AddToViewport();
+		ImageBoardWidget = CreateWidget<UImageBoardingWidget>(PlayerController, ImageBoardClass);
+		ImageBoardWidget->AddToViewport();
 	}
 }
 
@@ -142,4 +151,20 @@ void AAstroHUD::SetPasswordVisible(AActor* InOwner)
 	PasswordWidget->SetVisibility(ESlateVisibility::Visible);
 	PasswordWidget->OnVisible();
 	PasswordWidget->SetOwner(InOwner);
+}
+
+void AAstroHUD::DialogStringOnBoard(const TArray<FString>& InString)
+{
+	if(!InString.IsEmpty()) 
+	{
+		MissionWidget->DialogStringOnBoard(InString);
+	}
+}
+
+void AAstroHUD::ImageWidgetSet(UTexture2D* InTexture)
+{
+	if(InTexture) 
+	{
+		ImageBoardWidget->ImageWidgetOnBoard(InTexture);
+	}
 }

@@ -32,7 +32,6 @@ void AAstroItemContainerObject::OnCharacterOverlap(UPrimitiveComponent* Overlapp
 	auto ItemInterfaceCast = Cast<IAstroItemInterface>(OtherActor);
 	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && ItemInterfaceCast)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Init"));
 		ItemInterfaceCast->OnItemObjectCollided(OnItemIsGiven);
 	}
 }

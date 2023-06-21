@@ -25,6 +25,7 @@ public:
 
 	void ReactivateMissionTextBorder();
 
+	void DialogStringOnBoard(const TArray<FString>& MissionDescription);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<FString> DialogString;

@@ -25,23 +25,10 @@ void UMissionWidget::NativeConstruct()
 void UMissionWidget::UpdateMissionDialogWidget(const TArray<FString>& MissionDescription)
 {
 	if (!MissionDescription.IsEmpty()) {
-		GetOwningPlayer()->bShowMouseCursor = true;
-		if (DialogString.IsEmpty()) {
-			DialogString = MissionDescription;
-			MissionDialogText->SetText(FText::FromString(DialogString[DialogIndex]));
-			DialogIndex = FMath::Clamp(DialogIndex + 1, 0, DialogString.Num());
-			MissionDialogBorder->SetVisibility(ESlateVisibility::Visible);
-			AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
-			CurrentActor->DisableInput(GetOwningPlayer());
-		}
-		else
-		{
-			DialogString.Append(MissionDescription);
-		}
+		DialogStringOnBoard(MissionDescription);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Mission Dialog Is Empty"));
 		MissionTextBorder->SetVisibility(ESlateVisibility::Visible);
 		PlayAnimation(MissionComplete);
 	}
@@ -56,6 +43,23 @@ void UMissionWidget::ReactivateMissionTextBorder()
 {
 	MissionTextBorder->SetVisibility(ESlateVisibility::Visible);
 	PlayAnimation(MissionComplete);
+}
+
+void UMissionWidget::DialogStringOnBoard(const TArray<FString>& MissionDescription)
+{
+	GetOwningPlayer()->bShowMouseCursor = true;
+	if (DialogString.IsEmpty()) {
+		DialogString = MissionDescription;
+		MissionDialogText->SetText(FText::FromString(DialogString[DialogIndex]));
+		DialogIndex = FMath::Clamp(DialogIndex + 1, 0, DialogString.Num());
+		MissionDialogBorder->SetVisibility(ESlateVisibility::Visible);
+		AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
+		CurrentActor->DisableInput(GetOwningPlayer());
+	}
+	else
+	{
+		DialogString.Append(MissionDescription);
+	}
 }
 
 void UMissionWidget::DialogStringUpdate()

@@ -42,4 +42,8 @@ public:
 
 	virtual void SetPasswordVisible(AActor* Owner) = 0;
 
+	virtual void DialogStringOnBoard(const TArray<FString>& InString) = 0;
+
+	virtual void ImageWidgetSet(class UTexture2D* InTexture) = 0;
+
 };

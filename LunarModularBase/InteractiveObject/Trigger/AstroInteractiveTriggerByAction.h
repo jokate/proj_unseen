@@ -23,5 +23,4 @@ public :
 
 	virtual void SetObjDeActivateComplete() override;
 
-	virtual void CheckActivationByTrigger() override;
 };
