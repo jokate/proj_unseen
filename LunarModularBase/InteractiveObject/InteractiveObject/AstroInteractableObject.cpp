@@ -88,7 +88,8 @@ void AAstroInteractableObject::SetPercentage(float Infloat)
 		Widget->SetPercentage(ActivationPercent);
 		if (ActivationPercent > ActivationFullPercent)
 		{
-			SetObjActiveComplete();
+			ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			K2_OnObjectActiveOnClient();
 			GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
 			SetPercentage(0.0f);
 		}

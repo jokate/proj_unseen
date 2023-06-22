@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "InteractiveObject/Trigger/AstroInteractiveTriggerByAction.h"
+#include "InteractiveObject/InteractiveObject/AstroInteractiveTriggerByAction.h"
 #include "Components/SphereComponent.h"
 #include "InteractiveObject/Trigger/AstroInteractionTrigger.h"
 
@@ -9,7 +9,7 @@ void AAstroInteractiveTriggerByAction::SetObjActiveComplete()
 {
 	if(ObjectTrigger->GetCollisionEnabled() == ECollisionEnabled::QueryAndPhysics) 
 	{
-		Super::SetObjActiveComplete();
+		ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	else 
 	{

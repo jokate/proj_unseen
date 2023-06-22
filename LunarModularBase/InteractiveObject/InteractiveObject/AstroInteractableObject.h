@@ -70,4 +70,7 @@ protected:
 
 	virtual void SetTriggerEnable() override;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnObjectActiveClientCPP"))
+	void K2_OnObjectActiveOnClient();
+
 };

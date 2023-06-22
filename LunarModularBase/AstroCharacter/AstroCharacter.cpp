@@ -218,15 +218,7 @@ void AAstroCharacter::UnSearch(const FInputActionValue& Value)
 
 void AAstroCharacter::ActivationComplete(AActor* InActor)
 {
-	if (HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Server Initiated"));
-		ActivationComplete_Client(InActor);
-	}
-	else
-	{
-		ActivationComplete_Server(InActor);
-	}
+	ActivationComplete_Server(InActor);
 }
 
 
@@ -237,7 +229,7 @@ void AAstroCharacter::ActivationComplete_Server_Implementation(AActor* InActor)
 
 void AAstroCharacter::ActivationComplete_Multicast_Implementation(AActor* InActor)
 {
-	IInteractableObjectInterface* InteractableObject = Cast <IInteractableObjectInterface>(InActor);
+	IInteractableObjectInterface* InteractableObject = Cast<IInteractableObjectInterface>(InActor);
 	if (InteractableObject)
 	{
 		InteractableObject->SetObjActiveComplete();

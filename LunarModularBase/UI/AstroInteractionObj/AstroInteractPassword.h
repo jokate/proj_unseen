@@ -43,9 +43,9 @@ public :
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> PasswordText;
 
-	FORCEINLINE void SetOwner(AActor* Actor) 
+	FORCEINLINE void SetOwner(AActor* InActor) 
 	{
-		Owner = Actor;
+		Owner = InActor;
 	}
 private:
 

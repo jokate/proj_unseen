@@ -34,11 +34,6 @@ void UAstroInteractPassword::EnterPress()
 		ClosingAction();
 		IAstroCharacterInterface* AstroCharacter = CastChecked<IAstroCharacterInterface>(GetOwningPlayerPawn());
 		IAstroPwInteractInterface* PwObject = CastChecked<IAstroPwInteractInterface>(Owner);
-		IInteractableObjectInterface* InteractableObject = CastChecked<IInteractableObjectInterface>(PwObject->ReturnTriggerObject());
-		InteractableObject->SetObjActiveComplete();
-
-		AstroCharacter->ActivationComplete(PwObject->ReturnTriggerObject());
-
 	}
 	else 
 	{

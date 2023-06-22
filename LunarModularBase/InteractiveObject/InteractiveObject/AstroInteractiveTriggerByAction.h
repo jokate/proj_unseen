@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractiveObject/Trigger/AstroTriggerInteractiveObject.h"
+#include "InteractiveObject/InteractiveObject/AstroInteractableObject.h"
 #include "AstroInteractiveTriggerByAction.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class LUNARMODULARBASE_API AAstroInteractiveTriggerByAction : public AAstroTriggerInteractiveObject
+class LUNARMODULARBASE_API AAstroInteractiveTriggerByAction : public AAstroInteractableObject
 {
 	GENERATED_BODY()
 	

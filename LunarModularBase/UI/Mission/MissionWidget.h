@@ -35,6 +35,7 @@ public:
 
 	int32 DialogIndex = 0;
 
+	uint8 bIsMissionDialog = 0;
 
 	UPROPERTY(meta = (BindWidget))
 		TObjectPtr<class UTextBlock> MissionText;

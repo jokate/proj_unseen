@@ -25,6 +25,7 @@ class LUNARMODULARBASE_API IAstroItemInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
 	virtual void UseItem(UAstroItemData* InItemData) = 0;
 
 	virtual bool ContainsItem(UAstroItemData* ItemData) = 0;

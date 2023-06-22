@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractiveObject/InteractiveObject/AstroItemContainerObject.h"
+#include "InteractiveObject/InteractiveObject/AstroInteractableObject.h"
 #include "AstroInstallItem.generated.h"
 
 class UAstroActiveItemData;
@@ -11,11 +11,13 @@ class UAstroActiveItemData;
  * 
  */
 UCLASS()
-class LUNARMODULARBASE_API AAstroInstallItem : public AAstroItemContainerObject
+class LUNARMODULARBASE_API AAstroInstallItem : public AAstroInteractableObject
 {
 	GENERATED_BODY()
 	
 public :
+	AAstroInstallItem();
+
 	virtual void SetObjActiveComplete() override;
 
 	void Initialize(UAstroActiveItemData* InItemData);
@@ -31,5 +33,8 @@ public :
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	virtual void SetPercentage(float Infloat) override;
 protected :
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = ItemComponent)
+	TObjectPtr<class UInteractiveItemController> ItemComponent;
 };

@@ -26,6 +26,7 @@ void UMissionWidget::UpdateMissionDialogWidget(const TArray<FString>& MissionDes
 {
 	if (!MissionDescription.IsEmpty()) {
 		DialogStringOnBoard(MissionDescription);
+		bIsMissionDialog = true;
 	}
 	else
 	{
@@ -49,6 +50,7 @@ void UMissionWidget::DialogStringOnBoard(const TArray<FString>& MissionDescripti
 {
 	GetOwningPlayer()->bShowMouseCursor = true;
 	if (DialogString.IsEmpty()) {
+		bIsMissionDialog = false;
 		DialogString = MissionDescription;
 		MissionDialogText->SetText(FText::FromString(DialogString[DialogIndex]));
 		DialogIndex = FMath::Clamp(DialogIndex + 1, 0, DialogString.Num());
@@ -74,7 +76,9 @@ void UMissionWidget::DialogStringUpdate()
 		DialogIndex = 0;
 		MissionDialogBorder->SetVisibility(ESlateVisibility::Hidden);
 		MissionTextBorder->SetVisibility(ESlateVisibility::Visible);
-		PlayAnimation(MissionComplete);
+
+		if(bIsMissionDialog)
+			PlayAnimation(MissionComplete);
 
 		AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 		CurrentActor->EnableInput(GetOwningPlayer());

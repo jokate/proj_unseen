@@ -3,7 +3,10 @@
 
 #include "InteractiveObject/InteractiveObject/AstroInstallItem.h"
 #include "Item/AstroItemDatas.h"
+#include "Interface/InteractionWidgetInterface.h"
 #include "Net/UnrealNetwork.h"
+#include "Components/WidgetComponent.h"
+#include "InteractiveObject/Components/InteractiveItemController.h"
 
 void AAstroInstallItem::Initialize(UAstroActiveItemData* InItemData)
 {
@@ -35,6 +38,7 @@ void AAstroInstallItem::Initialize(UAstroActiveItemData* InItemData)
 void AAstroInstallItem::BeginPlay()
 {
 	Super::BeginPlay();
+	ItemComponent->ObjectItemData = ActivationItemData;
 }
 
 void AAstroInstallItem::SetMeshofItem()
@@ -54,9 +58,30 @@ void AAstroInstallItem::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 }
 
+void AAstroInstallItem::SetPercentage(float Infloat)
+{
+	ActivationPercent = Infloat;
+	IInteractionWidgetInterface* Widget = Cast<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
+	if (Widget) {
+		Widget->SetPercentage(ActivationPercent);
+		if (ActivationPercent > ActivationFullPercent)
+		{
+			SetObjActiveComplete();
+			K2_OnObjectActiveOnClient();
+			ItemComponent->ReturnItem();
+			GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
+			SetPercentage(0.0f);
+		}
+	}
+}
+
+AAstroInstallItem::AAstroInstallItem()
+{
+	ItemComponent = CreateDefaultSubobject<UInteractiveItemController>("ITEM_COMPONENT");
+}
+
 void AAstroInstallItem::SetObjActiveComplete()
 {
-	OnItemIsGiven.ExecuteIfBound(ActivationItemData);
 	AAstroInteractableObject::SetObjActiveComplete();
 	Destroy();
 }

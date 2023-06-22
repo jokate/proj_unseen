@@ -24,5 +24,4 @@ class LUNARMODULARBASE_API IAstroPwInteractInterface
 public:
 	virtual bool ComparePassword(const FString& InPassword) = 0;
 
-	virtual AActor* ReturnTriggerObject() = 0;
 };
