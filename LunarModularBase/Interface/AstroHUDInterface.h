@@ -48,4 +48,6 @@ public:
 
 	virtual void SetVisibilityOnSpectating() = 0;
 
+	virtual void SetMovementCommandActive(AActor* InActor) = 0;
+
 };

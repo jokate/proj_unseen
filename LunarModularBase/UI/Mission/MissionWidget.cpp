@@ -37,8 +37,7 @@ void UMissionWidget::UpdateMissionDialogWidget(const TArray<FString>& MissionDes
 	}
 	else
 	{
-		MissionTextBorder->SetVisibility(ESlateVisibility::Visible);
-		PlayAnimation(MissionComplete);
+		ReactivateMissionTextBorder();
 	}
 }
 
@@ -57,9 +56,9 @@ void UMissionWidget::ReactivateMissionTextBorder()
 void UMissionWidget::DialogStringOnBoard(const TArray<FString>& MissionDescription)
 {
 	if (DialogString.IsEmpty()) {
+		bIsMissionDialog = false;
 		SetVisibility(ESlateVisibility::Visible);
 		MissionDialogBorder->SetVisibility(ESlateVisibility::Visible);
-		bIsMissionDialog = false;
 		DialogString = MissionDescription;
 		MissionDialogText->SetText(FText::FromString(DialogString[DialogIndex]));
 		DialogIndex = FMath::Clamp(DialogIndex + 1, 0, DialogString.Num());

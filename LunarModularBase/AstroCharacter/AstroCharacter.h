@@ -103,13 +103,20 @@ public:
 	virtual void ActivationComplete(AActor* InActor) override;
 
 	UFUNCTION(Server, Reliable)
+	virtual void MoveObject(AActor* InActor, EDirection MoveVector) override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MoveObject_Multicast(AActor* InActor, EDirection MoveVector);
+
+
+	UFUNCTION(Server, Reliable)
 	void ActivationComplete_Server(AActor* InActor);
 
 	UFUNCTION(NetMulticast, Reliable)
 	void ActivationComplete_Multicast(AActor* InActor);
 
 	UFUNCTION(NetMulticast, Reliable)
-		void ActivationComplete_Client(AActor* InActor);
+	void ActivationComplete_Client(AActor* InActor);
 
 	void ReactivateMissionWidget();
 

@@ -13,6 +13,16 @@ const static FName SESSION_NAME = TEXT("Game");
 #define ASTRO_FRONT_ID TEXT("F_")
 #define ASTRO_BACK_ID TEXT("B_")
 #define ASTRO_COOP_ID TEXT("C_")
+
+UENUM(BlueprintType)
+enum class EDirection : uint8 
+{
+	LEFT = 0,
+	RIGHT,
+	UP,
+	DOWN
+};
+
 UENUM(BlueprintType)
 enum class EMissionType : uint8 {
 	MISSION_INTERACTION,

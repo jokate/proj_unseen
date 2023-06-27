@@ -40,8 +40,6 @@ void UAstroInteractPassword::EnterPress()
 	if(PasswordOwner->ComparePassword(CurrentPw)) 
 	{
 		OnInvisible();
-		IAstroCharacterInterface* AstroCharacter = CastChecked<IAstroCharacterInterface>(GetOwningPlayerPawn());
-		IAstroPwInteractInterface* PwObject = CastChecked<IAstroPwInteractInterface>(Owner);
 	}
 	else 
 	{
@@ -63,11 +61,11 @@ void UAstroInteractPassword::CloseButtonPress()
 
 void UAstroInteractPassword::OnInvisible()
 {
+	SetVisibility(ESlateVisibility::Hidden);
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->EnableInput(GetOwningPlayer());
 	GetOwningPlayer()->bShowMouseCursor = false;
 	CancelButtonPress();
-	SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UAstroInteractPassword::OnVisible()

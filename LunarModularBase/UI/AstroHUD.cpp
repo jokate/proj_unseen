@@ -10,6 +10,7 @@
 #include "UI/Inventory/InventoryWidget.h"
 #include "UI/AstroInteractionObj/AstroInteractPassword.h"
 #include "UI/SpectatingWidget.h"
+#include "UI/AstroInteractionObj/AstroMovementCommandWidget.h"
 #include "Item/AstroItemData.h"
 
 AAstroHUD::AAstroHUD()
@@ -20,6 +21,7 @@ AAstroHUD::AAstroHUD()
 	static ConstructorHelpers::FClassFinder<UAstroInteractPassword> ASTRO_PASSWORD_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_Password.ASTRO_Password_C'"));
 	static ConstructorHelpers::FClassFinder<UImageBoardingWidget> ASTRO_IMAGE_BOARD_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_IMAGE_BOARDER.ASTRO_IMAGE_BOARDER_C'"));
 	static ConstructorHelpers::FClassFinder<USpectatingWidget> ASTRO_SPECTATING_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_SPECTATOR.ASTRO_SPECTATOR_C'"));
+	static ConstructorHelpers::FClassFinder<UAstroMovementCommandWidget> ASTRO_Movement_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_MACHINE_ENTER.ASTRO_MACHINE_ENTER_C'"));
 	if (ASTRO_PASSWORD_WIDGET.Class)
 	{
 		PasswordClass = ASTRO_PASSWORD_WIDGET.Class;
@@ -45,7 +47,8 @@ AAstroHUD::AAstroHUD()
 	if (ASTRO_SPECTATING_WIDGET.Class)
 		SpectatingClass = ASTRO_SPECTATING_WIDGET.Class;
 	
-
+	if (ASTRO_Movement_WIDGET.Class)
+		MovementCommandClass = ASTRO_Movement_WIDGET.Class;
 
 
 }
@@ -65,6 +68,8 @@ void AAstroHUD::BeginPlay()
 		InventoryWidget->AddToViewport();
 		PasswordWidget = CreateWidget<UAstroInteractPassword>(PlayerController, PasswordClass);
 		PasswordWidget->AddToViewport();
+		MovementCommandWidget = CreateWidget<UAstroMovementCommandWidget>(PlayerController, MovementCommandClass);
+		MovementCommandWidget->AddToViewport();
 		ImageBoardWidget = CreateWidget<UImageBoardingWidget>(PlayerController, ImageBoardClass);
 		ImageBoardWidget->AddToViewport();
 		MissionWidget = CreateWidget<UMissionWidget>(PlayerController, MissionWidgetClass);
@@ -164,6 +169,7 @@ void AAstroHUD::SetPasswordVisible(AActor* InOwner)
 {
 	PasswordWidget->SetVisibility(ESlateVisibility::Visible);
 	PasswordWidget->SetOwner(InOwner);
+	SpectatingWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void AAstroHUD::DialogStringOnBoard(const TArray<FString>& InString)
@@ -171,6 +177,7 @@ void AAstroHUD::DialogStringOnBoard(const TArray<FString>& InString)
 	if(!InString.IsEmpty()) 
 	{
 		MissionWidget->DialogStringOnBoard(InString);
+		SpectatingWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
@@ -179,10 +186,16 @@ void AAstroHUD::ImageWidgetSet(UTexture2D* InTexture)
 	if(InTexture) 
 	{
 		ImageBoardWidget->ImageWidgetOnBoard(InTexture);
+		SpectatingWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
 void AAstroHUD::SetVisibilityOnSpectating()
 {
 	SpectatingWidget->VisibilityButtonPressed();
+}
+
+void AAstroHUD::SetMovementCommandActive(AActor* InActor)
+{
+	MovementCommandWidget->SetOwner(InActor);
 }
