@@ -75,6 +75,7 @@ public:
 	virtual void StopSwift(const FInputActionValue& Value) override;
 	virtual void Exploring(const FInputActionValue& Value) override;
 	virtual void UnExploring(const FInputActionValue& Value) override;
+	void SpectatingViewButtonPressed(const FInputActionValue& Value);
 
 	//MissionClear Part
 protected:
@@ -102,10 +103,10 @@ public:
 	virtual void ActivationComplete(AActor* InActor) override;
 
 	UFUNCTION(Server, Reliable)
-		void ActivationComplete_Server(AActor* InActor);
+	void ActivationComplete_Server(AActor* InActor);
 
 	UFUNCTION(NetMulticast, Reliable)
-		void ActivationComplete_Multicast(AActor* InActor);
+	void ActivationComplete_Multicast(AActor* InActor);
 
 	UFUNCTION(NetMulticast, Reliable)
 		void ActivationComplete_Client(AActor* InActor);
@@ -125,7 +126,7 @@ protected:
 	//Relicated Variable and Event
 protected:
 	UPROPERTY(ReplicatedUsing = On_RepMovementSpeedUpdate)
-		float MovementSpeed;
+	float MovementSpeed;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -134,24 +135,24 @@ protected:
 	void OnMovementSpeedUpdate();
 
 	UFUNCTION()
-		void On_RepMovementSpeedUpdate();
+	void On_RepMovementSpeedUpdate();
 
 	UFUNCTION(Server, Reliable)
-		void Server_Swift(float InSpeed);
+	void Server_Swift(float InSpeed);
 
 	//Input Actions
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
-		class UInputMappingContext* InputMapping;
+	class UInputMappingContext* InputMapping;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
-		class UMovementDataAsset* InputActions;
+	class UMovementDataAsset* InputActions;
 
 	//Item Section
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Item Component", Meta = (PrivateAccess = "true"))
-		TObjectPtr<class UItemComponent> ItemComponent;
+	TObjectPtr<class UItemComponent> ItemComponent;
 
 	void ActiveItemWidget();
 
@@ -167,16 +168,16 @@ protected:
 	virtual void ItemEquip(UAstroActiveItemData* InItemData) override;
 
 	UFUNCTION(Server, Reliable)
-		virtual void ItemEquip_Server(UAstroActiveItemData* InItemData);
+	virtual void ItemEquip_Server(UAstroActiveItemData* InItemData);
 
 	UFUNCTION(NetMulticast, Reliable)
-		void ItemEquip_Multicast(UAstroActiveItemData* InItemData);
+	void ItemEquip_Multicast(UAstroActiveItemData* InItemData);
 
 	UFUNCTION(Server, Reliable)
-		virtual void ItemDeEquip(bool CanDequip) override;
+	virtual void ItemDeEquip(bool CanDequip) override;
 
 	UFUNCTION(NetMulticast, Reliable)
-		void ItemDeEquip_Server(bool CanDequip);
+	void ItemDeEquip_Server(bool CanDequip);
 
 	void ItemInstall(const FInputActionValue& Value);
 
@@ -188,7 +189,7 @@ protected:
 	//For Item Installation
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Item Data")
-		TObjectPtr<UAstroActiveItemData> OnHandedItemData;
+	TObjectPtr<UAstroActiveItemData> OnHandedItemData;
 
 	UPROPERTY(VisibleAnywhere, Category = "Item Data")
 	TObjectPtr<UAstroActiveItemData> ToBeInstalled;
@@ -198,5 +199,5 @@ protected:
 	TSubclassOf<class AAstroInstallItem> ItemInstallClass;
 
 protected:
-
+	
 };

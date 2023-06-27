@@ -14,8 +14,6 @@
 // Sets default values for this component's properties
 UItemComponent::UItemComponent()
 {
-	ItemUseEvents.Add((uint8)EActiveType::PermanentOperational, FUseItemDelegateWrapper(FOnUseItemDelegate::CreateUObject(this, &UItemComponent::OperateItem)));
-	ItemUseEvents.Add((uint8)EActiveType::Installation, FUseItemDelegateWrapper(FOnUseItemDelegate::CreateUObject(this, &UItemComponent::InstallItem)));
 }
 
 
@@ -23,6 +21,9 @@ UItemComponent::UItemComponent()
 void UItemComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ItemUseEvents.Add((uint8)EActiveType::PermanentOperational, FUseItemDelegateWrapper(FOnUseItemDelegate::CreateUObject(this, &UItemComponent::OperateItem)));
+	ItemUseEvents.Add((uint8)EActiveType::Installation, FUseItemDelegateWrapper(FOnUseItemDelegate::CreateUObject(this, &UItemComponent::InstallItem)));
 }
 
 void UItemComponent::ItemWidgetActive()

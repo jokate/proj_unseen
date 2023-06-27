@@ -18,8 +18,15 @@ void UMissionWidget::NativeConstruct()
 	MissionTextBorder = Cast<UBorder>(GetWidgetFromName(TEXT("MissionTextBorder")));
 	MissionDialogBorder = Cast<UBorder>(GetWidgetFromName(TEXT("MissionDialogBorder")));
 	MissionDialogText = Cast<UTextBlock>(GetWidgetFromName(TEXT("MissionDialogText")));
-	MissionDialogBorder->SetVisibility(ESlateVisibility::Hidden);
+	SetVisibility(ESlateVisibility::Hidden);
 	MissionDialogBorder->OnMouseButtonDownEvent.BindUFunction(this, "DialogStringUpdate");
+}
+
+void UMissionWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+	if (MissionDialogBorder->GetVisibility() == ESlateVisibility::Visible)
+		OnVisible();
 }
 
 void UMissionWidget::UpdateMissionDialogWidget(const TArray<FString>& MissionDescription)
@@ -42,21 +49,20 @@ void UMissionWidget::UpdateMissionText(FString& MissionScript)
 
 void UMissionWidget::ReactivateMissionTextBorder()
 {
+	SetVisibility(ESlateVisibility::Visible);
 	MissionTextBorder->SetVisibility(ESlateVisibility::Visible);
 	PlayAnimation(MissionComplete);
 }
 
 void UMissionWidget::DialogStringOnBoard(const TArray<FString>& MissionDescription)
 {
-	GetOwningPlayer()->bShowMouseCursor = true;
 	if (DialogString.IsEmpty()) {
+		SetVisibility(ESlateVisibility::Visible);
+		MissionDialogBorder->SetVisibility(ESlateVisibility::Visible);
 		bIsMissionDialog = false;
 		DialogString = MissionDescription;
 		MissionDialogText->SetText(FText::FromString(DialogString[DialogIndex]));
 		DialogIndex = FMath::Clamp(DialogIndex + 1, 0, DialogString.Num());
-		MissionDialogBorder->SetVisibility(ESlateVisibility::Visible);
-		AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
-		CurrentActor->DisableInput(GetOwningPlayer());
 	}
 	else
 	{
@@ -77,12 +83,27 @@ void UMissionWidget::DialogStringUpdate()
 		MissionDialogBorder->SetVisibility(ESlateVisibility::Hidden);
 		MissionTextBorder->SetVisibility(ESlateVisibility::Visible);
 
-		if(bIsMissionDialog)
+		if (bIsMissionDialog)
 			PlayAnimation(MissionComplete);
-
-		AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
-		CurrentActor->EnableInput(GetOwningPlayer());
-		GetOwningPlayer()->bShowMouseCursor = false;
+		else 
+		{
+			SetVisibility(ESlateVisibility::Hidden);
+		}
+		OnInvisible();
 		DialogString.Empty();
 	}
+}
+
+void UMissionWidget::OnVisible()
+{
+	GetOwningPlayer()->bShowMouseCursor = true;
+	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
+	CurrentActor->DisableInput(GetOwningPlayer());
+}
+
+void UMissionWidget::OnInvisible()
+{
+	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
+	CurrentActor->EnableInput(GetOwningPlayer());
+	GetOwningPlayer()->bShowMouseCursor = false;
 }

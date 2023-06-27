@@ -151,6 +151,7 @@ void AAstroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PEI->BindAction(InputActions->ItemUse, ETriggerEvent::Triggered, this, &AAstroCharacter::ActiveItemWidget);
 	PEI->BindAction(InputActions->ItemInstall, ETriggerEvent::Triggered, this, &AAstroCharacter::ItemInstall);
 	PEI->BindAction(InputActions->ReactivateMissionWidget, ETriggerEvent::Triggered, this, &AAstroCharacter::ReactivateMissionWidget);
+	PEI->BindAction(InputActions->SpectatingViewButton, ETriggerEvent::Triggered, this, &AAstroCharacter::SpectatingViewButtonPressed);
 }
 
 
@@ -258,6 +259,14 @@ void AAstroCharacter::UnExploring(const FInputActionValue& Value)
 {
 	ExploreWidgetVisibleSet(false);
 
+}
+
+void AAstroCharacter::SpectatingViewButtonPressed(const FInputActionValue& Value)
+{
+	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
+	if (PlayerHUD != nullptr) {
+		PlayerHUD->SetVisibilityOnSpectating();
+	}
 }
 
 

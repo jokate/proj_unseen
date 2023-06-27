@@ -14,6 +14,14 @@ void UAstroInteractPassword::NativeConstruct()
 
 	SetVisibility(ESlateVisibility::Hidden);
 }
+
+void UAstroInteractPassword::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+	if (GetVisibility() == ESlateVisibility::Visible)
+		OnVisible();
+}
+
 void UAstroInteractPassword::PasswordButtonPress(UButton* InButton)
 {
 	FString ButtonName = InButton->GetName().Reverse();
@@ -31,7 +39,7 @@ void UAstroInteractPassword::EnterPress()
 	FString CurrentPw = PasswordText->GetText().ToString();
 	if(PasswordOwner->ComparePassword(CurrentPw)) 
 	{
-		ClosingAction();
+		OnInvisible();
 		IAstroCharacterInterface* AstroCharacter = CastChecked<IAstroCharacterInterface>(GetOwningPlayerPawn());
 		IAstroPwInteractInterface* PwObject = CastChecked<IAstroPwInteractInterface>(Owner);
 	}
@@ -48,14 +56,12 @@ void UAstroInteractPassword::CancelButtonPress()
 
 void UAstroInteractPassword::CloseButtonPress()
 {
-	ClosingAction();
-
+	OnInvisible();
 	IInteractableObjectInterface* PasswordOwner = CastChecked<IInteractableObjectInterface>(Owner);
 	PasswordOwner->SetTriggerEnable();
-
 }
 
-void UAstroInteractPassword::ClosingAction()
+void UAstroInteractPassword::OnInvisible()
 {
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->EnableInput(GetOwningPlayer());

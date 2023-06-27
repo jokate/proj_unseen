@@ -16,6 +16,7 @@ class UAstroItemData;
 class UInventoryWidget;
 class UAstroInteractPassword;
 class UImageBoardingWidget;
+class USpectatingWidget;
 
 UCLASS()
 class LUNARMODULARBASE_API AAstroHUD : public AHUD, public IAstroHUDInterface
@@ -54,6 +55,8 @@ public:
 
 	virtual void ImageWidgetSet(class UTexture2D* InTexture) override;
 
+	virtual void SetVisibilityOnSpectating() override;
+
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
 		TSubclassOf<UMissionWidget> MissionWidgetClass;
@@ -69,6 +72,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Image Board Widget")
 		TSubclassOf<UImageBoardingWidget> ImageBoardClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spectating View")
+	TSubclassOf<USpectatingWidget> SpectatingClass;
 
 
 private:
@@ -86,4 +92,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Image Board Widget")
 		TObjectPtr<UImageBoardingWidget> ImageBoardWidget;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spectating Widget")
+		TObjectPtr<USpectatingWidget> SpectatingWidget;
+
 };

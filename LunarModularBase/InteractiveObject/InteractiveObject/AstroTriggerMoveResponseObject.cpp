@@ -10,11 +10,14 @@ AAstroTriggerMoveResponseObject::AAstroTriggerMoveResponseObject()
 
 void AAstroTriggerMoveResponseObject::SetObjActiveComplete()
 {
+	Super::SetObjActiveComplete();
 	GetWorld()->GetTimerManager().SetTimer(ActivationHandle, this, &AAstroTriggerMoveResponseObject::MoveObject, MoveRate, true);
 }
 
 void AAstroTriggerMoveResponseObject::SetObjDeActivateComplete()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Deactivated"))
+	Super::SetObjDeActivateComplete();
 	GetWorld()->GetTimerManager().ClearTimer(ActivationHandle);
 }
 

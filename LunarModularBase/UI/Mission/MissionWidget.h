@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Interface/AstroWidgetInterface.h"
 #include "MissionWidget.generated.h"
 
 /**
  *
  */
 UCLASS()
-class LUNARMODULARBASE_API UMissionWidget : public UUserWidget
+class LUNARMODULARBASE_API UMissionWidget : public UUserWidget, public IAstroWidgetInterface
 {
 	GENERATED_BODY()
 
@@ -18,6 +19,8 @@ public:
 	UMissionWidget(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeConstruct() override;
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	void UpdateMissionDialogWidget(const TArray<FString>& MissionDescription);
 
@@ -32,7 +35,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void DialogStringUpdate();
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void OnVisible() override;
 
+	virtual void OnInvisible() override;
+
+protected :
+	
 	int32 DialogIndex = 0;
 
 	uint8 bIsMissionDialog = 0;

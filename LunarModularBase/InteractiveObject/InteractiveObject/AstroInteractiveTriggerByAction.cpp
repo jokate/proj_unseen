@@ -9,7 +9,7 @@ void AAstroInteractiveTriggerByAction::SetObjActiveComplete()
 {
 	if(ObjectTrigger->GetCollisionEnabled() == ECollisionEnabled::QueryAndPhysics) 
 	{
-		ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Super::SetObjActiveComplete();
 	}
 	else 
 	{

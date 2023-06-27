@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Interface/AstroWidgetInterface.h"
 #include "AstroInteractPassword.generated.h"
 
 /**
@@ -11,12 +12,14 @@
  */
 
 UCLASS()
-class LUNARMODULARBASE_API UAstroInteractPassword : public UUserWidget
+class LUNARMODULARBASE_API UAstroInteractPassword : public UUserWidget, public IAstroWidgetInterface
 {
 	GENERATED_BODY()
 	
 
 	virtual void NativeConstruct();
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	
 	UFUNCTION(BlueprintCallable)
@@ -31,10 +34,12 @@ class LUNARMODULARBASE_API UAstroInteractPassword : public UUserWidget
 	UFUNCTION(BlueprintCallable)
 	void CloseButtonPress();
 
-	void ClosingAction();
 public :
+	UFUNCTION(BlueprintCallable)
+	virtual void OnVisible() override;
 
-	void OnVisible();
+	UFUNCTION(BlueprintCallable)
+	virtual void OnInvisible() override;
 
 public :
 	UPROPERTY(BlueprintReadWrite)

@@ -37,7 +37,7 @@ public :
 	uint8 NeedToRev : 1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = LerpingPoint)
-	float LerpingPoint = 0.0f;
+	float LerpingPoint = 1.0f;
 	
 	void MoveObject();
 

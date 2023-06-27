@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Interface/AstroWidgetInterface.h"
 #include "ImageBoardingWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class LUNARMODULARBASE_API UImageBoardingWidget : public UUserWidget
+class LUNARMODULARBASE_API UImageBoardingWidget : public UUserWidget, public IAstroWidgetInterface
 {
 	GENERATED_BODY()
 	
@@ -19,6 +20,8 @@ public :
 
 	virtual void NativeConstruct() override;
 
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UImage> ObjectSendImage;
 
@@ -26,5 +29,11 @@ public :
 
 	UFUNCTION(BlueprintCallable)
 	void ImageWidgetUnBoard();
+
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnVisible() override;
+
+	virtual void OnInvisible() override;
 
 };

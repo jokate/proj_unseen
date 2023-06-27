@@ -46,4 +46,6 @@ public:
 
 	virtual void ImageWidgetSet(class UTexture2D* InTexture) = 0;
 
+	virtual void SetVisibilityOnSpectating() = 0;
+
 };
