@@ -17,8 +17,17 @@ void UInteractivePasswordComponent::PasswordWidgetOnBoard()
 	if (PlayerController)
 	{
 		auto HUD = CastChecked<IAstroHUDInterface>(PlayerController->GetHUD());
-		HUD->SetPasswordVisible(GetOwner());
+		HUD->SetPasswordVisible(this);
 
 	}
+}
+
+bool UInteractivePasswordComponent::ComparePassword(const FString& InPassword)
+{
+	if(PasswordString.Equals(InPassword)) 
+	{
+		PasswordEvent.Broadcast();
+	}
+	return PasswordString.Equals(InPassword);
 }
 

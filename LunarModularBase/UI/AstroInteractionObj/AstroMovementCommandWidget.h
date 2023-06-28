@@ -22,9 +22,9 @@ public :
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	UPROPERTY(BlueprintReadWrite)
-	TObjectPtr<AActor> Owner;
+	TObjectPtr<UActorComponent> Owner;
 
-	void SetOwner(AActor* InOwner);
+	void SetOwner(UActorComponent* InOwner);
 
 	UFUNCTION(BlueprintCallable)
 	void MoveObject(EDirection MoveVector);

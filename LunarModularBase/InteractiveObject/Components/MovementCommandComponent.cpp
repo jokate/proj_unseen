@@ -6,6 +6,7 @@
 // Sets default values for this component's properties
 UMovementCommandComponent::UMovementCommandComponent()
 {
+	bIsCoolDown = false;
 }
 
 void UMovementCommandComponent::MovementCommandActivated()
@@ -15,7 +16,19 @@ void UMovementCommandComponent::MovementCommandActivated()
 	if (PlayerController)
 	{
 		auto HUD = CastChecked<IAstroHUDInterface>(PlayerController->GetHUD());
-		HUD->SetMovementCommandActive(GetOwner());
+		HUD->SetMovementCommandActive(this);
+	}
+}
+
+void UMovementCommandComponent::MoveObject(EDirection Direction)
+{
+	if (!bIsCoolDown)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Pressed!"))
+		MovementStarted.Broadcast(Direction);
+		bIsCoolDown = true;
+		GetWorld()->GetTimerManager().SetTimer(MovementHandle, [&]() {
+			bIsCoolDown = false; }, CoolTime, false);
 	}
 }
 

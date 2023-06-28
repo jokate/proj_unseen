@@ -165,7 +165,7 @@ bool AAstroHUD::ItemContainCheck(UAstroItemData* InItemData)
 	return InventoryWidget->IsItemContains(InItemData);
 }
 
-void AAstroHUD::SetPasswordVisible(AActor* InOwner)
+void AAstroHUD::SetPasswordVisible(UActorComponent* InOwner)
 {
 	PasswordWidget->SetVisibility(ESlateVisibility::Visible);
 	PasswordWidget->SetOwner(InOwner);
@@ -195,7 +195,7 @@ void AAstroHUD::SetVisibilityOnSpectating()
 	SpectatingWidget->VisibilityButtonPressed();
 }
 
-void AAstroHUD::SetMovementCommandActive(AActor* InActor)
+void AAstroHUD::SetMovementCommandActive(UActorComponent* InActor)
 {
 	MovementCommandWidget->SetOwner(InActor);
 }

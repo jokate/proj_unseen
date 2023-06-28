@@ -223,13 +223,13 @@ void AAstroCharacter::ActivationComplete(AActor* InActor)
 	ActivationComplete_Server(InActor);
 }
 
-void AAstroCharacter::MoveObject_Multicast_Implementation(AActor* InActor, EDirection MoveVector)
+void AAstroCharacter::MoveObject_Multicast_Implementation(UActorComponent* InActor, EDirection MoveVector)
 {
 	auto NeedToMoveObject = CastChecked<IMovementCommandInterface>(InActor);
 	NeedToMoveObject->MoveObject(MoveVector);
 }
 
-void AAstroCharacter::MoveObject_Implementation(AActor* InActor, EDirection MoveVector)
+void AAstroCharacter::MoveObject_Implementation(UActorComponent* InActor, EDirection MoveVector)
 {
 	MoveObject_Multicast(InActor, MoveVector);
 }

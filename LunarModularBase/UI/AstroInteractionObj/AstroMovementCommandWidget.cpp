@@ -18,7 +18,7 @@ void UAstroMovementCommandWidget::NativeTick(const FGeometry& MyGeometry, float 
 		OnVisible();
 }
 
-void UAstroMovementCommandWidget::SetOwner(AActor* InOwner)
+void UAstroMovementCommandWidget::SetOwner(UActorComponent* InOwner)
 {	
 	SetVisibility(ESlateVisibility::Visible);
 	Owner = InOwner;

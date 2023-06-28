@@ -50,7 +50,7 @@ public:
 
 	virtual bool ItemContainCheck(UAstroItemData* InItemData) override;
 
-	virtual void SetPasswordVisible(AActor* InOwner) override;
+	virtual void SetPasswordVisible(UActorComponent* InOwner) override;
 
 	virtual void DialogStringOnBoard(const TArray<FString>& InString) override;
 
@@ -58,7 +58,7 @@ public:
 
 	virtual void SetVisibilityOnSpectating() override;
 
-	virtual void SetMovementCommandActive(AActor* InActor) override;
+	virtual void SetMovementCommandActive(UActorComponent* InActor) override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")

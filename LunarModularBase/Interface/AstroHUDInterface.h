@@ -40,7 +40,7 @@ public:
 
 	virtual bool ItemContainCheck(class UAstroItemData* InItemData) = 0;
 
-	virtual void SetPasswordVisible(AActor* Owner) = 0;
+	virtual void SetPasswordVisible(UActorComponent* Owner) = 0;
 
 	virtual void DialogStringOnBoard(const TArray<FString>& InString) = 0;
 
@@ -48,6 +48,6 @@ public:
 
 	virtual void SetVisibilityOnSpectating() = 0;
 
-	virtual void SetMovementCommandActive(AActor* InActor) = 0;
+	virtual void SetMovementCommandActive(UActorComponent* InActor) = 0;
 
 };
