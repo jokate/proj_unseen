@@ -63,4 +63,7 @@ private:
 
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 		TObjectPtr<UWidgetAnimation> MissionComplete;
+
+	UFUNCTION(BlueprintCallable)
+	void CheckIfAnotherDialogInit();
 };

@@ -32,6 +32,7 @@ void UMissionWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 void UMissionWidget::UpdateMissionDialogWidget(const TArray<FString>& MissionDescription)
 {
 	if (!MissionDescription.IsEmpty()) {
+		UE_LOG(LogTemp, Warning, TEXT("Mission Onboard"))
 		DialogStringOnBoard(MissionDescription);
 		bIsMissionDialog = true;
 	}
@@ -55,10 +56,13 @@ void UMissionWidget::ReactivateMissionTextBorder()
 
 void UMissionWidget::DialogStringOnBoard(const TArray<FString>& MissionDescription)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Dialog Onboard"))
+	SetVisibility(ESlateVisibility::Visible);
+	MissionDialogBorder->SetVisibility(ESlateVisibility::Visible);
+
 	if (DialogString.IsEmpty()) {
+
 		bIsMissionDialog = false;
-		SetVisibility(ESlateVisibility::Visible);
-		MissionDialogBorder->SetVisibility(ESlateVisibility::Visible);
 		DialogString = MissionDescription;
 		MissionDialogText->SetText(FText::FromString(DialogString[DialogIndex]));
 		DialogIndex = FMath::Clamp(DialogIndex + 1, 0, DialogString.Num());
@@ -79,6 +83,7 @@ void UMissionWidget::DialogStringUpdate()
 	else
 	{
 		DialogIndex = 0;
+		DialogString.Empty();
 		MissionDialogBorder->SetVisibility(ESlateVisibility::Hidden);
 		MissionTextBorder->SetVisibility(ESlateVisibility::Visible);
 
@@ -88,13 +93,14 @@ void UMissionWidget::DialogStringUpdate()
 		{
 			SetVisibility(ESlateVisibility::Hidden);
 		}
+
 		OnInvisible();
-		DialogString.Empty();
 	}
 }
 
 void UMissionWidget::OnVisible()
 {
+	SetVisibility(ESlateVisibility::Visible);
 	GetOwningPlayer()->bShowMouseCursor = true;
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->DisableInput(GetOwningPlayer());
@@ -105,4 +111,10 @@ void UMissionWidget::OnInvisible()
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->EnableInput(GetOwningPlayer());
 	GetOwningPlayer()->bShowMouseCursor = false;
+}
+
+void UMissionWidget::CheckIfAnotherDialogInit()
+{
+	if (DialogString.IsEmpty())
+		SetVisibility(ESlateVisibility::Hidden);
 }

@@ -64,6 +64,10 @@ void AAstroInteractableObject::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 void AAstroInteractableObject::SetObjActiveComplete()
 {
 	Super::SetObjActiveComplete();
+	if(ForGlobalSequencer.IsBound()) 
+	{
+		ForGlobalSequencer.Broadcast();
+	}
 	ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -90,6 +94,10 @@ void AAstroInteractableObject::SetPercentage(float Infloat)
 		{
 			ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			K2_OnObjectActiveOnClient();
+			if(ForSequencer.IsBound()) 
+			{
+				ForSequencer.Broadcast();
+			}
 			GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
 			SetPercentage(0.0f);
 		}

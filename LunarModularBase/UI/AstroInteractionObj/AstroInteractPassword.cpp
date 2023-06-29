@@ -55,7 +55,7 @@ void UAstroInteractPassword::CancelButtonPress()
 void UAstroInteractPassword::CloseButtonPress()
 {
 	OnInvisible();
-	IInteractableObjectInterface* PasswordOwner = CastChecked<IInteractableObjectInterface>(Owner);
+	IInteractableObjectInterface* PasswordOwner = CastChecked<IInteractableObjectInterface>(Owner->GetOwner());
 	PasswordOwner->SetTriggerEnable();
 }
 

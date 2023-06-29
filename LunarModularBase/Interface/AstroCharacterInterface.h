@@ -33,7 +33,6 @@ public:
 	virtual void Exploring(const FInputActionValue& Value) = 0;
 	virtual void UnExploring(const FInputActionValue& Value) = 0;
 	virtual void ActivationComplete(AActor* InActor) = 0;
-	virtual void MoveObject(UActorComponent* InActor, EDirection MoveVector) = 0;
 	virtual FOnCharacterActivateObject& ReturnActivateObjectDelegate() = 0;
 	virtual FOnCharacterStopActivateObject& ReturnDeactivateObjectDelegate() = 0;
 };

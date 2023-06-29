@@ -102,12 +102,6 @@ public:
 
 	virtual void ActivationComplete(AActor* InActor) override;
 
-	UFUNCTION(Server, Reliable)
-	virtual void MoveObject(UActorComponent* InActor, EDirection MoveVector) override;
-
-	UFUNCTION(NetMulticast, Reliable)
-	void MoveObject_Multicast(UActorComponent* InActor, EDirection MoveVector);
-
 
 	UFUNCTION(Server, Reliable)
 	void ActivationComplete_Server(AActor* InActor);

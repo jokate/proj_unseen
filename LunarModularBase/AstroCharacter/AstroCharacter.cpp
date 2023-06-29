@@ -11,7 +11,6 @@
 #include "AstroCharacter/AstroAnimInstance.h"
 #include "Interface/InteractableObjectInterface.h"
 #include "Interface/AstroHUDInterface.h"
-#include "Interface/MovementCommandInterface.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -223,16 +222,6 @@ void AAstroCharacter::ActivationComplete(AActor* InActor)
 	ActivationComplete_Server(InActor);
 }
 
-void AAstroCharacter::MoveObject_Multicast_Implementation(UActorComponent* InActor, EDirection MoveVector)
-{
-	auto NeedToMoveObject = CastChecked<IMovementCommandInterface>(InActor);
-	NeedToMoveObject->MoveObject(MoveVector);
-}
-
-void AAstroCharacter::MoveObject_Implementation(UActorComponent* InActor, EDirection MoveVector)
-{
-	MoveObject_Multicast(InActor, MoveVector);
-}
 
 void AAstroCharacter::ActivationComplete_Server_Implementation(AActor* InActor)
 {

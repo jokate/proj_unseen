@@ -7,6 +7,10 @@
 #include "Interface/InteractableObjectInterface.h"
 #include "AstroTriggerResponseObject.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnObjectForSequencer);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnObjectForSequencerGlobal);
+
 UCLASS()
 class LUNARMODULARBASE_API AAstroTriggerResponseObject : public AActor, public IInteractableObjectInterface
 {
@@ -48,6 +52,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnObjectDeactiveCPP"))
 	void K2_OnObjectDeactive();
 
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite,  Category = Interaction)
+	FOnObjectForSequencer ForSequencer;
+
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = Interaction)
+		FOnObjectForSequencerGlobal ForGlobalSequencer;
 	UFUNCTION(BlueprintCallable)
 	virtual void SetTriggerEnable() override {}
 
