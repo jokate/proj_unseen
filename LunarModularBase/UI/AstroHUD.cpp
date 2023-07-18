@@ -20,6 +20,7 @@ AAstroHUD::AAstroHUD()
 	static ConstructorHelpers::FClassFinder<UAstroInteractPassword> ASTRO_PASSWORD_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_Password.ASTRO_Password_C'"));
 	static ConstructorHelpers::FClassFinder<UImageBoardingWidget> ASTRO_IMAGE_BOARD_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_IMAGE_BOARDER.ASTRO_IMAGE_BOARDER_C'"));
 	static ConstructorHelpers::FClassFinder<USpectatingWidget> ASTRO_SPECTATING_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/ASTRO_SPECTATOR.ASTRO_SPECTATOR_C'"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> ASTRO_AIM_WIDGET(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/AimPoint.AimPoint_C'"));
 	if (ASTRO_PASSWORD_WIDGET.Class)
 	{
 		PasswordClass = ASTRO_PASSWORD_WIDGET.Class;
@@ -44,6 +45,9 @@ AAstroHUD::AAstroHUD()
 
 	if (ASTRO_SPECTATING_WIDGET.Class)
 		SpectatingClass = ASTRO_SPECTATING_WIDGET.Class;
+
+	if (ASTRO_AIM_WIDGET.Class)
+		AimWidgetClass = ASTRO_AIM_WIDGET.Class;
 	
 }
 
@@ -54,6 +58,8 @@ void AAstroHUD::BeginPlay()
 	const auto PlayerController = GetOwningPlayerController();
 	if (IsValid(MissionWidgetClass) && IsValid(UserStatusClass))
 	{
+		AimWidget = CreateWidget<UUserWidget>(PlayerController, AimWidgetClass);
+		AimWidget->AddToViewport();
 		SpectatingWidget = CreateWidget<USpectatingWidget>(PlayerController, SpectatingClass);
 		SpectatingWidget->AddToViewport();
 		UserStatusWidget = CreateWidget<UAstroCharacterWidget>(PlayerController, UserStatusClass);
@@ -134,12 +140,15 @@ void AAstroHUD::AddItem(UObject* InItemData)
 void AAstroHUD::ActiveItemWidget()
 {
 	if (InventoryWidget->GetVisibility() == ESlateVisibility::Visible) {
+
+		GetOwningPlayerController()->SetInputMode(FInputModeGameOnly());
 		InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
 		GetOwningPlayerController()->bShowMouseCursor = false;
-		GetOwningPlayerController()->SetIgnoreLookInput(false);
+;		GetOwningPlayerController()->SetIgnoreLookInput(false);
 	}
 	else
 	{
+		GetOwningPlayerController()->SetInputMode(FInputModeGameAndUI());
 		InventoryWidget->SetVisibility(ESlateVisibility::Visible);
 		GetOwningPlayerController()->bShowMouseCursor = true;
 		GetOwningPlayerController()->SetIgnoreLookInput(true);
@@ -159,6 +168,17 @@ bool AAstroHUD::ItemContainCheck(UAstroItemData* InItemData)
 
 void AAstroHUD::SetPasswordVisible(UActorComponent* InOwner)
 {
+
+	if (InventoryWidget->GetVisibility() == ESlateVisibility::Visible) {
+		ActiveItemWidget();
+	}
+
+	if (SpectatingWidget->GetVisibility() == ESlateVisibility::Visible) {
+		SetVisibilityOnSpectating();
+	}
+
+	GetOwningPlayerController()->SetInputMode(FInputModeUIOnly());
+
 	PasswordWidget->SetVisibility(ESlateVisibility::Visible);
 	PasswordWidget->SetOwner(InOwner);
 	SpectatingWidget->SetVisibility(ESlateVisibility::Hidden);
@@ -177,6 +197,15 @@ void AAstroHUD::ImageWidgetSet(UTexture2D* InTexture)
 {
 	if(InTexture) 
 	{
+		if (InventoryWidget->GetVisibility() == ESlateVisibility::Visible) {
+			ActiveItemWidget();
+		}
+
+		if (SpectatingWidget->GetVisibility() == ESlateVisibility::Visible) {
+			SetVisibilityOnSpectating();
+		}
+
+		GetOwningPlayerController()->SetInputMode(FInputModeUIOnly());
 		ImageBoardWidget->ImageWidgetOnBoard(InTexture);
 		SpectatingWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
@@ -185,4 +214,12 @@ void AAstroHUD::ImageWidgetSet(UTexture2D* InTexture)
 void AAstroHUD::SetVisibilityOnSpectating()
 {
 	SpectatingWidget->VisibilityButtonPressed();
+}
+
+void AAstroHUD::SetMaterialOnImageBoard(UMaterial* InMaterial)
+{
+	if(InMaterial) 
+	{
+		ImageBoardWidget->ImageWidgetMaterialChange(InMaterial);
+	}
 }

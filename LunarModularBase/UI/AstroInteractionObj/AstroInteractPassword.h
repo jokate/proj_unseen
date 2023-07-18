@@ -41,6 +41,9 @@ public :
 	UFUNCTION(BlueprintCallable)
 	virtual void OnInvisible() override;
 
+	UFUNCTION()
+	void OnChangedVisibility(ESlateVisibility InVisibility);
+
 public :
 	UPROPERTY(BlueprintReadWrite)
 	FString Password;
@@ -52,6 +55,7 @@ public :
 	{
 		Owner = InActor;
 	}
+
 private:
 
 	UPROPERTY(VisibleAnywhere)

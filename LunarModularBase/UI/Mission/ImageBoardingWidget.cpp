@@ -7,6 +7,7 @@ void UImageBoardingWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	SetVisibility(ESlateVisibility::Hidden);
+	OnVisibilityChanged.AddDynamic(this, &UImageBoardingWidget::OnChangedVisibility);
 }
 void UImageBoardingWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -17,26 +18,40 @@ void UImageBoardingWidget::NativeTick(const FGeometry& MyGeometry, float InDelta
 void UImageBoardingWidget::ImageWidgetOnBoard(UTexture2D* InTexture)
 {
 	SetVisibility(ESlateVisibility::Visible);
-	ObjectSendImage->SetBrushFromTexture(InTexture);
+	ObjectSendImage->SetBrushFromTexture(InTexture, true);
 }
 
 void UImageBoardingWidget::ImageWidgetUnBoard()
 {
 	SetVisibility(ESlateVisibility::Hidden);
-	OnInvisible();
+}
+
+void UImageBoardingWidget::ImageWidgetMaterialChange(UMaterial* InMaterial)
+{
+	ObjectSendImage->SetBrushFromMaterial(InMaterial);
 }
 
 void UImageBoardingWidget::OnVisible()
 {
+	UE_LOG(LogTemp, Warning, TEXT("ACTIVATED"));
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->DisableInput(GetOwningPlayer());
-	GetOwningPlayer()->bShowMouseCursor = true;
+	GetOwningPlayer()->SetShowMouseCursor(true);
 }
 
 void UImageBoardingWidget::OnInvisible()
 {
+	UE_LOG(LogTemp, Warning, TEXT("DISABLED"));
+	GetOwningPlayer()->SetShowMouseCursor(false);
+	GetOwningPlayer()->SetInputMode(FInputModeGameOnly());
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->EnableInput(GetOwningPlayer());
-	GetOwningPlayer()->bShowMouseCursor = false;
+}
 
+void UImageBoardingWidget::OnChangedVisibility(ESlateVisibility InVisibility)
+{
+	if (InVisibility == ESlateVisibility::Hidden)
+	{
+		OnInvisible();
+	}
 }

@@ -30,8 +30,6 @@ public:
 	virtual void Turn(const FInputActionValue& Value) = 0;
 	virtual void Swift(const FInputActionValue& Value) = 0;
 	virtual void StopSwift(const FInputActionValue& Value) = 0;
-	virtual void Exploring(const FInputActionValue& Value) = 0;
-	virtual void UnExploring(const FInputActionValue& Value) = 0;
 	virtual void ActivationComplete(AActor* InActor) = 0;
 	virtual FOnCharacterActivateObject& ReturnActivateObjectDelegate() = 0;
 	virtual FOnCharacterStopActivateObject& ReturnDeactivateObjectDelegate() = 0;

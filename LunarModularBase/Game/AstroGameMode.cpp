@@ -67,7 +67,6 @@ void AAstroGameMode::SwapPlayerControllers(APlayerController* OldPC, APlayerCont
 	auto NewAstroController = CastChecked<AAstroController>(NewPC);
 	auto OldAstroController = CastChecked<AAstroController>(OldPC);
 	NewAstroController->CurrentPlayerType = OldAstroController->CurrentPlayerType;
-
 }
 
 

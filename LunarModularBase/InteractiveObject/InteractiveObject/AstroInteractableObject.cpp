@@ -4,6 +4,7 @@
 #include "InteractiveObject/InteractiveObject/AstroInteractableObject.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/AudioComponent.h"
 #include "Interface/AstroCharacterInterface.h"
 #include "Interface/InteractionWidgetInterface.h"
 #include "GameFramework/GameStateBase.h"
@@ -21,10 +22,16 @@ AAstroInteractableObject::AAstroInteractableObject()
 		DataAsset = BOX_DATA.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<USoundBase> SOUND_DATA(TEXT("/Script/Engine.SoundWave'/Game/Sound/Activated.Activated'"));
+	if(SOUND_DATA.Object) 
+	{
+		CompleteSound = SOUND_DATA.Object;
+	}
+
 	ActivationWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("ACTIVATION"));
 	AccessChecker = CreateDefaultSubobject<UAccessControlComponent>(TEXT("ACCESSCHECKER"));
 	ObjectTrigger = CreateDefaultSubobject<USphereComponent>(TEXT("OBJECTTRIGGER"));
-
+	CompleteAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("COMPLETEAUDIO"));
 
 	check(DataAsset != nullptr);
 	RootComponent = Mesh;
@@ -40,7 +47,6 @@ AAstroInteractableObject::AAstroInteractableObject()
 	
 	Mesh->SetStaticMesh(DataAsset->MeshData);
 	Mesh->SetRelativeLocation(FVector(0.0f, -3.5f, 0.0f));
-	bReplicates = true;
 }
 
 
@@ -48,6 +54,7 @@ AAstroInteractableObject::AAstroInteractableObject()
 void AAstroInteractableObject::BeginPlay()
 {
 	Super::BeginPlay();
+	CompleteAudioComponent->SetSound(CompleteSound);
 }
 void AAstroInteractableObject::PostInitializeComponents()
 {
@@ -56,18 +63,15 @@ void AAstroInteractableObject::PostInitializeComponents()
 	ObjectTrigger->OnComponentEndOverlap.AddDynamic(this, &AAstroInteractableObject::OnCharacterOverlapOut);
 }
 
-void AAstroInteractableObject::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-}
-
 void AAstroInteractableObject::SetObjActiveComplete()
 {
 	Super::SetObjActiveComplete();
+
 	if(ForGlobalSequencer.IsBound()) 
 	{
 		ForGlobalSequencer.Broadcast();
 	}
+
 	ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -88,11 +92,13 @@ void AAstroInteractableObject::SetPercentage(float Infloat)
 {
 	ActivationPercent = Infloat;
 	IInteractionWidgetInterface* Widget = Cast<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
+
 	if (Widget) {
 		Widget->SetPercentage(ActivationPercent);
 		if (ActivationPercent > ActivationFullPercent)
 		{
 			ObjectTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			CompleteAudioComponent->Play();
 			K2_OnObjectActiveOnClient();
 			if(ForSequencer.IsBound()) 
 			{
@@ -102,6 +108,7 @@ void AAstroInteractableObject::SetPercentage(float Infloat)
 			SetPercentage(0.0f);
 		}
 	}
+
 }
 
 void AAstroInteractableObject::OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -130,10 +137,16 @@ void AAstroInteractableObject::OnCharacterOverlapOut(UPrimitiveComponent* Overla
 	{
 		CharacterInterface->ReturnActivateObjectDelegate().Unbind();
 		CharacterInterface->ReturnDeactivateObjectDelegate().Unbind();
+		GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
+
 		if (ActivationPercent > ActivationFullPercent) 
 		{
 			CharacterInterface->ActivationComplete(this);
 		}
+
+		if (ActivationPercent > 0.0f)
+			SetPercentage(0.0f);
+
 		IInteractionWidgetInterface* Widget = Cast<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
 		if(Widget)
 			Widget->OnPlayerTriggered(false);

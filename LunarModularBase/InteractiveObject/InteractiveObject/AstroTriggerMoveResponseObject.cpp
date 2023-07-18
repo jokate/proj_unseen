@@ -8,17 +8,30 @@ AAstroTriggerMoveResponseObject::AAstroTriggerMoveResponseObject()
 	NeedToRev = false;
 }
 
-void AAstroTriggerMoveResponseObject::SetObjActiveComplete()
+void AAstroTriggerMoveResponseObject::BeginPlay()
 {
+	Super::BeginPlay();
+
+	if (HasAuthority()) {
+		SetReplicates(true);
+		SetReplicateMovement(true);
+	}
+}
+
+void AAstroTriggerMoveResponseObject::SetObjActiveComplete()
+{	
+	if(HasAuthority())
+		GetWorld()->GetTimerManager().SetTimer(ActivationHandle, this, &AAstroTriggerMoveResponseObject::MoveObject, MoveRate, true);
+
 	Super::SetObjActiveComplete();
-	GetWorld()->GetTimerManager().SetTimer(ActivationHandle, this, &AAstroTriggerMoveResponseObject::MoveObject, MoveRate, true);
 }
 
 void AAstroTriggerMoveResponseObject::SetObjDeActivateComplete()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Deactivated"))
+	if(HasAuthority())
+		GetWorld()->GetTimerManager().ClearTimer(ActivationHandle);
+
 	Super::SetObjDeActivateComplete();
-	GetWorld()->GetTimerManager().ClearTimer(ActivationHandle);
 }
 
 

@@ -30,10 +30,14 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void ImageWidgetUnBoard();
 
+	void ImageWidgetMaterialChange(UMaterial* InMaterial);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void OnVisible() override;
 
 	virtual void OnInvisible() override;
+
+	UFUNCTION()
+	void OnChangedVisibility(ESlateVisibility InVisibility);
 
 };

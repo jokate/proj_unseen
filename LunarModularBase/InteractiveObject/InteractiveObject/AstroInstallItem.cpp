@@ -6,6 +6,7 @@
 #include "Interface/InteractionWidgetInterface.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/WidgetComponent.h"
+#include "Components/AudioComponent.h"
 #include "InteractiveObject/Components/InteractiveItemController.h"
 
 void AAstroInstallItem::Initialize(UAstroActiveItemData* InItemData)
@@ -67,6 +68,7 @@ void AAstroInstallItem::SetPercentage(float Infloat)
 		if (ActivationPercent > ActivationFullPercent)
 		{
 			SetObjActiveComplete();
+			CompleteAudioComponent->Play();
 			K2_OnObjectActiveOnClient();
 			ItemComponent->ReturnItem();
 			GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
@@ -77,6 +79,7 @@ void AAstroInstallItem::SetPercentage(float Infloat)
 
 AAstroInstallItem::AAstroInstallItem()
 {
+	bReplicates = true;
 	ItemComponent = CreateDefaultSubobject<UInteractiveItemController>("ITEM_COMPONENT");
 }
 

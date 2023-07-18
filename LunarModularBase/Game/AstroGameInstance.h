@@ -67,6 +67,9 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void StartSession();
 
+	UFUNCTION(BlueprintCallable)
+	void EndSession();
+
 	UPROPERTY(BlueprintReadWrite)
 	FName CurrentRoomName;
 	
@@ -80,6 +83,10 @@ public :
 	virtual void OnStartGameSessionCompleted(FName SessionName, bool Succeeded);
 
 	virtual void OnDestroySessionComplete(FName SessionName, bool Succeeded);
+
+	virtual void OnEndSessionComplete(FName SessionName, bool Succeeded);
+
+	void HandleNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString);
 
 public :
 	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnFindCompletedCPP"))

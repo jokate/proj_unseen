@@ -13,6 +13,7 @@
 #include "Interface/AstroHUDInterface.h"
 #include "Components/WidgetComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "InteractiveObject/InteractiveObject/AstroInstallItem.h"
 
@@ -67,8 +68,10 @@ AAstroCharacter::AAstroCharacter()
 	MissionComponent = CreateDefaultSubobject<UMissionComponent>(TEXT("MISSION"));
 	ItemComponent = CreateDefaultSubobject<UItemComponent>(TEXT("ITEM"));
 	OnHandedItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ONHANDED"));
+	FootStepAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FOOTSTEPAUDIO"));
 
 	SpringArm->SetupAttachment(GetCapsuleComponent());
+	FootStepAudioComponent->SetupAttachment(GetCapsuleComponent());
 	Camera->SetupAttachment(SpringArm);
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
 	GetCharacterMovement()->GravityScale = UserDataAsset->GravityScale;
@@ -97,7 +100,6 @@ AAstroCharacter::AAstroCharacter()
 void AAstroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	AstroHUD = GetWorld()->GetFirstPlayerController()->GetHUD();
 
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController) {
@@ -105,6 +107,8 @@ void AAstroCharacter::BeginPlay()
 		if (Subsystem)
 			Subsystem->AddMappingContext(InputMapping, 0);
 	}
+	FootStepAudioComponent->SetSound(FootStepSound);
+
 
 	GetWorld()->OnWorldBeginPlay.AddUObject(this, &AAstroCharacter::InputSystemInit);
 
@@ -127,7 +131,6 @@ void AAstroCharacter::InputSystemInit()
 void AAstroCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	ExploreCheck(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -142,8 +145,6 @@ void AAstroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PEI->BindAction(InputActions->InputMove, ETriggerEvent::Triggered, this, &AAstroCharacter::Move);
 	PEI->BindAction(InputActions->InputLook, ETriggerEvent::Triggered, this, &AAstroCharacter::LookUp);
 	PEI->BindAction(InputActions->InputTurn, ETriggerEvent::Triggered, this, &AAstroCharacter::Turn);
-	PEI->BindAction(InputActions->InputExplore, ETriggerEvent::Triggered, this, &AAstroCharacter::Exploring);
-	PEI->BindAction(InputActions->InputExplore, ETriggerEvent::Completed, this, &AAstroCharacter::UnExploring);
 	PEI->BindAction(InputActions->InputSprint, ETriggerEvent::Triggered, this, &AAstroCharacter::Swift);
 	PEI->BindAction(InputActions->InputSprint, ETriggerEvent::Completed, this, &AAstroCharacter::StopSwift);
 	PEI->BindAction(InputActions->InputSearch, ETriggerEvent::Triggered, this, &AAstroCharacter::Search);
@@ -161,6 +162,30 @@ void AAstroCharacter::PostInitializeComponents()
 }
 
 #pragma region For Control
+
+void AAstroCharacter::MoveForSequence(FVector MovementVector)
+{
+	Server_Swift(DefaultSpeed);
+	const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	// get forward vector
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+	// get right vector 
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	const FVector ScaledMovementInput = (ForwardDirection * MovementVector.Y + RightDirection * MovementVector.X).GetSafeNormal();
+	if (CharacterStat->bSearch) return;
+	// add movement 
+
+	AddMovementInput(ScaledMovementInput);
+}
+
+void AAstroCharacter::PlaySoundEffect()
+{
+	if(IsLocallyControlled())
+		FootStepAudioComponent->Play();
+}
 
 void AAstroCharacter::Move(const FInputActionValue& Value)
 {
@@ -248,19 +273,6 @@ void AAstroCharacter::ActivationComplete_Client_Implementation(AActor* InActor)
 }
 
 
-void AAstroCharacter::Exploring(const FInputActionValue& Value)
-{
-	if (GetCharacterMovement()->Velocity.Z != 0.0f) return;
-
-	ExploreWidgetVisibleSet(true);
-}
-
-void AAstroCharacter::UnExploring(const FInputActionValue& Value)
-{
-	ExploreWidgetVisibleSet(false);
-
-}
-
 void AAstroCharacter::SpectatingViewButtonPressed(const FInputActionValue& Value)
 {
 	auto PlayerHUD = Cast<IAstroHUDInterface>((GetWorld()->GetFirstPlayerController()->GetHUD()));
@@ -268,8 +280,6 @@ void AAstroCharacter::SpectatingViewButtonPressed(const FInputActionValue& Value
 		PlayerHUD->SetVisibilityOnSpectating();
 	}
 }
-
-
 
 #pragma endregion
 
@@ -353,7 +363,6 @@ void AAstroCharacter::On_RepMovementSpeedUpdate()
 
 void AAstroCharacter::OnMovementSpeedUpdate()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Speed : %f"), MovementSpeed);
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 
 }
@@ -373,13 +382,6 @@ void AAstroCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME(AAstroCharacter, MovementSpeed);
 }
 
-
-void AAstroCharacter::ExploreWidgetVisibleSet(bool InVisible)
-{
-
-}
-
-
 FOnCharacterActivateObject& AAstroCharacter::ReturnActivateObjectDelegate()
 {
 	return OnActivateEvent;
@@ -388,15 +390,6 @@ FOnCharacterActivateObject& AAstroCharacter::ReturnActivateObjectDelegate()
 FOnCharacterStopActivateObject& AAstroCharacter::ReturnDeactivateObjectDelegate()
 {
 	return OnDeActivateEvent;
-}
-
-void AAstroCharacter::OnMissionObjectCollided(FOnActivatedComplete& InActivatedDelegate)
-{
-
-}
-
-void AAstroCharacter::OnItemObjectCollided(FOnTakeItemDelegate& ItemDelegate)
-{
 }
 
 void AAstroCharacter::ActiveItemWidget()

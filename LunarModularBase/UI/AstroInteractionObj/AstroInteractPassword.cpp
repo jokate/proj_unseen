@@ -13,6 +13,7 @@ void UAstroInteractPassword::NativeConstruct()
 	Super::NativeConstruct();
 
 	SetVisibility(ESlateVisibility::Hidden);
+	OnVisibilityChanged.AddDynamic(this, &UAstroInteractPassword::OnChangedVisibility);
 }
 
 void UAstroInteractPassword::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -39,10 +40,11 @@ void UAstroInteractPassword::EnterPress()
 	FString CurrentPw = PasswordText->GetText().ToString();
 	if(PasswordOwner->ComparePassword(CurrentPw)) 
 	{
-		OnInvisible();
+		SetVisibility(ESlateVisibility::Hidden);
 	}
 	else 
 	{
+
 	}
 
 }
@@ -54,23 +56,33 @@ void UAstroInteractPassword::CancelButtonPress()
 
 void UAstroInteractPassword::CloseButtonPress()
 {
-	OnInvisible();
+	SetVisibility(ESlateVisibility::Hidden);
 	IInteractableObjectInterface* PasswordOwner = CastChecked<IInteractableObjectInterface>(Owner->GetOwner());
 	PasswordOwner->SetTriggerEnable();
 }
 
 void UAstroInteractPassword::OnInvisible()
 {
-	SetVisibility(ESlateVisibility::Hidden);
+	CancelButtonPress();
+
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->EnableInput(GetOwningPlayer());
-	GetOwningPlayer()->bShowMouseCursor = false;
-	CancelButtonPress();
+	GetOwningPlayer()->SetShowMouseCursor(false);
+	GetOwningPlayer()->SetInputMode(FInputModeGameOnly());
+}
+
+void UAstroInteractPassword::OnChangedVisibility(ESlateVisibility InVisibility)
+{
+	if(InVisibility == ESlateVisibility::Hidden) 
+	{
+		OnInvisible();
+	}
 }
 
 void UAstroInteractPassword::OnVisible()
 {
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->DisableInput(GetOwningPlayer());
-	GetOwningPlayer()->bShowMouseCursor = true;
+	GetOwningPlayer()->SetShowMouseCursor(true);
+
 }

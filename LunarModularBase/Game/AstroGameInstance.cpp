@@ -22,6 +22,8 @@ void UAstroGameInstance::Init()
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UAstroGameInstance::OnFindSessionsComplete);
 			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UAstroGameInstance::OnJoinGameSessionCompleted);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UAstroGameInstance::OnDestroySessionComplete);
+			SessionInterface->OnEndSessionCompleteDelegates.AddUObject(this, &UAstroGameInstance::OnEndSessionComplete);
+			GetEngine()->OnNetworkFailure().AddUObject(this, &UAstroGameInstance::HandleNetworkFailure);
 			bIsHost = false;
 		}
 	}
@@ -135,12 +137,34 @@ void UAstroGameInstance::OnDestroySessionComplete(FName SessionName, bool Succee
 	}
 }
 
+void UAstroGameInstance::OnEndSessionComplete(FName SessionName, bool Succeeded)
+{
+	if(Succeeded) 
+	{
+		DestroySession(SessionName);
+	}
+}
+
+//When Session Has an Error or Session Host Leave th
+void UAstroGameInstance::HandleNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Host Ended Or Session Has An Error"));
+	SessionInterface->DestroySession(SESSION_NAME);
+}
+
 void UAstroGameInstance::StartSession()
 {
 	if (SessionInterface) 
 	{
 		SessionInterface->StartSession(SESSION_NAME);
-	
+	}
+}
+
+void UAstroGameInstance::EndSession()
+{
+	if(SessionInterface) 
+	{
+		SessionInterface->EndSession(SESSION_NAME);
 	}
 }
 

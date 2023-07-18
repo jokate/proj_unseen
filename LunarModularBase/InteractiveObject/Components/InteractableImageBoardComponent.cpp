@@ -20,5 +20,16 @@ void UInteractableImageBoardComponent::ImageOnBoard()
 	}
 }
 
+void UInteractableImageBoardComponent::ImageSetMaterial(UMaterial* InMaterial)
+{
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+
+	if (PlayerController)
+	{
+		auto HUD = CastChecked<IAstroHUDInterface>(PlayerController->GetHUD());
+		HUD->SetMaterialOnImageBoard(InMaterial);
+	}
+}
+
 
 

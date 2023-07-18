@@ -15,8 +15,13 @@ class LUNARMODULARBASE_API AAstroInteractiveTriggerByAction : public AAstroInter
 	GENERATED_BODY()
 	
 public :
+	AAstroInteractiveTriggerByAction();
+
 	UPROPERTY(BlueprintReadWrite)
-	uint8 bIsActions : 1;
+	uint8 bIsReadyToActions : 1;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Game, Meta = (DisplayName = "OnObjectReadyToActionCPP"))
+	void K2_OnObjectReadyToAction();
 
 	
 	virtual void SetObjActiveComplete() override;

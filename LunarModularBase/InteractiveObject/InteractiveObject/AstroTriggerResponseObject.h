@@ -56,7 +56,7 @@ public:
 	FOnObjectForSequencer ForSequencer;
 
 	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = Interaction)
-		FOnObjectForSequencerGlobal ForGlobalSequencer;
+	FOnObjectForSequencerGlobal ForGlobalSequencer;
 	UFUNCTION(BlueprintCallable)
 	virtual void SetTriggerEnable() override {}
 

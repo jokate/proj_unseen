@@ -8,8 +8,8 @@
 
 // This class does not need to be modified.
 
-DECLARE_DELEGATE_OneParam(FOnTakeItemDelegate, class UAstroItemData*);
 class UAstroActiveItemData;
+
 UINTERFACE(MinimalAPI)
 class UAstroItemInterface : public UInterface
 {
@@ -29,8 +29,6 @@ public:
 	virtual void UseItem(UAstroItemData* InItemData) = 0;
 
 	virtual bool ContainsItem(UAstroItemData* ItemData) = 0;
-
-	virtual void OnItemObjectCollided(FOnTakeItemDelegate& ItemDelegate) = 0;
 
 	virtual void ItemEquip(UAstroActiveItemData* InItemData) = 0;
 

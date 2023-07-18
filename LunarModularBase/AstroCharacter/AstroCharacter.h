@@ -45,10 +45,6 @@ public:
 	virtual FOnCharacterActivateObject& ReturnActivateObjectDelegate() override;
 
 	virtual FOnCharacterStopActivateObject& ReturnDeactivateObjectDelegate() override;
-
-	virtual void OnMissionObjectCollided(FOnActivatedComplete& InActivaedDelegate) override;
-
-	virtual void OnItemObjectCollided(FOnTakeItemDelegate& ItemDelegate) override;
 public:
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
@@ -60,21 +56,27 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Status)
 		TObjectPtr<class UAstroCharacterStatusComponent> CharacterStat;
 
-	UPROPERTY(VisibleAnywhere, Category = HUD)
-		TObjectPtr<class AHUD> AstroHUD;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = EquippedItem, Meta = (AllowPrivateAccess = "true"))
 		TObjectPtr<class UStaticMeshComponent> OnHandedItem;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Audio, Meta = (AllowPrivateAccess = "true"))
+		TObjectPtr<class UAudioComponent> FootStepAudioComponent;	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WalkingSound, Meta = (AllowPrivateAccess = "true"))
+		TObjectPtr<class USoundBase> FootStepSound;	
 public:
+	UFUNCTION(BlueprintCallable)
+	void MoveForSequence(FVector MovementVector);
+	
+	UFUNCTION(BlueprintCallable)
+	void PlaySoundEffect();
+
 	//Move
 	virtual void Move(const FInputActionValue& Value) override;
 	virtual void LookUp(const FInputActionValue& Value) override;
 	virtual void Turn(const FInputActionValue& Value) override;
 	virtual void Swift(const FInputActionValue& Value) override;
 	virtual void StopSwift(const FInputActionValue& Value) override;
-	virtual void Exploring(const FInputActionValue& Value) override;
-	virtual void UnExploring(const FInputActionValue& Value) override;
 	void SpectatingViewButtonPressed(const FInputActionValue& Value);
 
 	//MissionClear Part
@@ -92,7 +94,6 @@ protected:
 	virtual void PlayerTypeSetting(EPlayerType InPlayerType) override;
 
 	virtual void HUDUpdate(FName InMissionID);
-
 
 public:
 
@@ -120,8 +121,11 @@ protected:
 	void SetControlMode();
 
 	float ArmLengthTo = 450.0f;
+
 	FRotator ArmRotatorTo = FRotator::ZeroRotator;
+
 	float ArmLengthSpeed = 0.0f;
+
 	float ArmRotationSpeed = 0.0f;
 
 	//Relicated Variable and Event
@@ -130,8 +134,6 @@ protected:
 	float MovementSpeed;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	void SetMovementSpeed(float InSpeed);
 
 	void OnMovementSpeedUpdate();
 

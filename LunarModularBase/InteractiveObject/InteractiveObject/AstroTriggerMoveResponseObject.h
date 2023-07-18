@@ -17,6 +17,8 @@ class LUNARMODULARBASE_API AAstroTriggerMoveResponseObject : public AAstroTrigge
 public :
 	AAstroTriggerMoveResponseObject();
 
+	virtual void BeginPlay() override;
+
 	virtual void SetObjActiveComplete() override;
 
 	virtual void SetObjDeActivateComplete() override;

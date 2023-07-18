@@ -6,6 +6,7 @@
 #include "Lobby/LobbyGameMode.h"
 #include "Game/AstroGameInstance.h"
 #include "Interface/AstroCharacterInterface.h"
+#include "Game/AstroGameInstance.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -47,6 +48,7 @@ void AAstroController::OnNetCleanup(UNetConnection* Connection)
 {
 	if (HasAuthority()) 
 	{
+		//Not Play the Game
 		ALobbyGameMode* GameMode = Cast<ALobbyGameMode>(GetWorld()->GetAuthGameMode());
 		if(GameMode) 
 		{
@@ -58,6 +60,8 @@ void AAstroController::OnNetCleanup(UNetConnection* Connection)
 				GameMode->BackwardCount.fetch_sub(1);
 			}
 		}
+
+		//When Playing the Game.
 
 	}
 	Super::OnNetCleanup(Connection);

@@ -82,8 +82,10 @@ void ALobbyGameMode::LogOutProcess(APlayerController* ExitPlayer)
 
 	FUniqueNetIdRepl UniqueNetIdRepl;
 	AAstroController* Player = CastChecked<AAstroController>(ExitPlayer);
+	//HOST
 	if (ExitPlayer->IsLocalPlayerController())
 	{
+
 		ULocalPlayer* LocalPlayer = ExitPlayer->GetLocalPlayer();
 		if (IsValid(LocalPlayer))
 		{
@@ -96,6 +98,7 @@ void ALobbyGameMode::LogOutProcess(APlayerController* ExitPlayer)
 			UniqueNetIdRepl = RemoteNetConnection->PlayerId;
 		}
 	}
+	//Non_Host
 	else
 	{
 		UNetConnection* RemoteNetConnection = Cast<UNetConnection>(ExitPlayer->Player);

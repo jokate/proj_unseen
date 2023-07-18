@@ -63,6 +63,7 @@ void UInventorySlotWidget::OnActivationItemButton()
 	{
 		Widget->ItemCountDown(ItemData);
 	}
+
 	ItemUseComponent->UseItem(ItemData);
 	ItemActivationWidget->SetItemActivateWidgetActive();
 }

@@ -24,7 +24,9 @@ UMissionComponent::UMissionComponent()
 void UMissionComponent::Init()
 {
 	auto AstroGameState = CastChecked<IAstroGameStateInterface>(GetWorld()->GetGameState());
+
 	auto OwningCharacter = CastChecked<IAstroMissionClearInterface>(GetOwner());
+
 	if (OwningCharacter->GetLocalPlayerTag() == OwningCharacter->ReturnTag() && GetOwner()->GetLocalRole() == ENetRole::ROLE_Authority) {
 		FName InitializedMission = AstroGameState->GetInitiailizedMissionID(OwningCharacter->ReturnTag());
 		if (!InitializedMission.IsNone())

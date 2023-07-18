@@ -57,8 +57,13 @@ public:
 
 	virtual void SetVisibilityOnSpectating() override;
 
+	virtual void SetMaterialOnImageBoard(UMaterial* InMaterial) override;
 
 public:
+	UPROPERTY(EditDefaultsOnly, Category = "Aim Widget")
+		TSubclassOf<UUserWidget> AimWidgetClass;
+
+
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
 		TSubclassOf<UMissionWidget> MissionWidgetClass;
 
@@ -79,6 +84,9 @@ public:
 
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Aim Widget")
+		TObjectPtr<UUserWidget> AimWidget;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Mission Widget")
 		TObjectPtr<UMissionWidget> MissionWidget;
 

@@ -26,5 +26,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ImageOnBoard();
+
+	UFUNCTION(BlueprintCallable)
+	void ImageSetMaterial(UMaterial* InMaterial);
 		
 };

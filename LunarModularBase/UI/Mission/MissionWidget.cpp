@@ -101,9 +101,9 @@ void UMissionWidget::DialogStringUpdate()
 void UMissionWidget::OnVisible()
 {
 	SetVisibility(ESlateVisibility::Visible);
-	GetOwningPlayer()->bShowMouseCursor = true;
 	AActor* CurrentActor = CastChecked<AActor>(GetOwningPlayerPawn());
 	CurrentActor->DisableInput(GetOwningPlayer());
+	GetOwningPlayer()->bShowMouseCursor = true;
 }
 
 void UMissionWidget::OnInvisible()

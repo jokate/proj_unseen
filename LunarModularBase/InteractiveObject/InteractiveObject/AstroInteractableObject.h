@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in he Description page of Project Settings.
 
 #pragma once
 
@@ -33,7 +33,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Box)
 		TObjectPtr<class USphereComponent> ObjectTrigger;
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = CompleteAudio)
+		TObjectPtr<class UAudioComponent> CompleteAudioComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CompleteSound, Meta = (AllowPrivateAccess = "true"))
+		TObjectPtr<class USoundBase> CompleteSound;
+
 	//Object Activation
 protected:
 
