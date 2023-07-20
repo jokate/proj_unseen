@@ -34,11 +34,13 @@ void UAstroGameInstance::HostGameSession(FString String)
 {
 	const int MaxNumofPlayer = 2;
 	FOnlineSessionSettings OnlineSessionSettings;
-	OnlineSessionSettings.bAllowJoinInProgress = false;
+	OnlineSessionSettings.bAllowJoinInProgress = true;
+	OnlineSessionSettings.bAllowInvites = true;
 	OnlineSessionSettings.bAllowJoinViaPresence = true;
 	OnlineSessionSettings.NumPublicConnections = 2;
 	OnlineSessionSettings.bUsesPresence = true;
 	OnlineSessionSettings.bShouldAdvertise = true;
+	OnlineSessionSettings.bUseLobbiesIfAvailable = true;
 	OnlineSessionSettings.bIsDedicated = false;
 	OnlineSessionSettings.bIsLANMatch = (IOnlineSubsystem::Get()->GetSubsystemName() != "NULL") ? false : true;
 
@@ -47,8 +49,8 @@ void UAstroGameInstance::HostGameSession(FString String)
 	SessionName.AdvertisementType = EOnlineDataAdvertisementType::ViaOnlineService;
 	SessionName.Data = String;
 	OnlineSessionSettings.Settings.Add("SESSION_NAME", SessionName);
-
-	SessionInterface->CreateSession(0, SESSION_NAME, OnlineSessionSettings);
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+	SessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), SESSION_NAME, OnlineSessionSettings);
 }
 
 void UAstroGameInstance::OnCreateSessionComplete(FName SessionName, bool Succeeded)
@@ -66,7 +68,8 @@ void UAstroGameInstance::OnCreateSessionComplete(FName SessionName, bool Succeed
 
 void UAstroGameInstance::JoinGameSession(FResultConstructor Result)
 {
-	SessionInterface->JoinSession(0, SESSION_NAME, 	Result.Result);
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+	SessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), SESSION_NAME, 	Result.Result);
 }
 
 void UAstroGameInstance::OnJoinGameSessionCompleted(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
@@ -90,10 +93,11 @@ void UAstroGameInstance::OnJoinGameSessionCompleted(FName SessionName, EOnJoinSe
 void UAstroGameInstance::FindGameSession()
 {
 	LastSessionSearch = MakeShareable(new FOnlineSessionSearch());
-	LastSessionSearch->MaxSearchResults = 100;
+	LastSessionSearch->MaxSearchResults = 200000;
 	LastSessionSearch->bIsLanQuery = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL");
 	LastSessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
-	SessionInterface->FindSessions(0, LastSessionSearch.ToSharedRef());
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+	SessionInterface->FindSessions(*LocalPlayer->GetPreferredUniqueNetId(), LastSessionSearch.ToSharedRef());
 }
 
 void UAstroGameInstance::OnFindSessionsComplete(bool Succeeded)

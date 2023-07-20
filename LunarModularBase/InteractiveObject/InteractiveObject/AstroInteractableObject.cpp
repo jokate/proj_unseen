@@ -119,11 +119,14 @@ void AAstroInteractableObject::OnCharacterOverlap(UPrimitiveComponent* Overlappe
 	auto CharacterInterface = Cast<IAstroCharacterInterface>(OtherActor);
 	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && CharacterInterface)
 	{
-		CharacterInterface->ReturnActivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::OnActivating);
-		CharacterInterface->ReturnDeactivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::StopActivating);
-		IInteractionWidgetInterface* Widget = Cast<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
-		if(Widget)
-			Widget->OnPlayerTriggered(true);
+		if (!CharacterInterface->ReturnActivateObjectDelegate().IsBound() && !CharacterInterface->ReturnActivateObjectDelegate().IsBound()) {
+			UE_LOG(LogTemp, Warning, TEXT("Collided In Bound"));
+			CharacterInterface->ReturnActivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::OnActivating);
+			CharacterInterface->ReturnDeactivateObjectDelegate().BindUObject(this, &AAstroInteractableObject::StopActivating);
+			IInteractionWidgetInterface* Widget = Cast<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
+			if (Widget)
+				Widget->OnPlayerTriggered(true);
+		}
 	}
 }
 
@@ -135,11 +138,14 @@ void AAstroInteractableObject::OnCharacterOverlapOut(UPrimitiveComponent* Overla
 	auto CharacterInterface = Cast<IAstroCharacterInterface>(OtherActor);
 	if ((OtherActor == GetWorld()->GetFirstPlayerController()->GetPawn()) && CharacterInterface)
 	{
-		CharacterInterface->ReturnActivateObjectDelegate().Unbind();
-		CharacterInterface->ReturnDeactivateObjectDelegate().Unbind();
+		UE_LOG(LogTemp, Warning, TEXT("Exited Out Bound"))
+		if (CharacterInterface->ReturnActivateObjectDelegate().IsBoundToObject(this) && CharacterInterface->ReturnDeactivateObjectDelegate().IsBoundToObject(this)) {
+			CharacterInterface->ReturnActivateObjectDelegate().Unbind();
+			CharacterInterface->ReturnDeactivateObjectDelegate().Unbind();
+		}
 		GetWorld()->GetTimerManager().ClearTimer(ActivationTimer);
 
-		if (ActivationPercent > ActivationFullPercent) 
+		if (ActivationPercent > ActivationFullPercent)
 		{
 			CharacterInterface->ActivationComplete(this);
 		}
@@ -148,8 +154,9 @@ void AAstroInteractableObject::OnCharacterOverlapOut(UPrimitiveComponent* Overla
 			SetPercentage(0.0f);
 
 		IInteractionWidgetInterface* Widget = Cast<IInteractionWidgetInterface>(ActivationWidget->GetWidget());
-		if(Widget)
+		if (Widget)
 			Widget->OnPlayerTriggered(false);
+		
 	}
 }
 
