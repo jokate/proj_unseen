@@ -26,3 +26,8 @@
 # 상세 개발 내역
 
 [개발 내역](https://chief-plum-961.notion.site/Project-UNSEEN-The-Hidden-Truth-4bf5412dd9554d9ab72e9dd962ebd45a?pvs=4)
+
+
+# 해당 프로젝트에 대한 개발 일지는 다음 링크에서 참고하시면 됩니다
+
+[김재윤 UNSEEN 좌충우돌 개발일지](https://chief-plum-961.notion.site/f9fb443e917a4528b415bb8eaf049ebd?v=112fb81b5e5c4b3e8ac1c89b0a38cdbf&pvs=4)
